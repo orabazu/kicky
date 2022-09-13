@@ -48,4 +48,14 @@ module.exports = {
       },
     ],
   },
+  globals: {
+    moment: true,
+    document: true,
+    window: true,
+    localStorage: true,
+    Audio: true,
+    Event: true,
+    Blob: true,
+    JSX: true,
+  },
 };
