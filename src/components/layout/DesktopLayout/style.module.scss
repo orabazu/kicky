@@ -1,17 +1,17 @@
 .SideBar {
   position: absolute;
-  background: whitesmoke;
-  height: calc(100% - 49px);
+  // background: whitesmoke;
+  height: calc(100% - 70px);
   left: 0;
-  top: 48px;
+  top: 70px;
   width: 40%;
 }
 
 @media screen and (max-width: 768px) {
   .SideBar {
     position: absolute;
-    background: whitesmoke;
-    height: calc(100% - 49px);
+    // background: whitesmoke;
+    height: calc(100% - 70px);
     left: 0;
     top: 48px;
     width: 100%;
@@ -21,9 +21,9 @@
 .Main {
   position: absolute;
   width: 60%;
-  height: calc(100% - 49px);
+  height: calc(100% - 70px);
   background: darkorchid;
-  top: 49px;
+  top: 70px;
   left: 40%;
   transition: 0.6s cubic-bezier(0.42, 0, 0, 0.99);
   transform: translateZ(0);
@@ -33,7 +33,7 @@
   .Main {
     position: absolute;
     width: 100%;
-    height: calc(100% - 49px);
+    height: calc(100% - 70px);
     background: darkorchid;
     top: 65px;
     left: -800px;

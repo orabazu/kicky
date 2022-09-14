@@ -1,0 +1,39 @@
+.siteHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  height: 70px;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+}
+
+.item {
+  padding: 5px 15px;
+  font-size: 16px;
+}
+
+.item + .item {
+  margin-left: 5px;
+}
+
+.item.is-site-header-item-selected {
+  color: #ffffff;
+  background-color: #415f69;
+  border-radius: 4px;
+}
+
+.siteHeader {
+  @extend .item;
+  font-size: 20px;
+  line-height: 0;
+  color: white;
+}
+
+.siteHeaderButton {
+  @extend .item;
+  cursor: pointer;
+  color: #d9e9ef;
+}
