@@ -1,0 +1,41 @@
+.SideBar {
+  position: absolute;
+  background: whitesmoke;
+  height: calc(100% - 49px);
+  left: 0;
+  top: 48px;
+  width: 40%;
+}
+
+@media screen and (max-width: 768px) {
+  .SideBar {
+    position: absolute;
+    background: whitesmoke;
+    height: calc(100% - 49px);
+    left: 0;
+    top: 48px;
+    width: 100%;
+  }
+}
+
+.Main {
+  position: absolute;
+  width: 60%;
+  height: calc(100% - 49px);
+  background: darkorchid;
+  top: 49px;
+  left: 40%;
+  transition: 0.6s cubic-bezier(0.42, 0, 0, 0.99);
+  transform: translateZ(0);
+}
+
+@media screen and (max-width: 768px) {
+  .Main {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 49px);
+    background: darkorchid;
+    top: 65px;
+    left: -800px;
+  }
+}
