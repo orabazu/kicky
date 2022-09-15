@@ -1,5 +1,8 @@
 .LeftBar {
   padding: 0 20px;
+  position: relative;
+  height: 100%;
+  overflow: auto;
   :global(.ant-tabs-tab) {
     min-width: 50px;
     justify-content: center;
@@ -8,4 +11,21 @@
   :global(.ant-tabs-tab + .ant-tabs-tab) {
     margin-left: 10px;
   }
+}
+
+// fixed siderbar footer
+.LeftBarFooter {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 30px 20px;
+  text-align: center;
+  margin-left: -20px;
+}
+
+// fixed footer
+.ImportButton {
+  // bottom: 0;
+  // right: 0;
+  // margin: 20px;
 }
