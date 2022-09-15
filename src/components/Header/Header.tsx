@@ -1,6 +1,6 @@
 import React from 'react';
 
-import HeaderLogo from '../../../assets/logo.png';
+import HeaderLogo from '../../assets/logo.png';
 import styles from './style.module.scss';
 
 export const Header = () => {
@@ -11,9 +11,8 @@ export const Header = () => {
         <div className={styles.siteHeader}>
           <img src={HeaderLogo} alt="logo" />
         </div>
-        <div className={styles.siteHeaderButton}>Inbox</div>
-        <div className={styles.siteHeaderButton}>Sent</div>
-        <div className={styles.siteHeaderButton}>Trash</div>
+        <div className={styles.siteHeaderButton}>Analyzer</div>
+        <div className={styles.siteHeaderButton}>Discover</div>
       </div>
       <div className={styles.section}>
         <div className={styles.siteHeaderButton}>Settings</div>

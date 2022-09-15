@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Header } from '../Header';
 import styles from './style.module.scss';
-export const DesktopLayout = () => {
+export const Main = () => {
   return (
     <>
       <Header />

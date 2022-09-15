@@ -3,7 +3,7 @@ import './App.less';
 import React, { useEffect } from 'react';
 
 import useMaps from '../src/hooks/useMaps';
-import { DesktopLayout } from './components/layout/DesktopLayout';
+import { Main } from './components/Main';
 
 function App() {
   const { google } = useMaps();
@@ -19,7 +19,7 @@ function App() {
     }
   }, [google]);
 
-  return <DesktopLayout></DesktopLayout>;
+  return <Main></Main>;
 }
 
 export default App;
