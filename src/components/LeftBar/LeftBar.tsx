@@ -1,5 +1,33 @@
+import { Tabs } from 'antd';
 import React from 'react';
+import { FiDatabase, FiMap } from 'react-icons/fi';
 
+import styles from './style.module.scss';
 export const LeftBar = () => {
-  return <div>LeftBar</div>;
+  const tabs = [
+    {
+      label: (
+        <span>
+          <FiDatabase />
+        </span>
+      ),
+      key: 'layers',
+      children: `Layers`,
+    },
+    {
+      label: (
+        <span>
+          <FiMap />
+        </span>
+      ),
+      key: 'map',
+      children: `Map`,
+    },
+  ];
+
+  return (
+    <div className={styles.LeftBar}>
+      <Tabs defaultActiveKey="2" items={tabs} />
+    </div>
+  );
 };
