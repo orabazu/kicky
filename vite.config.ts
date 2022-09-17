@@ -6,14 +6,12 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   plugins: [reactRefresh(), tsconfigPaths()],
   css: {
-    modules: true,
     preprocessorOptions: {
       less: {
         modifyVars: {
           'primary-color': '#34d499',
-          'heading-color': '#f00',
           'body-background': '#1b1b22',
-          'font-size-base': '16px',
+          'font-size-base': '14px',
           'btn-height-base': '40px',
           'btn-font-weight': 'bold',
         },

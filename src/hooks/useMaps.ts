@@ -1,10 +1,10 @@
 import useMapContext from './useMapsContext';
 
 const useMaps = () => {
-  const { google } = useMapContext();
+  const { gmaps } = useMapContext();
 
   return {
-    google,
+    gmaps,
   };
 };
 
