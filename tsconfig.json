@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -21,38 +17,18 @@
     "jsx": "react-jsx",
     "baseUrl": "./",
     "paths": {
-      "components/*": [
-        "src/components/*"
-      ],
-      "types/*": [
-        "src/types/*"
-      ],
-      "const/*": [
-        "src/const/*"
-      ],
-      "contexts/*": [
-        "src/contexts/*"
-      ],
-      "reducers/*": [
-        "src/reducers/*"
-      ],
-      "managers/*": [
-        "src/managers/*"
-      ],
-      "views/*": [
-        "src/views/*"
-      ],
-      "hooks/*": [
-        "src/hooks/*"
-      ],
-      "assets/*": [
-        "src/assets/*"
-      ],
-    },
+      "components/*": ["src/components/*"],
+      "types/*": ["src/types/*"],
+      "const/*": ["src/const/*"],
+      "contexts/*": ["src/contexts/*"],
+      "reducers/*": ["src/reducers/*"],
+      "managers/*": ["src/managers/*"],
+      "views/*": ["src/views/*"],
+      "hooks/*": ["src/hooks/*"],
+      "assets/*": ["src/assets/*"]
+    }
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "references": [
     {
       "path": "./tsconfig.node.json"
