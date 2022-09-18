@@ -17,25 +17,3 @@
     width: 100%;
   }
 }
-
-.Main {
-  position: absolute;
-  width: 60%;
-  height: calc(100% - 70px);
-  background: darkorchid;
-  top: 70px;
-  left: 40%;
-  transition: 0.6s cubic-bezier(0.42, 0, 0, 0.99);
-  transform: translateZ(0);
-}
-
-@media screen and (max-width: 768px) {
-  .Main {
-    position: absolute;
-    width: 100%;
-    height: calc(100% - 70px);
-    background: darkorchid;
-    top: 65px;
-    left: -800px;
-  }
-}

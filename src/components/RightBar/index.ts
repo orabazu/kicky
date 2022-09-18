@@ -1,0 +1,1 @@
+export { RightBar } from './RightBar';
