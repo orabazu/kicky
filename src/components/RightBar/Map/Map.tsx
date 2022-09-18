@@ -1,4 +1,4 @@
-import { sampleData } from 'components/Main/sampleData';
+import { sampleData } from 'const/sampleData';
 import useMaps from 'hooks/useMaps';
 import React, { useEffect } from 'react';
 
