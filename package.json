@@ -11,12 +11,14 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
     "antd": "^4.23.1",
     "deck.gl": "^8.8.10",
     "google-maps": "^4.3.3",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.4.0"
+    "react-icons": "^4.4.0",
+    "react-redux": "^8.0.2"
   },
   "devDependencies": {
     "@types/react": "^17.0.38",

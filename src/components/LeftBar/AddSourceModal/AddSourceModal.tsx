@@ -4,8 +4,11 @@ import Meta from 'antd/lib/card/Meta';
 import Arsenal from 'assets/arsenal-2004.png';
 import Euro from 'assets/euro-2022.png';
 import StatsBomb from 'assets/stats.png';
-import React from 'react';
+import React, { useState } from 'react';
 import { FiCloud, FiHardDrive } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
+import { addData, removeData } from 'store/openDataSlice';
+import { RootState } from 'store/store';
 
 import styles from './style.module.scss';
 
@@ -15,7 +18,11 @@ enum IndoorData {
 }
 
 export const AddSourceModal = () => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openData = useSelector((state: RootState) => state.openData);
+  console.log(openData);
+  const dispatch = useDispatch();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -38,9 +45,11 @@ export const AddSourceModal = () => {
     switch (selectedData) {
       case IndoorData.Euro:
         console.log('arsenal');
+        dispatch(addData({ name: 'jo', dataSet: 'jo' }));
         break;
       case IndoorData.Arsenal:
         console.log('arsenal');
+        dispatch(removeData({ name: 'jo' }));
         break;
       default:
         break;
