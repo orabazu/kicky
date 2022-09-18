@@ -4,6 +4,7 @@ import Meta from 'antd/lib/card/Meta';
 import Arsenal from 'assets/arsenal-2004.png';
 import Euro from 'assets/euro-2022.png';
 import StatsBomb from 'assets/stats.png';
+import { arsenalMatches } from 'const/arsenalMatches';
 import React, { useState } from 'react';
 import { FiCloud, FiHardDrive } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,13 +44,13 @@ export const AddSourceModal = () => {
 
   const importData = (selectedData: IndoorData) => {
     switch (selectedData) {
-      case IndoorData.Euro:
-        console.log('arsenal');
-        dispatch(addData({ name: 'jo', dataSet: 'jo' }));
-        break;
       case IndoorData.Arsenal:
         console.log('arsenal');
-        dispatch(removeData({ name: 'jo' }));
+        dispatch(addData({ name: 'arsenal', dataSet: arsenalMatches }));
+        break;
+      case IndoorData.Euro:
+        console.log('euro');
+        dispatch(removeData({ name: 'arsenal' }));
         break;
       default:
         break;

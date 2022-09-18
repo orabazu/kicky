@@ -22,8 +22,8 @@ export const openDataSlice = createSlice({
       };
     },
     removeData: (state, action: PayloadAction<{ name: string }>) => {
-      const stateCopy = { ...state };
-      delete stateCopy?.data[action.payload.name];
+      const stateCopy = { ...state.data };
+      delete stateCopy?.[action.payload.name];
       state.data = {
         ...stateCopy,
       };
