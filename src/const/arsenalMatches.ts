@@ -2658,3 +2658,5 @@ export const arsenalMatches = [
     },
   },
 ];
+
+export type Match = typeof arsenalMatches[0];

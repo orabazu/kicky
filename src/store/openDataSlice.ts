@@ -18,7 +18,7 @@ export const openDataSlice = createSlice({
     addData: (state, action: PayloadAction<{ name: string; dataSet: any }>) => {
       state.data = {
         ...state.data,
-        [action.payload.name]: { ...action.payload.dataSet },
+        [action.payload.name]: [...action.payload.dataSet],
       };
     },
     removeData: (state, action: PayloadAction<{ name: string }>) => {
