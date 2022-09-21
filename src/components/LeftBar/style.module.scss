@@ -15,10 +15,40 @@
 
 // fixed siderbar footer
 .LeftBarFooter {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 30px 20px;
+  padding: 0px 20px 40px;
   text-align: center;
   margin-left: -20px;
+  width: 40%;
+  background: #1b1b22;
+}
+
+.DataCardHeading {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+
+  & > :global(svg) {
+    font-size: 20px;
+    background: #37003c;
+    width: 26px;
+    border-radius: 2px;
+  }
+}
+
+.DataCardBody {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 16px;
+  justify-content: space-between;
+}
+
+.DataCardExpand {
+  > svg {
+    font-size: 20px;
+  }
 }

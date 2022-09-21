@@ -1,7 +1,8 @@
-import { Tabs } from 'antd';
+import { Card, Tabs } from 'antd';
 import { Match } from 'const/arsenalMatches';
 import React from 'react';
-import { FiDatabase, FiMap } from 'react-icons/fi';
+import { FiChevronRight, FiDatabase, FiMap } from 'react-icons/fi';
+import { GiSoccerField } from 'react-icons/gi';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
@@ -11,49 +12,50 @@ import styles from './style.module.scss';
 export const LeftBar = () => {
   const openData = useSelector((state: RootState) => state.openData.data);
   const dataKeys = Object.keys(openData);
+  const [isGamesOpen, setIsGamesOpen] = React.useState<{ [x: string]: boolean }>({});
+
+  const toggleGames = (key: string) => {
+    setIsGamesOpen({
+      ...isGamesOpen,
+      [key]: !isGamesOpen[key],
+    });
+  };
 
   const renderOpenData = () => (
     <div>
-      <div>
-        <div>
-          <FiDatabase className={styles.OpenDataIcon} />
-          <span>Open Data </span>
-        </div>
-        <div>
-          {dataKeys.length ? (
-            dataKeys.map((key) => {
-              console.log(openData, key, openData[key]);
-              return (
-                openData[key] &&
-                openData[key].map((data: Match) => (
-                  <MatchResult
-                    key={data.match_id}
-                    homeTeamName={data.home_team.home_team_name}
-                    awayTeamName={data.away_team.away_team_name}
-                    homeScore={data.home_score}
-                    awayScore={data.away_score}
-                    date={data.match_date}
-                    matchId={data.match_id}
-                    stadium={data.stadium.name}
-                  />
-                  // <div className={styles.OpenDataItem} key={data.match_id}>
-                  //   <span className={styles.OpenDataItemName}>
-                  //     {data.home_team.home_team_name}
-                  //   </span>
-                  //   <span className={styles.OpenDataItemSize}>
-                  //     {data.away_team.away_team_name}
-                  //   </span>
-                  // </div>
-                ))
-              );
-            })
-          ) : (
-            <div>
-              <span>No data</span>
+      {dataKeys.map((key) => (
+        <>
+          <Card onClick={() => toggleGames(key)} key={key}>
+            <div className={styles.DataCardHeading}>
+              <GiSoccerField /> Results
             </div>
-          )}
-        </div>
-      </div>
+            <div className={styles.DataCardBody}>
+              <div>
+                <span>{key.toUpperCase()} - </span>
+                <span>{openData[key].length} games</span>
+              </div>
+              <div className={styles.DataCardExpand}>
+                <FiChevronRight />
+              </div>
+            </div>
+          </Card>
+
+          {openData[key] &&
+            isGamesOpen[key] &&
+            openData[key].map((data: Match) => (
+              <MatchResult
+                key={data.match_id}
+                homeTeamName={data.home_team.home_team_name}
+                awayTeamName={data.away_team.away_team_name}
+                homeScore={data.home_score}
+                awayScore={data.away_score}
+                date={data.match_date}
+                matchId={data.match_id}
+                stadium={data.stadium.name}
+              />
+            ))}
+        </>
+      ))}
     </div>
   );
 
