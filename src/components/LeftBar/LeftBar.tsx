@@ -1,7 +1,7 @@
-import { Card, Tabs } from 'antd';
+import { Button, Card, Tabs } from 'antd';
 import { Match } from 'const/arsenalMatches';
 import React from 'react';
-import { FiChevronRight, FiDatabase, FiMap } from 'react-icons/fi';
+import { FiChevronRight, FiChevronsLeft, FiDatabase, FiMap } from 'react-icons/fi';
 import { GiSoccerField } from 'react-icons/gi';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
@@ -25,20 +25,34 @@ export const LeftBar = () => {
     <div>
       {dataKeys.map((key) => (
         <>
-          <Card onClick={() => toggleGames(key)} key={key}>
-            <div className={styles.DataCardHeading}>
-              <GiSoccerField /> Results
-            </div>
-            <div className={styles.DataCardBody}>
-              <div>
-                <span>{key.toUpperCase()} - </span>
-                <span>{openData[key].length} games</span>
+          {!isGamesOpen[key] && (
+            <Card onClick={() => toggleGames(key)} key={key} className={styles.DataCard}>
+              <div className={styles.DataCardHeading}>
+                <GiSoccerField /> Results
               </div>
-              <div className={styles.DataCardExpand}>
-                <FiChevronRight />
+              <div className={styles.DataCardBody}>
+                <div>
+                  <span>{key.toUpperCase()} - </span>
+                  <span>{openData[key].length} games</span>
+                </div>
+                <div className={styles.DataCardExpand}>
+                  <FiChevronRight />
+                </div>
               </div>
+            </Card>
+          )}
+
+          {isGamesOpen[key] && (
+            <div>
+              <Button
+                onClick={() => toggleGames(key)}
+                type="link"
+                icon={<FiChevronsLeft />}
+              >
+                Back
+              </Button>
             </div>
-          </Card>
+          )}
 
           {openData[key] &&
             isGamesOpen[key] &&

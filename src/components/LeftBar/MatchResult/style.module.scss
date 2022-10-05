@@ -24,3 +24,10 @@
   text-align: center;
   line-height: 20px;
 }
+
+.GoTo {
+  :global(.ant-btn) {
+    height: 20px;
+    padding: 0 8px;
+  }
+}

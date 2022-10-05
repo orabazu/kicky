@@ -55,6 +55,7 @@ export const AddSourceModal = () => {
       default:
         break;
     }
+    setIsModalOpen(false);
   };
 
   const renderOpenData = () => (
