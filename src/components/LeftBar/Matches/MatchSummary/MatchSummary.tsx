@@ -11,7 +11,14 @@ type MatchSummaryProps = {
   homeScore: number;
   awayScore: number;
   date: string;
-  stadium: string;
+  stadium: {
+    id: number;
+    name: string;
+    country: {
+      id: number;
+      name: string;
+    };
+  };
   matchId: number;
 };
 
@@ -21,6 +28,7 @@ export const MatchSummary: React.FC<MatchSummaryProps> = ({
   homeScore,
   awayScore,
   matchId,
+  stadium,
 }) => {
   return (
     <Card>
@@ -37,7 +45,7 @@ export const MatchSummary: React.FC<MatchSummaryProps> = ({
         </span>
         <span className={styles.GoTo}>
           <Button type="link">
-            <Link to={`${matchId}`}>
+            <Link to={`${matchId}?stadiumId=${stadium.id}`}>
               <FiChevronRight />
             </Link>
           </Button>

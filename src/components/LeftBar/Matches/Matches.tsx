@@ -27,7 +27,7 @@ export const Matches: React.FC<MatchesProps> = () => {
           awayScore={match.away_score}
           date={match.match_date}
           matchId={match.match_id}
-          stadium={match.stadium.name}
+          stadium={match.stadium}
         />
       ))}
     </>

@@ -37,6 +37,11 @@ type PlayPattern = {
   name: string;
 };
 
+type EventRequestType = {
+  matchId: string;
+  stadiumId: string;
+};
+
 // Define a service using a base URL and expected endpoints
 export const eventDataApi = createApi({
   reducerPath: 'eventDataApi',
@@ -44,13 +49,17 @@ export const eventDataApi = createApi({
     baseUrl: 'https://raw.githubusercontent.com/statsbomb/open-data/master/data/',
   }),
   endpoints: (builder) => ({
-    getEventByMatchId: builder.query<Event[], string>({
-      query: (id) => `events/${id}.json`,
-      transformResponse: (response) => {
+    getEventByMatchId: builder.query<Event[], EventRequestType>({
+      query: ({ matchId }) => `events/${matchId}.json`,
+      transformResponse: (response, _, arg) => {
         const events = response as Event[];
         events?.forEach((event) => {
           if (event.location) {
-            event.location = getGeoCoords(event.location[0], event.location[1], 1000243);
+            event.location = getGeoCoords(
+              event.location[0],
+              event.location[1],
+              Number(arg.stadiumId),
+            );
           }
         });
         return events;

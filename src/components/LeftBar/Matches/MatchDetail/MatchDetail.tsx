@@ -1,9 +1,12 @@
 import { Tabs } from 'antd';
+import { stadiums } from 'const/stadiumCoords';
 import React, { useEffect } from 'react';
 import { GiSoccerField } from 'react-icons/gi';
 import { HiUser, HiUserGroup } from 'react-icons/hi';
-import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useLazyGetEventByMatchIdQuery } from 'store/eventDataApi';
+import { setMapCenter } from 'store/mapSlice';
 
 import { MatchDetailPlayers } from './MatchDetailPlayers';
 import { MatchDetailSummary } from './MatchDetailSummary';
@@ -11,23 +14,35 @@ import { MatchDetailTeam } from './MatchDetailTeam';
 
 export const MatchDetail = () => {
   const params = useParams();
+  const [searchParams] = useSearchParams();
   const [fetchEventData, { data, isFetching }] = useLazyGetEventByMatchIdQuery();
+  const dispatch = useDispatch();
 
-  const getMatchData = async (matchId: string) => {
-    fetchEventData(matchId);
+  const stadiumId = searchParams.get('stadiumId');
+
+  const getMatchData = async (matchId: string, stadiumId: string) => {
+    fetchEventData({ matchId, stadiumId });
   };
 
   useEffect(() => {
-    if (params.matchId) {
-      getMatchData(params.matchId);
+    if (params.matchId && stadiumId) {
+      getMatchData(params.matchId, stadiumId);
     }
-  }, [params.matchId]);
+  }, [params.matchId, stadiumId]);
 
   useEffect(() => {
     console.log(data);
     if (data) {
       console.log({ converted: data });
     }
+    const stadium = stadiums.find((stadium) => stadium.id === parseInt(stadiumId!));
+
+    dispatch(
+      setMapCenter({
+        lat: stadium?.coords.bottomLeft[0]!,
+        lng: stadium?.coords.bottomLeft[1]!,
+      }),
+    );
   }, [data]);
 
   console.log(data, isFetching);

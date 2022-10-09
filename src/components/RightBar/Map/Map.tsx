@@ -1,11 +1,15 @@
 import { sampleData } from 'const/sampleData';
 import useMaps from 'hooks/useMaps';
 import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
 
 import styles from './style.module.scss';
 
 export const Map = () => {
   const { gmaps } = useMaps();
+  const mapCenter = useSelector((state: RootState) => state.map.mapCenter);
+  const mapInstance = useSelector((state: RootState) => state.map.mapInstance);
 
   // 54.57861443976441, -1.217597210421821 riverside stadium
 
@@ -29,19 +33,41 @@ export const Map = () => {
         console.log('click', e.latLng.lat(), e.latLng.lng());
       });
 
-      sampleData.forEach((data) => {
-        // eslint-disable-next-line no-unused-vars
-        const marker = new gmaps.maps.Marker({
-          position: {
-            lat: data.startX,
-            lng: data.startY,
-          },
-          map,
-          title: data.passer.toString(),
+      if (mapCenter) {
+        console.log('map center', mapCenter);
+
+        map.setCenter({
+          lat: mapCenter.lat,
+          lng: mapCenter.lng,
         });
+      }
+
+      // dispatch(setMapInstance({ mapInstance: map }));
+
+      // sampleData.forEach((data) => {
+      //   // eslint-disable-next-line no-unused-vars
+      //   const marker = new gmaps.maps.Marker({
+      //     position: {
+      //       lat: data.startX,
+      //       lng: data.startY,
+      //     },
+      //     map,
+      //     title: data.passer.toString(),
+      //   });
+      // });
+    }
+  }, [gmaps, mapCenter]);
+
+  useEffect(() => {
+    console.log('map center', mapCenter);
+    console.log('map mapInstance', mapInstance);
+    if (mapInstance && mapCenter) {
+      mapInstance.setCenter({
+        lat: mapCenter.lat,
+        lng: mapCenter.lng,
       });
     }
-  }, [gmaps]);
+  }, [mapCenter, mapInstance]);
   return (
     <div id="map" className={styles.Map}>
       Map

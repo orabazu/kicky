@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 import { eventDataApi } from './eventDataApi';
+import mapReducer from './mapSlice';
 import openDataReducer from './openDataSlice';
 
 export const store = configureStore({
   reducer: {
+    map: mapReducer,
     openData: openDataReducer,
     [eventDataApi.reducerPath]: eventDataApi.reducer,
   },
