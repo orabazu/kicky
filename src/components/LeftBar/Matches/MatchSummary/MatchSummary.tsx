@@ -5,7 +5,7 @@ import { useLazyGetEventByMatchIdQuery } from 'store/eventDataApi';
 
 import styles from './style.module.scss';
 
-type MatchResultProps = {
+type MatchSummaryProps = {
   homeTeamName: string;
   awayTeamName: string;
   homeScore: number;
@@ -15,7 +15,7 @@ type MatchResultProps = {
   matchId: number;
 };
 
-export const MatchResult: React.FC<MatchResultProps> = ({
+export const MatchSummary: React.FC<MatchSummaryProps> = ({
   homeTeamName,
   awayTeamName,
   homeScore,

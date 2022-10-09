@@ -1,0 +1,31 @@
+.DataCard {
+  cursor: pointer;
+}
+
+.DataCardHeading {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+
+  & > :global(svg) {
+    font-size: 20px;
+    background: #37003c;
+    width: 26px;
+    border-radius: 2px;
+  }
+}
+
+.DataCardBody {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 16px;
+  justify-content: space-between;
+}
+
+.DataCardExpand {
+  > svg {
+    font-size: 20px;
+  }
+}

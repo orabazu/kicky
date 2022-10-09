@@ -1,77 +1,13 @@
-import { Button, Card, Tabs } from 'antd';
-import { Match } from 'const/arsenalMatches';
+import { Tabs } from 'antd';
 import React from 'react';
-import { FiChevronRight, FiChevronsLeft, FiDatabase, FiMap } from 'react-icons/fi';
-import { GiSoccerField } from 'react-icons/gi';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
+import { FiDatabase, FiMap } from 'react-icons/fi';
+import { Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { AddSourceModal } from './AddSourceModal/AddSourceModal';
-import { MatchResult } from './MatchResult/MatchResult';
 import styles from './style.module.scss';
 export const LeftBar = () => {
-  const openData = useSelector((state: RootState) => state.openData.data);
-  const dataKeys = Object.keys(openData);
-  const [isGamesOpen, setIsGamesOpen] = React.useState<{ [x: string]: boolean }>({});
-
-  const toggleGames = (key: string) => {
-    setIsGamesOpen({
-      ...isGamesOpen,
-      [key]: !isGamesOpen[key],
-    });
-  };
-
-  const renderOpenData = () => (
-    <div>
-      {dataKeys.map((key) => (
-        <>
-          {!isGamesOpen[key] && (
-            <Card onClick={() => toggleGames(key)} key={key} className={styles.DataCard}>
-              <div className={styles.DataCardHeading}>
-                <GiSoccerField /> Results
-              </div>
-              <div className={styles.DataCardBody}>
-                <div>
-                  <span>{key.toUpperCase()} - </span>
-                  <span>{openData[key].length} games</span>
-                </div>
-                <div className={styles.DataCardExpand}>
-                  <FiChevronRight />
-                </div>
-              </div>
-            </Card>
-          )}
-
-          {isGamesOpen[key] && (
-            <div>
-              <Button
-                onClick={() => toggleGames(key)}
-                type="link"
-                icon={<FiChevronsLeft />}
-              >
-                Back
-              </Button>
-            </div>
-          )}
-
-          {openData[key] &&
-            isGamesOpen[key] &&
-            openData[key].map((data: Match) => (
-              <MatchResult
-                key={data.match_id}
-                homeTeamName={data.home_team.home_team_name}
-                awayTeamName={data.away_team.away_team_name}
-                homeScore={data.home_score}
-                awayScore={data.away_score}
-                date={data.match_date}
-                matchId={data.match_id}
-                stadium={data.stadium.name}
-              />
-            ))}
-        </>
-      ))}
-    </div>
-  );
+  const navigate = useNavigate();
 
   const tabs = [
     {
@@ -80,8 +16,7 @@ export const LeftBar = () => {
           <FiDatabase />
         </span>
       ),
-      key: 'layers',
-      children: renderOpenData(),
+      key: 'dataset',
     },
     {
       label: (
@@ -90,13 +25,21 @@ export const LeftBar = () => {
         </span>
       ),
       key: 'map',
-      children: `Map`,
     },
   ];
 
+  const onTabsChanged = (activeTab: string) => {
+    navigate(`/analytics/${activeTab}`);
+  };
+
   return (
     <div className={styles.LeftBar}>
-      <Tabs defaultActiveKey="2" items={tabs} />
+      <Tabs
+        activeKey={window.location.href.includes('dataset') ? 'dataset' : 'map'}
+        items={tabs}
+        onChange={onTabsChanged}
+      />
+      <Outlet />
       <div className={styles.LeftBarFooter}>
         <AddSourceModal />
       </div>
