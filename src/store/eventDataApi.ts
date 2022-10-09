@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { getGeoCoords } from 'src/utils';
 
 export type Event = {
   id: string;
@@ -14,7 +15,7 @@ export type Event = {
   team: PlayPattern;
   player: PlayPattern;
   position: PlayPattern;
-  location: number[];
+  location?: number[];
   duration: number;
   under_pressure: boolean;
   related_events: string[];
@@ -45,6 +46,15 @@ export const eventDataApi = createApi({
   endpoints: (builder) => ({
     getEventByMatchId: builder.query<Event[], string>({
       query: (id) => `events/${id}.json`,
+      transformResponse: (response) => {
+        const events = response as Event[];
+        events?.forEach((event) => {
+          if (event.location) {
+            event.location = getGeoCoords(event.location[0], event.location[1], 1000243);
+          }
+        });
+        return events;
+      },
     }),
   }),
 });

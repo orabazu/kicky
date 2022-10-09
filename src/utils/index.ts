@@ -1,33 +1,30 @@
-export const getRotatedCoords = (passNetworkData: any) => {
-  const rotationinRadians = 89 * (Math.PI / 180);
-  // const X = x * Math.cos(0.5) +  y * Math.sin(0.5);
-  // const Y = -x * Math.sin(0.5) + y * Math.cos(0.5);
-  const rotatedPassdata = passNetworkData.map((d) => ({
-    ...d,
-    startX:
-      (d.startX * Math.cos(rotationinRadians) + d.startY * Math.sin(rotationinRadians)) *
-        0.0000085 +
-      51.5556764,
-    startY:
-      (-d.startX * Math.sin(rotationinRadians) + d.startY * Math.cos(rotationinRadians)) *
-        -0.00001 -
-      0.2803755,
-    endX:
-      (d.endX * Math.cos(rotationinRadians) + d.endY * Math.sin(rotationinRadians)) *
-        0.0000085 +
-      51.5556764,
-    endY:
-      (-d.endX * Math.sin(rotationinRadians) + d.endY * Math.cos(rotationinRadians)) *
-        -0.00001 -
-      0.2803755,
-  }));
-  console.log(rotatedPassdata);
+import { stadiums } from '../const/stadiumCoords';
+
+export const getGeoCoords = (pixelX: number, pixelY: number, stadiumId: number) => {
+  const homeStadium = stadiums.find((stadium) => stadium.id === stadiumId);
+  const { bottomLeft, bottomRight } = homeStadium!.coords;
+
+  const [bottomRightX, bottomRightY] = bottomRight;
+  const [bottomLeftX, bottomLeftY] = bottomLeft;
+
+  const rotationinRadians = getAngle(
+    bottomLeftX,
+    bottomLeftY,
+    bottomRightX,
+    bottomRightY,
+  );
+  const convertedX =
+    (pixelX * Math.cos(rotationinRadians) + pixelY * Math.sin(rotationinRadians)) *
+      0.0000085 +
+    bottomRightX;
+  const convertedY =
+    (-pixelX * Math.sin(rotationinRadians) + pixelY * Math.cos(rotationinRadians)) *
+      -0.00001 +
+    bottomRightY;
+  return [convertedX, convertedY];
 };
 
-// // converts image coordinates to lat long
-// export const getLatLong = (x: number, y: number) => {
-//   const rotationinRadians = 89 * (Math.PI / 180);
-//   const lat = (x * Math.cos(rotationinRadians) + y * Math.sin(rotationinRadians)) * 0.0000085 + 51.5556764;
-//   const long = (-x * Math.sin(rotationinRadians) + y * Math.cos(rotationinRadians)) * -0.00001 - 0.2803755;
-//   return { lat, long };
-// }
+// calculate rotation angle
+function getAngle(x1: number, y1: number, x2: number, y2: number) {
+  return Math.atan2(y2 - y1, x2 - x1);
+}

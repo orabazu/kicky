@@ -22,6 +22,14 @@ export const MatchDetail = () => {
       getMatchData(params.matchId);
     }
   }, [params.matchId]);
+
+  useEffect(() => {
+    console.log(data);
+    if (data) {
+      console.log({ converted: data });
+    }
+  }, [data]);
+
   console.log(data, isFetching);
 
   const tabs = [
