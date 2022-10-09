@@ -1,7 +1,7 @@
 import { Button, Card } from 'antd';
 import React from 'react';
 import { FiChevronRight } from 'react-icons/fi';
-import { useLazyGetEventByMatchIdQuery } from 'store/eventDataApi';
+import { Link } from 'react-router-dom';
 
 import styles from './style.module.scss';
 
@@ -22,13 +22,6 @@ export const MatchSummary: React.FC<MatchSummaryProps> = ({
   awayScore,
   matchId,
 }) => {
-  const [fetchEventData, { data, isFetching }] = useLazyGetEventByMatchIdQuery();
-
-  const getMatchData = async () => {
-    fetchEventData(matchId.toString());
-  };
-  console.log(data, isFetching);
-
   return (
     <Card>
       <div className={styles.MatchResult}>
@@ -43,8 +36,10 @@ export const MatchSummary: React.FC<MatchSummaryProps> = ({
           {awayTeamName.substring(0, 3).toLocaleUpperCase()}
         </span>
         <span className={styles.GoTo}>
-          <Button onClick={getMatchData} type="link">
-            <FiChevronRight />
+          <Button type="link">
+            <Link to={`${matchId}`}>
+              <FiChevronRight />
+            </Link>
           </Button>
         </span>
       </div>

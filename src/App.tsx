@@ -2,6 +2,7 @@ import './App.less';
 
 import { Header } from 'components/Header';
 import { DataSets } from 'components/LeftBar/DataSets/DataSets';
+import { MatchDetail } from 'components/LeftBar/Matches/MatchDetail';
 import { Matches } from 'components/LeftBar/Matches/Matches';
 import React from 'react';
 import { /*Link, Outlet,*/ Route, Routes } from 'react-router-dom';
@@ -22,7 +23,7 @@ function App() {
         <Route path="analytics" element={<Analytics />}>
           <Route path="dataset" element={<DataSets />}></Route>
           <Route path="dataset/:datasetId/matches" element={<Matches />} />
-          <Route path="dataset/:datasetId/matches/:matchId" element={'<Match />'} />
+          <Route path="dataset/:datasetId/matches/:matchId" element={<MatchDetail />} />
           <Route path="map" element={'<Map />'} />
         </Route>
         {/* <Route path="user" element={<User />} /> */}
