@@ -15,12 +15,15 @@ export const getGeoCoords = (pixelX: number, pixelY: number, stadiumId: number) 
   );
   const convertedX =
     (pixelX * Math.cos(rotationinRadians) + pixelY * Math.sin(rotationinRadians)) *
-      0.0000085 +
+      -0.000009 +
     bottomRightX;
   const convertedY =
-    (-pixelX * Math.sin(rotationinRadians) + pixelY * Math.cos(rotationinRadians)) *
-      -0.00001 +
+    (pixelX * -Math.sin(rotationinRadians) + pixelY * Math.cos(rotationinRadians)) *
+      0.000014 +
     bottomRightY;
+
+  console.log(rotationinRadians);
+
   return [convertedX, convertedY];
 };
 

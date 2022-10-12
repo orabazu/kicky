@@ -1,4 +1,5 @@
 import { sampleData } from 'const/sampleData';
+import { google } from 'google-maps';
 import useMaps from 'hooks/useMaps';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -9,16 +10,17 @@ import styles from './style.module.scss';
 export const Map = () => {
   const { gmaps } = useMaps();
   const mapCenter = useSelector((state: RootState) => state.map.mapCenter);
-  const mapInstance = useSelector((state: RootState) => state.map.mapInstance);
+  const passes = useSelector((state: RootState) => state.events.passes);
+  const [map, setMap] = React.useState<google.maps.Map>();
 
   // 54.57861443976441, -1.217597210421821 riverside stadium
 
   useEffect(() => {
-    if (gmaps) {
+    if (gmaps && !map) {
       console.log('google', gmaps);
       console.log('sample', sampleData);
       // eslint-disable-next-line no-unused-vars
-      const map = new gmaps.maps.Map(document.getElementById('map')!, {
+      const mapInstance = new gmaps.maps.Map(document.getElementById('map')!, {
         center: { lng: -0.2805, lat: 51.55637 },
         zoom: 17,
         heading: 320,
@@ -27,22 +29,13 @@ export const Map = () => {
         mapId: 'fb9023c973f94f3a',
       });
 
-      map.addListener('click', (e) => {
+      mapInstance.addListener('click', (e) => {
         // 3 seconds after the center of the map has changed, pan back to the
         // marker.
         console.log('click', e.latLng.lat(), e.latLng.lng());
       });
 
-      if (mapCenter) {
-        console.log('map center', mapCenter);
-
-        map.setCenter({
-          lat: mapCenter.lat,
-          lng: mapCenter.lng,
-        });
-      }
-
-      // dispatch(setMapInstance({ mapInstance: map }));
+      setMap(mapInstance);
 
       // sampleData.forEach((data) => {
       //   // eslint-disable-next-line no-unused-vars
@@ -59,15 +52,35 @@ export const Map = () => {
   }, [gmaps, mapCenter]);
 
   useEffect(() => {
-    console.log('map center', mapCenter);
-    console.log('map mapInstance', mapInstance);
-    if (mapInstance && mapCenter) {
-      mapInstance.setCenter({
-        lat: mapCenter.lat,
-        lng: mapCenter.lng,
+    if (map) {
+      map.setCenter(mapCenter);
+    }
+  }, [mapCenter, map]);
+
+  useEffect(() => {
+    if (map && gmaps) {
+      passes.forEach((pass) => {
+        // eslint-disable-next-line no-unused-vars
+        const marker = new gmaps.maps.Polyline({
+          path: [
+            {
+              lat: pass.startX,
+              lng: pass.startY,
+            },
+            {
+              lat: pass.endX,
+              lng: pass.endY,
+            },
+          ],
+          map,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+        });
       });
     }
-  }, [mapCenter, mapInstance]);
+  }, [passes, map]);
+
   return (
     <div id="map" className={styles.Map}>
       Map

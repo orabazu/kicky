@@ -1,5 +1,19 @@
 export const stadiums = [
   {
+    id: 1000243,
+    name: 'Wembley Stadium',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      bottomLeft: [51.55634956972751, -0.2804925473693265],
+      bottomRight: [51.55634728033311, -0.27877173458054294],
+      // bottomLeft: [51.55570867010285, -0.2803537160338203],
+      // bottomRight: [51.5556883621325, -0.2787240083325969],
+    },
+  },
+  {
     id: 217,
     name: 'Molineux Stadium',
     country: {
@@ -11,18 +25,18 @@ export const stadiums = [
       bottomRight: [52.590739278703396, -2.1300501861465864],
     },
   },
-  {
-    id: 1000243,
-    name: 'Highbury Stadium',
-    country: {
-      id: 68,
-      name: 'England',
-    },
-    coords: {
-      bottomLeft: [52.58980728266269, -2.1297579524204737],
-      bottomRight: [51.5556764, 0.2803755],
-    },
-  },
+  // {
+  //   id: 1000243,
+  //   name: 'Highbury Stadium',
+  //   country: {
+  //     id: 68,
+  //     name: 'England',
+  //   },
+  //   coords: {
+  //     bottomLeft: [52.58980728266269, -2.1297579524204737],
+  //     bottomRight: [51.5556764, 0.2803755],
+  //   },
+  // },
   {
     id: 214,
     name: 'Riverside Stadium ',
@@ -55,8 +69,11 @@ export const stadiums = [
       name: 'England',
     },
     coords: {
-      bottomLeft: [53.43029214327109, -2.960898313194552],
-      bottomRight: [53.430989004786625, -2.9599304363419527],
+      //  53.430270283558755 -2.96085925126101
+      // bottomLeft: [53.430270283558, -2.960859251261],
+      // bottomRight: [53.43098001966, -2.959896040909],
+      bottomLeft: [53.43070219927581, -2.961746999896353],
+      bottomRight: [53.4313855348529, -2.9607410518383803],
     },
   },
   {
@@ -103,8 +120,10 @@ export const stadiums = [
       name: 'England',
     },
     coords: {
-      bottomLeft: [53.480866858661194, -2.1921806155282613],
-      bottomRight: [53.481792190996416, -2.1924682040002765],
+      // bottomLeft: [53.480866858661194, -2.1921806155282613],
+      // bottomRight: [53.481792190996416, -2.1924682040002765],
+      bottomLeft: [53.48274822935525, -2.1997342486197025],
+      bottomRight: [53.4836784251439, -2.2000092305876384],
     },
   },
   {

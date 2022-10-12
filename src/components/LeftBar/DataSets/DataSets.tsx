@@ -1,6 +1,6 @@
-import { Button, Card } from 'antd';
+import { Card } from 'antd';
 import React from 'react';
-import { FiChevronRight, FiChevronsLeft } from 'react-icons/fi';
+import { FiChevronRight } from 'react-icons/fi';
 import { GiSoccerField } from 'react-icons/gi';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ export const DataSets = () => {
   const dataKeys = Object.keys(openData);
   const navigate = useNavigate();
 
-  const navigateGame = (key) => {
+  const navigateGame = (key: string) => {
     navigate(`/analytics/dataset/${key}/matches`);
   };
   return (
@@ -22,15 +22,6 @@ export const DataSets = () => {
         'no data'
       ) : (
         <>
-          <div>
-            <Button
-              onClick={() => navigate(`/analytics/dataset/`)}
-              type="link"
-              icon={<FiChevronsLeft />}
-            >
-              Back
-            </Button>
-          </div>
           <div>
             {dataKeys.map((key) => (
               <Card

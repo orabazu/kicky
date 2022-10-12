@@ -61,6 +61,13 @@ export const eventDataApi = createApi({
               Number(arg.stadiumId),
             );
           }
+          if (event.pass?.end_location) {
+            event.pass.end_location = getGeoCoords(
+              event.pass.end_location[0],
+              event.pass.end_location[1],
+              Number(arg.stadiumId),
+            );
+          }
         });
         return events;
       },
@@ -68,6 +75,4 @@ export const eventDataApi = createApi({
   }),
 });
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
 export const { useGetEventByMatchIdQuery, useLazyGetEventByMatchIdQuery } = eventDataApi;

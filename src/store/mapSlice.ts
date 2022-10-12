@@ -35,12 +35,9 @@ export const mapSlice = createSlice({
         lng: action.payload.lng,
       };
     },
-    setMapInstance: (state, action: PayloadAction<{ mapInstance: google.maps.Map }>) => {
-      state.mapInstance = action.payload.mapInstance;
-    },
   },
 });
 
-export const { setMapCenter, setMapInstance } = mapSlice.actions;
+export const { setMapCenter } = mapSlice.actions;
 
 export default mapSlice.reducer;

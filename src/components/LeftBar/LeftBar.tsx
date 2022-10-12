@@ -1,6 +1,7 @@
-import { Tabs } from 'antd';
+import { Button, Tabs } from 'antd';
 import React from 'react';
 import { FiDatabase, FiMap } from 'react-icons/fi';
+import { FiChevronsLeft } from 'react-icons/fi';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,6 +40,11 @@ export const LeftBar = () => {
         items={tabs}
         onChange={onTabsChanged}
       />
+      <div>
+        <Button onClick={() => navigate(-1)} type="link" icon={<FiChevronsLeft />}>
+          Back
+        </Button>
+      </div>
       <Outlet />
       <div className={styles.LeftBarFooter}>
         <AddSourceModal />

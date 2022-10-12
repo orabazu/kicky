@@ -1,6 +1,7 @@
-import { Tabs } from 'antd';
+import { Segmented, Tabs } from 'antd';
+import { SegmentedValue } from 'antd/lib/segmented';
 import { stadiums } from 'const/stadiumCoords';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GiSoccerField } from 'react-icons/gi';
 import { HiUser, HiUserGroup } from 'react-icons/hi';
 import { useDispatch } from 'react-redux';
@@ -17,8 +18,16 @@ export const MatchDetail = () => {
   const [searchParams] = useSearchParams();
   const [fetchEventData, { data, isFetching }] = useLazyGetEventByMatchIdQuery();
   const dispatch = useDispatch();
-
   const stadiumId = searchParams.get('stadiumId');
+
+  const [isAway, setIsAway] = useState(false);
+  const [teams, setTeams] = useState<{
+    home?: number;
+    away?: number;
+  }>({
+    home: undefined,
+    away: undefined,
+  });
 
   const getMatchData = async (matchId: string, stadiumId: string) => {
     fetchEventData({ matchId, stadiumId });
@@ -43,9 +52,17 @@ export const MatchDetail = () => {
         lng: stadium?.coords.bottomLeft[1]!,
       }),
     );
+    setTeams({
+      home: data?.[0].team.id,
+      away: data?.[1].team.id,
+    });
   }, [data]);
 
   console.log(data, isFetching);
+
+  const onCurrentTeamSelected = (val: SegmentedValue) => {
+    setIsAway(val === 'Away');
+  };
 
   const tabs = [
     {
@@ -55,7 +72,7 @@ export const MatchDetail = () => {
         </span>
       ),
       key: 'teams',
-      children: <MatchDetailTeam />,
+      children: <MatchDetailTeam matchData={data} isAway={isAway} teams={teams} />,
     },
     {
       label: (
@@ -79,7 +96,14 @@ export const MatchDetail = () => {
 
   return (
     <>
-      <h3>MatchDetail</h3>
+      <div>
+        <h3>MatchDetail</h3>
+        <Segmented
+          options={['Home', 'Away']}
+          onChange={onCurrentTeamSelected}
+          style={{ textAlign: 'center' }}
+        />
+      </div>
       <Tabs items={tabs} defaultActiveKey="1" />
     </>
   );
