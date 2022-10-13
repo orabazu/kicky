@@ -1,13 +1,19 @@
+/* eslint-disable no-unused-vars */
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { google } from 'google-maps';
+
+export enum LayerTypes {
+  Pass = 'pass',
+}
 
 export interface MapState {
   mapCenter: {
     lat: number;
     lng: number;
   };
-  mapInstance: google.maps.Map | null;
+  layers: {
+    [key in LayerTypes]: boolean;
+  };
 }
 
 const initialState: MapState = {
@@ -15,7 +21,9 @@ const initialState: MapState = {
     lng: -0.2805,
     lat: 51.55637,
   },
-  mapInstance: null,
+  layers: {
+    [LayerTypes.Pass]: false,
+  },
 };
 
 export const mapSlice = createSlice({
@@ -35,9 +43,12 @@ export const mapSlice = createSlice({
         lng: action.payload.lng,
       };
     },
+    toggleLayer: (state, action: PayloadAction<LayerTypes>) => {
+      state.layers[action.payload] = !state.layers[action.payload];
+    },
   },
 });
 
-export const { setMapCenter } = mapSlice.actions;
+export const { setMapCenter, toggleLayer } = mapSlice.actions;
 
 export default mapSlice.reducer;

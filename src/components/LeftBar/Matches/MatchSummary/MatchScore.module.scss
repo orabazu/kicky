@@ -1,0 +1,19 @@
+.Score {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 6px;
+  align-items: center;
+}
+
+.TeamScore {
+  background: #37003c;
+  color: #fff;
+  padding: 6px;
+  padding: 0;
+  height: 20px;
+  font-size: 12px;
+  min-width: 20px;
+  text-align: center;
+  line-height: 20px;
+}

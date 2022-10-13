@@ -96,8 +96,11 @@ export const MatchDetail = () => {
 
   return (
     <>
-      <div>
-        <h3>MatchDetail</h3>
+      <div className="flex space-between">
+        <h3>
+          {data?.[0].team.name.substring(0, 3).toLocaleUpperCase()} -{' '}
+          {data?.[1].team.name.substring(0, 3).toLocaleUpperCase()}
+        </h3>
         <Segmented
           options={['Home', 'Away']}
           onChange={onCurrentTeamSelected}

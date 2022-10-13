@@ -12,6 +12,7 @@ export type PassType = {
   passerName: string;
   recipient: number;
   type: string;
+  height: number;
 };
 
 export interface MapState {

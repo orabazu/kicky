@@ -3,6 +3,7 @@ import React from 'react';
 import { FiChevronRight } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
+import { MatchScore } from './MatchScore';
 import styles from './style.module.scss';
 
 type MatchSummaryProps = {
@@ -33,16 +34,12 @@ export const MatchSummary: React.FC<MatchSummaryProps> = ({
   return (
     <Card>
       <div className={styles.MatchResult}>
-        <span className={styles.TeamName}>
-          {homeTeamName.substring(0, 3).toLocaleUpperCase()}
-        </span>
-        <div className={styles.Score}>
-          <div className={styles.TeamScore}>{homeScore}</div>
-          <span className={styles.TeamScore}>{awayScore}</span>
-        </div>
-        <span className={styles.TeamName}>
-          {awayTeamName.substring(0, 3).toLocaleUpperCase()}
-        </span>
+        <MatchScore
+          awayScore={awayScore}
+          homeScore={homeScore}
+          awayTeamName={awayTeamName}
+          homeTeamName={homeTeamName}
+        />
         <span className={styles.GoTo}>
           <Button type="link">
             <Link to={`${matchId}?stadiumId=${stadium.id}`}>

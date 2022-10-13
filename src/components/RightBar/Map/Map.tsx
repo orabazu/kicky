@@ -1,8 +1,11 @@
+import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { sampleData } from 'const/sampleData';
+import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import useMaps from 'hooks/useMaps';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { PassType } from 'store/eventsSlice';
 import { RootState } from 'store/store';
 
 import styles from './style.module.scss';
@@ -59,26 +62,49 @@ export const Map = () => {
 
   useEffect(() => {
     if (map && gmaps) {
-      passes.forEach((pass) => {
-        // eslint-disable-next-line no-unused-vars
-        const marker = new gmaps.maps.Polyline({
-          path: [
-            {
-              lat: pass.startX,
-              lng: pass.startY,
-            },
-            {
-              lat: pass.endX,
-              lng: pass.endY,
-            },
-          ],
-          map,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2,
-        });
+      const flightsLayer = new ArcLayer({
+        id: 'flights',
+        data: passes,
+        //@ts-ignore
+        dataTransform: (d: PassType[]) => d.filter((f) => f),
+        //@ts-ignore
+        getSourcePosition: (f: PassType) => [f.startY, f.startX], // Prague
+        //@ts-ignore
+        getTargetPosition: (f: PassType) => [f.endY, f.endX],
+        getSourceColor: [0, 128, 200],
+        //@ts-ignore
+        getTargetColor: (d: PassType) => (d.height === 1 ? [255, 0, 0] : [0, 0, 80]),
+        getWidth: 2,
+        //@ts-ignore
+        getHeight: (d: PassType) => (d.height === 1 ? 0.02 : 0.3),
       });
+
+      const overlay = new GoogleMapsOverlay({
+        layers: [flightsLayer],
+      });
+
+      overlay.setMap(map);
     }
+    //   passes.forEach((pass) => {
+    //     // eslint-disable-next-line no-unused-vars
+    //     const marker = new gmaps.maps.Polyline({
+    //       path: [
+    //         {
+    //           lat: pass.startX,
+    //           lng: pass.startY,
+    //         },
+    //         {
+    //           lat: pass.endX,
+    //           lng: pass.endY,
+    //         },
+    //       ],
+    //       map,
+    //       strokeColor: '#FF0000',
+    //       strokeOpacity: 1.0,
+    //       strokeWeight: 2,
+    //     });
+    //   });
+    // }
   }, [passes, map]);
 
   return (

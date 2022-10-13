@@ -36,15 +36,18 @@ export const LeftBar = () => {
   return (
     <div className={styles.LeftBar}>
       <Tabs
-        activeKey={window.location.href.includes('dataset') ? 'dataset' : 'map'}
         items={tabs}
         onChange={onTabsChanged}
+        activeKey={window.location.href.includes('dataset') ? 'dataset' : 'map'}
       />
-      <div>
-        <Button onClick={() => navigate(-1)} type="link" icon={<FiChevronsLeft />}>
-          Back
-        </Button>
-      </div>
+      {
+        <div>
+          <Button onClick={() => navigate(-1)} type="link" icon={<FiChevronsLeft />}>
+            Back
+          </Button>
+        </div>
+      }
+
       <Outlet />
       <div className={styles.LeftBarFooter}>
         <AddSourceModal />

@@ -1,8 +1,10 @@
-import { Space, Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import React from 'react';
+import { IoIosEye } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { Event } from 'store/eventDataApi';
 import { PassType, setPasses } from 'store/eventsSlice';
+import { LayerTypes, toggleLayer } from 'store/mapSlice';
 
 type MatchDetailTeamProps = {
   matchData?: Event[];
@@ -41,6 +43,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({ matchData }) =
           passerName: event.player?.name,
           recipient: event.pass.recipient?.id,
           type: event.type.name,
+          height: event.pass.height.id,
         });
       }
     }
@@ -52,9 +55,14 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({ matchData }) =
     getPassData(matchData);
   }
 
+  const toggle = (layerType: LayerTypes) => {
+    dispatch(toggleLayer(layerType));
+  };
+
   return (
-    <Space>
+    <div className="flex space-between">
       <Title level={5}>Passes</Title>
-    </Space>
+      <Button onClick={() => toggle(LayerTypes.Pass)} icon={<IoIosEye />} />
+    </div>
   );
 };
