@@ -14,6 +14,8 @@ export const Map = () => {
   const mapCenter = useSelector((state: RootState) => state.map.mapCenter);
   const passes = useSelector((state: RootState) => state.events.passes);
   const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
+  const isMobileMapOpen = useSelector((state: RootState) => state.map.isMobileMapOpen);
+
   const [map, setMap] = React.useState<google.maps.Map>();
   const [overlay, setOverlay] = React.useState<GoogleMapsOverlay>();
 
@@ -130,7 +132,10 @@ export const Map = () => {
   }, [isPassOverlayVisible, map]);
 
   return (
-    <div id="map" className={styles.Map}>
+    <div
+      id="map"
+      className={isMobileMapOpen ? `${styles.Map} ${styles.MapOpen}` : styles.Map}
+    >
       Map
     </div>
   );

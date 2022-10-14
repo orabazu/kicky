@@ -25,3 +25,45 @@
   width: 40%;
   background: #1b1b22;
 }
+
+@media screen and (max-width: 768px) {
+  .LeftBarFooter {
+    width: 100% !important;
+  }
+}
+
+.ToggleMap {
+  position: absolute;
+  bottom: 120px;
+  display: flex;
+  width: 100px;
+  margin: auto;
+  right: 0;
+  left: 0;
+  justify-content: center;
+  z-index: 120;
+}
+
+@media screen and (min-width: 768px) {
+  .ToggleMap {
+    display: none;
+  }
+}
+
+.ButtonLogo {
+  display: inline-flex;
+  margin-left: 10px;
+  position: relative;
+  height: 25px;
+  padding-top: 3px;
+}
+
+.ButtonWrapper {
+  display: flex;
+
+  > span {
+    display: inline-flex !important;
+    -webkit-align-self: center !important;
+    align-self: center !important;
+  }
+}

@@ -14,6 +14,7 @@ export interface MapState {
   layers: {
     [key in LayerTypes]: boolean;
   };
+  isMobileMapOpen: boolean;
 }
 
 const initialState: MapState = {
@@ -24,6 +25,7 @@ const initialState: MapState = {
   layers: {
     [LayerTypes.Pass]: true,
   },
+  isMobileMapOpen: false,
 };
 
 export const mapSlice = createSlice({
@@ -51,9 +53,12 @@ export const mapSlice = createSlice({
         [LayerTypes.Pass]: false,
       };
     },
+    toggleMobileMap: (state) => {
+      state.isMobileMapOpen = !state.isMobileMapOpen;
+    },
   },
 });
 
-export const { setMapCenter, toggleLayer } = mapSlice.actions;
+export const { setMapCenter, toggleLayer, toggleMobileMap } = mapSlice.actions;
 
 export default mapSlice.reducer;
