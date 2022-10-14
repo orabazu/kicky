@@ -22,7 +22,7 @@ const initialState: MapState = {
     lat: 51.55637,
   },
   layers: {
-    [LayerTypes.Pass]: false,
+    [LayerTypes.Pass]: true,
   },
 };
 

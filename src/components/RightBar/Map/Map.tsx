@@ -13,7 +13,9 @@ export const Map = () => {
   const { gmaps } = useMaps();
   const mapCenter = useSelector((state: RootState) => state.map.mapCenter);
   const passes = useSelector((state: RootState) => state.events.passes);
+  const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
   const [map, setMap] = React.useState<google.maps.Map>();
+  const [overlay, setOverlay] = React.useState<GoogleMapsOverlay>();
 
   // 54.57861443976441, -1.217597210421821 riverside stadium
 
@@ -85,11 +87,12 @@ export const Map = () => {
         getHeight: (d: PassType) => (d.height === 1 || d.height === 2 ? 0.02 : 0.3),
       });
 
-      const overlay = new GoogleMapsOverlay({
+      const overlayInstance = new GoogleMapsOverlay({
         layers: [flightsLayer],
       });
 
-      overlay.setMap(map);
+      overlayInstance.setMap(map);
+      setOverlay(overlayInstance);
     }
     //   passes.forEach((pass) => {
     //     // eslint-disable-next-line no-unused-vars
@@ -112,6 +115,12 @@ export const Map = () => {
     //   });
     // }
   }, [passes, map]);
+
+  useEffect(() => {
+    if (overlay) {
+      overlay.setMap(isPassOverlayVisible === false ? null : map);
+    }
+  }, [isPassOverlayVisible, map]);
 
   return (
     <div id="map" className={styles.Map}>
