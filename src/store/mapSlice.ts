@@ -46,6 +46,11 @@ export const mapSlice = createSlice({
     toggleLayer: (state, action: PayloadAction<LayerTypes>) => {
       state.layers[action.payload] = !state.layers[action.payload];
     },
+    resetAllLayers: (state) => {
+      state.layers = {
+        [LayerTypes.Pass]: false,
+      };
+    },
   },
 });
 

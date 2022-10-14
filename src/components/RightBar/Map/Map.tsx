@@ -69,6 +69,12 @@ export const Map = () => {
 
   useEffect(() => {
     if (map && gmaps) {
+      console.log(`passes`, passes);
+      if (passes && overlay) {
+        console.log(`passes`, passes);
+        overlay.setMap(null);
+      }
+
       const flightsLayer = new ArcLayer({
         id: 'flights',
         data: passes,
@@ -79,7 +85,8 @@ export const Map = () => {
         //@ts-ignore
         getTargetPosition: (f: PassType) => [f.endY, f.endX],
         //@ts-ignore
-        getSourceColor: (d: PassType) => (d.height === 1 ? [255, 0, 0] : [0, 128, 200]),
+        getSourceColor: (d: PassType) =>
+          d.height === 1 ? [255, 179, 179] : [0, 128, 200],
         //@ts-ignore
         getTargetColor: (d: PassType) => (d.height === 1 ? [255, 0, 0] : [0, 0, 80]),
         getWidth: 2,

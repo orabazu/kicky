@@ -9,16 +9,15 @@ import { RootState } from 'store/store';
 
 type MatchDetailTeamProps = {
   matchData?: Event[];
-  isAway: boolean;
-  teams: {
-    home?: number;
-    away?: number;
-  };
+  teamId?: number;
 };
 
 const { Title } = Typography;
 
-export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({ matchData }) => {
+export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({
+  matchData,
+  teamId,
+}) => {
   const dispatch = useDispatch();
   const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
 
@@ -30,8 +29,8 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({ matchData }) =
         const event = matchData[index];
         if (
           event.type.name === 'Pass' &&
-          !!event.pass.recipient?.id
-          // event.team.id == currentTeamAndEvents.teamId
+          !!event.pass.recipient?.id &&
+          event.team.id == teamId
         ) {
           passes.push({
             // startX: isAway ? mirror(event.location[0], pitch) : event.location[0],
@@ -56,19 +55,24 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({ matchData }) =
     }
 
     return [];
-  }, [matchData]);
+  }, [matchData, teamId]);
 
   useEffect(() => {
-    if (passData) {
+    if (passData.length > 0) {
       // const passes = getPassData(matchData);
       console.log('SET PASSES', passData);
-
-      dispatch(setPasses(passData));
+      if (isPassOverlayVisible) {
+        dispatch(setPasses(passData));
+      } else {
+        dispatch(setPasses([]));
+      }
+    } else {
+      dispatch(setPasses([]));
     }
-  }, [passData]);
+  }, [passData, isPassOverlayVisible]);
 
   const toggle = (layerType: LayerTypes) => {
-    dispatch(setPasses(isPassOverlayVisible ? [] : passData));
+    // dispatch(setPasses(isPassOverlayVisible ? [] : passData));
     dispatch(toggleLayer(layerType));
   };
 

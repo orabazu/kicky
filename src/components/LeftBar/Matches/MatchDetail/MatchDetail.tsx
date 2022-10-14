@@ -66,7 +66,9 @@ export const MatchDetail = () => {
         </span>
       ),
       key: 'teams',
-      children: <MatchDetailTeam matchData={data} isAway={isAway} teams={teams} />,
+      children: (
+        <MatchDetailTeam matchData={data} teamId={isAway ? teams.away : teams.home} />
+      ),
     },
     {
       label: (
