@@ -17,10 +17,6 @@ export const Header = () => {
         <div className={styles.siteHeaderButton}>Analyzer</div>
         <div className={styles.siteHeaderButton}>Discover</div>
       </div>
-      <div className={styles.section}>
-        <div className={styles.siteHeaderButton}>Settings</div>
-        <div className={styles.siteHeaderButton}>Log out</div>
-      </div>
     </div>
   );
 };
