@@ -40,10 +40,6 @@ export const MatchDetail = () => {
   }, [params.matchId, stadiumId]);
 
   useEffect(() => {
-    console.log(data);
-    if (data) {
-      console.log({ converted: data });
-    }
     const stadium = stadiums.find((stadium) => stadium.id === parseInt(stadiumId!));
 
     dispatch(
@@ -57,8 +53,6 @@ export const MatchDetail = () => {
       away: data?.[1].team.id,
     });
   }, [data]);
-
-  console.log(data, isFetching);
 
   const onCurrentTeamSelected = (val: SegmentedValue) => {
     setIsAway(val === 'Away');
@@ -107,7 +101,7 @@ export const MatchDetail = () => {
           style={{ textAlign: 'center' }}
         />
       </div>
-      <Tabs items={tabs} defaultActiveKey="1" />
+      {isFetching ? <div>Loading...</div> : <Tabs items={tabs} defaultActiveKey="1" />}
     </>
   );
 };

@@ -1,5 +1,4 @@
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
-import { sampleData } from 'const/sampleData';
 import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import useMaps from 'hooks/useMaps';
@@ -20,8 +19,13 @@ export const Map = () => {
 
   useEffect(() => {
     if (gmaps && !map) {
-      console.log('google', gmaps);
-      console.log('sample', sampleData);
+      const style = [
+        {
+          featureType: 'all',
+          elementType: 'icon',
+          stylers: [{ visibility: 'off' }],
+        },
+      ];
       // eslint-disable-next-line no-unused-vars
       const mapInstance = new gmaps.maps.Map(document.getElementById('map')!, {
         center: { lng: -0.2805, lat: 51.55637 },
@@ -32,6 +36,7 @@ export const Map = () => {
         mapId: 'fb9023c973f94f3a',
       });
 
+      mapInstance.set('styles', style);
       mapInstance.addListener('click', (e) => {
         // 3 seconds after the center of the map has changed, pan back to the
         // marker.
@@ -71,12 +76,13 @@ export const Map = () => {
         getSourcePosition: (f: PassType) => [f.startY, f.startX], // Prague
         //@ts-ignore
         getTargetPosition: (f: PassType) => [f.endY, f.endX],
-        getSourceColor: [0, 128, 200],
+        //@ts-ignore
+        getSourceColor: (d: PassType) => (d.height === 1 ? [255, 0, 0] : [0, 128, 200]),
         //@ts-ignore
         getTargetColor: (d: PassType) => (d.height === 1 ? [255, 0, 0] : [0, 0, 80]),
         getWidth: 2,
         //@ts-ignore
-        getHeight: (d: PassType) => (d.height === 1 ? 0.02 : 0.3),
+        getHeight: (d: PassType) => (d.height === 1 || d.height === 2 ? 0.02 : 0.3),
       });
 
       const overlay = new GoogleMapsOverlay({

@@ -1,5 +1,5 @@
 import { Button, Typography } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IoIosEye } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { Event } from 'store/eventDataApi';
@@ -45,15 +45,21 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({ matchData }) =
           type: event.type.name,
           height: event.pass.height.id,
         });
+        // console.log('event', event);
       }
     }
 
-    dispatch(setPasses(passes));
+    return passes;
   };
 
-  if (matchData) {
-    getPassData(matchData);
-  }
+  useEffect(() => {
+    if (matchData) {
+      const passes = getPassData(matchData);
+      console.log('SET PASSES', passes);
+
+      dispatch(setPasses(passes));
+    }
+  }, [matchData]);
 
   const toggle = (layerType: LayerTypes) => {
     dispatch(toggleLayer(layerType));

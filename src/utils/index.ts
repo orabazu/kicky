@@ -22,8 +22,6 @@ export const getGeoCoords = (pixelX: number, pixelY: number, stadiumId: number) 
       0.000014 +
     bottomRightY;
 
-  console.log(rotationinRadians);
-
   return [convertedX, convertedY];
 };
 

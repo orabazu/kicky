@@ -5,9 +5,10 @@ import Arsenal from 'assets/arsenal-2004.png';
 import Euro from 'assets/euro-2022.png';
 import StatsBomb from 'assets/stats.png';
 import { arsenalMatches } from 'const/arsenalMatches';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiCloud, FiHardDrive } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { addData, removeData } from 'store/openDataSlice';
 import { RootState } from 'store/store';
 
@@ -22,8 +23,9 @@ export const AddSourceModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openData = useSelector((state: RootState) => state.openData);
-  console.log(openData);
+  console.debug(openData);
   const dispatch = useDispatch();
+  const params = useParams();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -32,6 +34,12 @@ export const AddSourceModal = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    if (params.datasetId) {
+      dispatch(addData({ name: params.datasetId, dataSet: arsenalMatches }));
+    }
+  }, [params.datasetId]);
 
   const renderProvider = () => (
     <div className={styles.ProviderWrapper}>
@@ -45,11 +53,9 @@ export const AddSourceModal = () => {
   const importData = (selectedData: IndoorData) => {
     switch (selectedData) {
       case IndoorData.Arsenal:
-        console.log('arsenal');
         dispatch(addData({ name: 'arsenal', dataSet: arsenalMatches }));
         break;
       case IndoorData.Euro:
-        console.log('euro');
         dispatch(removeData({ name: 'arsenal' }));
         break;
       default:

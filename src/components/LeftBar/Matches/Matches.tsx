@@ -10,7 +10,6 @@ type MatchesProps = {};
 
 export const Matches: React.FC<MatchesProps> = () => {
   const params = useParams();
-  console.log(params);
 
   const matches = params.datasetId
     ? useSelector((state: RootState) => state.openData.data[params.datasetId as string])
