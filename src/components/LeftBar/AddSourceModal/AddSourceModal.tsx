@@ -66,7 +66,7 @@ export const AddSourceModal = () => {
 
   const renderOpenData = () => (
     <Row gutter={16}>
-      <Col span={12}>
+      <Col sm={24} md={12}>
         <Card hoverable cover={<img alt="example" src={Euro} />}>
           <Meta
             title="360 Data: Women’s Euro 2022"
@@ -85,7 +85,7 @@ export const AddSourceModal = () => {
           </Button>
         </Card>
       </Col>
-      <Col span={12}>
+      <Col sm={24} md={12}>
         <Card hoverable cover={<img alt="example" src={Arsenal} />}>
           <Meta
             title="The Invincibles: Arsenal’s 2003/04 Season"
@@ -151,7 +151,7 @@ export const AddSourceModal = () => {
         open={isModalOpen}
         onOk={closeModal}
         onCancel={closeModal}
-        width={`60%`}
+        style={{ top: 20, minWidth: '60%' }}
       >
         <div>
           <Tabs defaultActiveKey="2" items={tabs} />
