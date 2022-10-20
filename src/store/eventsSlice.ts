@@ -15,12 +15,20 @@ export type PassType = {
   height: number;
 };
 
+export type MovementType = {
+  path: number[][] | number[];
+  timestamps: number[];
+  players?: number[][];
+};
+
 export interface MapState {
   passes: PassType[];
+  movements: MovementType[];
 }
 
 const initialState: MapState = {
   passes: [],
+  movements: [],
 };
 
 export const eventsSlice = createSlice({
@@ -30,9 +38,12 @@ export const eventsSlice = createSlice({
     setPasses: (state, action: PayloadAction<PassType[]>) => {
       state.passes = action.payload;
     },
+    setMovements: (state, action: PayloadAction<MovementType[]>) => {
+      state.movements = action.payload;
+    },
   },
 });
 
-export const { setPasses } = eventsSlice.actions;
+export const { setPasses, setMovements } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

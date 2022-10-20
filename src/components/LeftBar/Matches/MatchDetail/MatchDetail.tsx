@@ -17,6 +17,7 @@ export const MatchDetail = () => {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const [fetchEventData, { data, isFetching }] = useLazyGetEventByMatchIdQuery();
+
   const dispatch = useDispatch();
   const stadiumId = searchParams.get('stadiumId');
 
@@ -86,7 +87,7 @@ export const MatchDetail = () => {
         </span>
       ),
       key: 'summary',
-      children: <MatchDetailSummary />,
+      children: <MatchDetailSummary matchId={params.matchId} stadiumId={stadiumId} />,
     },
   ];
 

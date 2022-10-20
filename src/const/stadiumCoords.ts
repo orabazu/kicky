@@ -14,6 +14,20 @@ export const stadiums = [
     },
   },
   {
+    id: 4666,
+    name: 'Wembley Stadium',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      bottomLeft: [51.55634956972751, -0.2804925473693265],
+      bottomRight: [51.55634728033311, -0.27877173458054294],
+      // bottomLeft: [51.55570867010285, -0.2803537160338203],
+      // bottomRight: [51.5556883621325, -0.2787240083325969],
+    },
+  },
+  {
     id: 217,
     name: 'Molineux Stadium',
     country: {

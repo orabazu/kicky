@@ -15,6 +15,8 @@ export const Matches: React.FC<MatchesProps> = () => {
     ? useSelector((state: RootState) => state.openData.data[params.datasetId as string])
     : [];
 
+  console.log(matches);
+
   return (
     <>
       {matches?.map((match: Match) => (

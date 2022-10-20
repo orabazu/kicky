@@ -5,6 +5,7 @@ import Arsenal from 'assets/arsenal-2004.png';
 import Euro from 'assets/euro-2022.png';
 import StatsBomb from 'assets/stats.png';
 import { arsenalMatches } from 'const/arsenalMatches';
+import { womenEuroMatches } from 'const/womenEuroMatches';
 import React, { useEffect, useState } from 'react';
 import { FiCloud, FiHardDrive } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,7 +38,16 @@ export const AddSourceModal = () => {
 
   useEffect(() => {
     if (params.datasetId) {
-      dispatch(addData({ name: params.datasetId, dataSet: arsenalMatches }));
+      switch (params.datasetId) {
+        case IndoorData.Arsenal.toLowerCase():
+          dispatch(addData({ name: 'arsenal', dataSet: arsenalMatches }));
+          break;
+        case IndoorData.Euro.toLowerCase():
+          dispatch(addData({ name: 'euro', dataSet: womenEuroMatches }));
+          break;
+        default:
+          break;
+      }
     }
   }, [params.datasetId]);
 
@@ -56,7 +66,7 @@ export const AddSourceModal = () => {
         dispatch(addData({ name: 'arsenal', dataSet: arsenalMatches }));
         break;
       case IndoorData.Euro:
-        dispatch(removeData({ name: 'arsenal' }));
+        dispatch(addData({ name: 'euro', dataSet: womenEuroMatches }));
         break;
       default:
         break;
