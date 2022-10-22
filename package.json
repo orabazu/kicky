@@ -19,7 +19,8 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
     "react-redux": "^8.0.2",
-    "react-router-dom": "^6.4.2"
+    "react-router-dom": "^6.4.2",
+    "utm-latlng": "^1.0.7"
   },
   "devDependencies": {
     "@danmarshall/deckgl-typings": "^4.9.27",

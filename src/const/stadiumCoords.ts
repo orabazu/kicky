@@ -9,6 +9,8 @@ export const stadiums = [
     coords: {
       bottomLeft: [51.55634956972751, -0.2804925473693265],
       bottomRight: [51.55634728033311, -0.27877173458054294],
+      upperLeftInUTM: [5715196, 688527],
+      upperRightInUTM: [5715199, 688642],
       // bottomLeft: [51.55570867010285, -0.2803537160338203],
       // bottomRight: [51.5556883621325, -0.2787240083325969],
     },
@@ -23,6 +25,8 @@ export const stadiums = [
     coords: {
       bottomLeft: [51.55634956972751, -0.2804925473693265],
       bottomRight: [51.55634728033311, -0.27877173458054294],
+      upperLeftInUTM: [5715196, 688527],
+      upperRightInUTM: [5715199, 688642],
       // bottomLeft: [51.55570867010285, -0.2803537160338203],
       // bottomRight: [51.5556883621325, -0.2787240083325969],
     },
@@ -37,6 +41,9 @@ export const stadiums = [
     coords: {
       bottomLeft: [52.58980728266269, -2.1297579524204737],
       bottomRight: [52.590739278703396, -2.1300501861465864],
+      // upperLeftinUTM: [5827087, 558866],
+      upperLeftInUTM: [5826984, 558887],
+      upperRightInUTM: [5827087, 558866],
     },
   },
   // {

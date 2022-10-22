@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { getGeoCoords } from 'src/utils';
+import { getGeoCoordsFromUTM } from 'src/utils';
 
 export type Event = {
   id: string;
@@ -55,14 +55,14 @@ export const eventDataApi = createApi({
         const events = response as Event[];
         events?.forEach((event) => {
           if (event.location) {
-            event.location = getGeoCoords(
+            event.location = getGeoCoordsFromUTM(
               event.location[0],
               event.location[1],
               Number(arg.stadiumId),
             );
           }
           if (event.pass?.end_location) {
-            event.pass.end_location = getGeoCoords(
+            event.pass.end_location = getGeoCoordsFromUTM(
               event.pass.end_location[0],
               event.pass.end_location[1],
               Number(arg.stadiumId),
