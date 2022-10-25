@@ -18,7 +18,6 @@ export const MatchDetailSummary: React.FC<MatchDetailSummaryProps> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('dispatch');
     dispatch(toggleLayer(LayerTypes.Pass));
   }, []);
 
@@ -53,7 +52,7 @@ export const MatchDetailSummary: React.FC<MatchDetailSummaryProps> = ({
       });
     }
     dispatch(setMovements(movements));
-    console.log(movements);
+    // console.log(movements);
   }, [threeSixty]);
 
   console.log(threeSixty);

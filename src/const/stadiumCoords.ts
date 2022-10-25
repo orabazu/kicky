@@ -11,8 +11,6 @@ export const stadiums = [
       bottomRight: [51.55634728033311, -0.27877173458054294],
       upperLeftInUTM: [5715196, 688527],
       upperRightInUTM: [5715199, 688642],
-      // bottomLeft: [51.55570867010285, -0.2803537160338203],
-      // bottomRight: [51.5556883621325, -0.2787240083325969],
     },
   },
   {
@@ -27,8 +25,6 @@ export const stadiums = [
       bottomRight: [51.55634728033311, -0.27877173458054294],
       upperLeftInUTM: [5715196, 688527],
       upperRightInUTM: [5715199, 688642],
-      // bottomLeft: [51.55570867010285, -0.2803537160338203],
-      // bottomRight: [51.5556883621325, -0.2787240083325969],
     },
   },
   {
@@ -41,7 +37,6 @@ export const stadiums = [
     coords: {
       bottomLeft: [52.58980728266269, -2.1297579524204737],
       bottomRight: [52.590739278703396, -2.1300501861465864],
-      // upperLeftinUTM: [5827087, 558866],
       upperLeftInUTM: [5826984, 558887],
       upperRightInUTM: [5827087, 558866],
     },
@@ -68,6 +63,8 @@ export const stadiums = [
     coords: {
       bottomLeft: [54.5778878206377, -1.2161061640539845],
       bottomRight: [54.5787802638222, -1.2166220771358511],
+      upperLeftInUTM: [6049261, 615239],
+      upperRightInUTM: [6049357, 615203],
     },
   },
   {
@@ -80,6 +77,8 @@ export const stadiums = [
     coords: {
       bottomLeft: [53.77836031010862, -1.5721059261212915],
       bottomRight: [54.5787802638222, -1.2166220771358511],
+      upperLeftInUTM: [5959684, 594087],
+      upperRightInUTM: [5959774, 594033],
     },
   },
   {
@@ -90,11 +89,10 @@ export const stadiums = [
       name: 'England',
     },
     coords: {
-      //  53.430270283558755 -2.96085925126101
-      // bottomLeft: [53.430270283558, -2.960859251261],
-      // bottomRight: [53.43098001966, -2.959896040909],
       bottomLeft: [53.43070219927581, -2.961746999896353],
       bottomRight: [53.4313855348529, -2.9607410518383803],
+      upperLeftInUTM: [5920184, 502545],
+      upperRightInUTM: [5920261, 502609],
     },
   },
   {
@@ -107,6 +105,8 @@ export const stadiums = [
     coords: {
       bottomLeft: [53.728225618419046, -2.4883918777546645],
       bottomRight: [53.729131907074304, -2.488997658075591],
+      upperLeftInUTM: [5953384, 533690],
+      upperRightInUTM: [5953484, 533651],
     },
   },
   {

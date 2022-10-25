@@ -148,6 +148,7 @@ export const Map = () => {
 
       const animate = () => {
         currentTime = (currentTime + 1) % 13000;
+        console.log(movements);
 
         const tripsLayer = new TripsLayer({
           id: 'trips',

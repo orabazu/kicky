@@ -51,9 +51,9 @@ export const getGeoCoordsFromUTM = (
   );
 
   const rotationinDegrees = (rotationinRadians * 180) / Math.PI;
-  // console.log(rotationinDegrees(rotationinRadians), 'rotation');
+  console.log(rotationinDegrees);
 
-  if (rotationinDegrees <= 90) {
+  if (rotationinDegrees <= 0) {
     rotationinRadians = rotationinRadians + Math.PI / 2;
   } else {
     rotationinRadians = Math.PI / 2 - rotationinRadians;
