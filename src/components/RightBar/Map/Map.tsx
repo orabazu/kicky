@@ -1,10 +1,12 @@
+//@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { ArcLayer, IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import useMaps from 'hooks/useMaps';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MovementType, PassType } from 'store/eventsSlice';
+import { setMapCenter } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import styles from './style.module.scss';
@@ -16,6 +18,9 @@ export const Map = () => {
   const movements = useSelector((state: RootState) => state.events.movements);
   const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
   const isMobileMapOpen = useSelector((state: RootState) => state.map.isMobileMapOpen);
+  const passFilters = useSelector((state: RootState) => state.map.passFilters);
+
+  const dispatch = useDispatch();
 
   const [map, setMap] = React.useState<google.maps.Map>();
   const [overlay, setOverlay] = React.useState<GoogleMapsOverlay>();
@@ -82,9 +87,24 @@ export const Map = () => {
         overlay.setMap(null);
       }
 
+      const filteredPasses = passes.filter((pass) => {
+        if (!passFilters.assists && !passFilters.crosses) {
+          return true;
+        }
+        if (passFilters.assists && passFilters.crosses) {
+          return pass.isAssist || pass.isCross;
+        } else if (passFilters.assists) {
+          return pass.isAssist;
+        } else if (passFilters.crosses) {
+          return pass.isCross;
+        }
+      });
+
+      console.log('filterePAsses', filteredPasses);
+
       const flightsLayer = new ArcLayer({
         id: 'flights',
-        data: passes,
+        data: filteredPasses,
         //@ts-ignore
         dataTransform: (d: PassType[]) => d.filter((f) => f),
         //@ts-ignore
@@ -107,6 +127,9 @@ export const Map = () => {
 
       overlayInstance.setMap(map);
       setOverlay(overlayInstance);
+      dispatch(
+        setMapCenter({ lat: mapCenter.lat + 0.000001, lng: mapCenter.lng + 0.000001 }),
+      );
     }
     //   passes.forEach((pass) => {
     //     // eslint-disable-next-line no-unused-vars
@@ -128,7 +151,7 @@ export const Map = () => {
     //     });
     //   });
     // }
-  }, [passes, map]);
+  }, [passes, map, passFilters]);
 
   //@ts-ignore
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
@@ -148,7 +171,6 @@ export const Map = () => {
 
       const animate = () => {
         currentTime = (currentTime + 1) % 13000;
-        console.log(movements);
 
         const tripsLayer = new TripsLayer({
           id: 'trips',

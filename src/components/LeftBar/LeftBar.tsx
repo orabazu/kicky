@@ -44,11 +44,6 @@ export const LeftBar = () => {
 
   return (
     <div className={styles.LeftBar}>
-      <Tabs
-        items={tabs}
-        onChange={onTabsChanged}
-        activeKey={window.location.href.includes('dataset') ? 'dataset' : 'map'}
-      />
       {
         <div>
           <Button onClick={() => navigate(-1)} type="link" icon={<FiChevronsLeft />}>
@@ -56,6 +51,11 @@ export const LeftBar = () => {
           </Button>
         </div>
       }
+      <Tabs
+        items={tabs}
+        onChange={onTabsChanged}
+        activeKey={window.location.href.includes('map') ? 'map' : 'dataset'}
+      />
 
       <Outlet />
       <div className={styles.LeftBarFooter}>

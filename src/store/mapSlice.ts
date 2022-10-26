@@ -14,6 +14,10 @@ export interface MapState {
   layers: {
     [key in LayerTypes]: boolean;
   };
+  passFilters: {
+    assists: boolean;
+    crosses: boolean;
+  };
   isMobileMapOpen: boolean;
 }
 
@@ -24,6 +28,10 @@ const initialState: MapState = {
   },
   layers: {
     [LayerTypes.Pass]: true,
+  },
+  passFilters: {
+    assists: false,
+    crosses: false,
   },
   isMobileMapOpen: false,
 };
@@ -56,9 +64,13 @@ export const mapSlice = createSlice({
     toggleMobileMap: (state) => {
       state.isMobileMapOpen = !state.isMobileMapOpen;
     },
+    toggleFilter: (state, action: PayloadAction<'assists' | 'crosses'>) => {
+      state.passFilters[action.payload] = !state.passFilters[action.payload];
+    },
   },
 });
 
-export const { setMapCenter, toggleLayer, toggleMobileMap } = mapSlice.actions;
+export const { setMapCenter, toggleLayer, toggleMobileMap, toggleFilter } =
+  mapSlice.actions;
 
 export default mapSlice.reducer;

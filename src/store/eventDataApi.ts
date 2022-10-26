@@ -30,6 +30,8 @@ type Pass = {
   end_location: number[];
   type: PlayPattern;
   aerial_won: boolean;
+  goal_assist: boolean;
+  cross: boolean;
 };
 
 type PlayPattern = {

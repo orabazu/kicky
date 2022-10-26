@@ -13,6 +13,8 @@ export type PassType = {
   recipient: number;
   type: string;
   height: number;
+  isAssist: boolean;
+  isCross: boolean;
 };
 
 export type MovementType = {
