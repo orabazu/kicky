@@ -115,10 +115,11 @@ export const Map = () => {
         getSourceColor: (d: PassType) =>
           d.height === 1 ? [255, 179, 179] : [0, 128, 200],
         //@ts-ignore
-        getTargetColor: (d: PassType) => (d.height === 1 ? [255, 0, 0] : [0, 0, 80]),
+        getTargetColor: (d: PassType) =>
+          d.height === 1 ? [255, 0, 0] : d.height === 2 ? [166, 130, 255] : [0, 0, 80],
         getWidth: 2,
         //@ts-ignore
-        getHeight: (d: PassType) => (d.height === 1 || d.height === 2 ? 0.02 : 0.3),
+        getHeight: (d: PassType) => (d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3),
       });
 
       const overlayInstance = new GoogleMapsOverlay({
