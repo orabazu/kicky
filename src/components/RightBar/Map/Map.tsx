@@ -1,5 +1,6 @@
 //@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
+import { latLngToVector3, ThreeJSOverlayView } from '@googlemaps/three';
 import { ArcLayer, IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import useMaps from 'hooks/useMaps';
@@ -8,7 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MovementType, PassType } from 'store/eventsSlice';
 import { setMapCenter } from 'store/mapSlice';
 import { RootState } from 'store/store';
+import * as THREE from 'three';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
+// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import styles from './style.module.scss';
 
 export const Map = () => {
@@ -272,6 +277,134 @@ export const Map = () => {
       overlay.setMap(map);
     }
   }, [movements, map]);
+
+  useEffect(() => {
+    if (map && gmaps) {
+      const scene = new THREE.Scene();
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.25);
+
+      directionalLight.position.set(0, 10, 50);
+      scene.add(directionalLight);
+
+      // Load the model.
+      // const loader = new GLTFLoader();
+      // const url =
+      //   'https://raw.githubusercontent.com/googlemaps/js-samples/main/assets/pin.gltf';
+
+      let mapOptions = {
+        tilt: map?.getTilt() || 0,
+        heading: map?.getHeading() || 0,
+        zoom: map?.getZoom() || 0,
+      };
+
+      // loader.load(url, (gltf) => {
+      //   gltf.scene.scale.set(10, 10, 10);
+      //   gltf.scene.rotation.x = Math.PI / 2;
+      //   scene.add(gltf.scene);
+
+      //   const animate = () => {
+      //     if (mapOptions.tilt < 67.5) {
+      //       mapOptions.tilt += 0.5;
+      //     } else if (mapOptions.heading <= 360) {
+      //       mapOptions.heading += 0.2;
+      //       mapOptions.zoom -= 0.0005;
+      //     } else {
+      //       // exit animation loop
+      //       return;
+      //     }
+
+      //     let { tilt, heading, zoom } = mapOptions;
+      //     //@ts-ignore
+      //     map.moveCamera({ tilt, heading, zoom });
+
+      //     requestAnimationFrame(animate);
+      //   };
+
+      //   requestAnimationFrame(animate);
+      // });
+
+      const fontLoader = new FontLoader();
+
+      fontLoader.load(
+        '../../../../resources/helvetiker_regular.typeface.json',
+        function (font) {
+          const textGeo = new TextGeometry('Arsenal 3 - 0 Wolves', {
+            font: font,
+            size: 80,
+            height: 5,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 10,
+            bevelSize: 8,
+            bevelOffset: 0,
+            bevelSegments: 5,
+          });
+
+          textGeo.computeBoundingBox();
+          // const centerOffset =
+          //   -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+
+          const textMaterial = new THREE.MeshPhongMaterial({
+            color: 0xff0000,
+            specular: 0xffffff,
+          });
+
+          const mesh = new THREE.Mesh(textGeo, textMaterial);
+          // mesh.position.x = centerOffset;
+          // mesh.position.y = FLOOR + 67;
+
+          // set position at center of map
+          mesh.position.copy(
+            latLngToVector3({
+              lat: map.getCenter().lat() + 0.002,
+              lng: map.getCenter().lng() - 0.003,
+            }),
+          );
+          // set position vertically
+          mesh.position.setY(10);
+          mesh.scale.set(0.5, 0.5, 0.5);
+
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          // mesh.rotation.y = -Math.PI / 4;
+
+          scene.add(mesh);
+
+          const animate = () => {
+            if (mapOptions.tilt < 67.5) {
+              mapOptions.tilt += 0.5;
+            } else if (mapOptions.heading <= 360) {
+              mapOptions.heading += 0.2;
+              mapOptions.zoom += 0.005;
+            } else {
+              // exit animation loop
+              return;
+            }
+
+            let { tilt, heading, zoom } = mapOptions;
+            //@ts-ignore
+            map.moveCamera({ tilt, heading, zoom });
+
+            requestAnimationFrame(animate);
+          };
+
+          requestAnimationFrame(animate);
+        },
+      );
+
+      new ThreeJSOverlayView({
+        map,
+        scene,
+        // anchor: { ...map?.getCenter(), altitude: 100 },
+        THREE,
+      });
+    }
+  }, [map, gmaps]);
 
   useEffect(() => {
     if (passOverlay) {
