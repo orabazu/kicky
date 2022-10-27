@@ -17,6 +17,14 @@ export type PassType = {
   isCross: boolean;
 };
 
+export type ShotType = {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  xGoal: number;
+};
+
 export type MovementType = {
   path: number[][] | number[];
   timestamps: number[];
@@ -25,11 +33,13 @@ export type MovementType = {
 
 export interface MapState {
   passes: PassType[];
+  shots: ShotType[];
   movements: MovementType[];
 }
 
 const initialState: MapState = {
   passes: [],
+  shots: [],
   movements: [],
 };
 
@@ -40,12 +50,15 @@ export const eventsSlice = createSlice({
     setPasses: (state, action: PayloadAction<PassType[]>) => {
       state.passes = action.payload;
     },
+    setShots: (state, action: PayloadAction<ShotType[]>) => {
+      state.shots = action.payload;
+    },
     setMovements: (state, action: PayloadAction<MovementType[]>) => {
       state.movements = action.payload;
     },
   },
 });
 
-export const { setPasses, setMovements } = eventsSlice.actions;
+export const { setPasses, setMovements, setShots } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

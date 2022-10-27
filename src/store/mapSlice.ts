@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export enum LayerTypes {
   Pass = 'pass',
+  Shots = 'shots',
 }
 
 export interface MapState {
@@ -28,6 +29,7 @@ const initialState: MapState = {
   },
   layers: {
     [LayerTypes.Pass]: true,
+    [LayerTypes.Shots]: false,
   },
   passFilters: {
     assists: false,
@@ -59,6 +61,7 @@ export const mapSlice = createSlice({
     resetAllLayers: (state) => {
       state.layers = {
         [LayerTypes.Pass]: false,
+        [LayerTypes.Shots]: false,
       };
     },
     toggleMobileMap: (state) => {

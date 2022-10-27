@@ -19,7 +19,8 @@ export type Event = {
   duration: number;
   under_pressure: boolean;
   related_events: string[];
-  pass: Pass;
+  pass?: Pass;
+  shot?: Shot;
 };
 
 type Pass = {
@@ -43,6 +44,25 @@ type EventRequestType = {
   matchId: string;
   stadiumId: string;
 };
+
+export type FreezeFrame = {
+  location: number[];
+  player: PlayPattern;
+  position: PlayPattern;
+  teammate: boolean;
+};
+
+export interface Shot {
+  statsbomb_xg: number;
+  end_location: number[];
+  key_pass_id: string;
+  body_part: PlayPattern;
+  type: PlayPattern;
+  outcome: PlayPattern;
+  first_time: boolean;
+  technique: PlayPattern;
+  freeze_frame: FreezeFrame[];
+}
 
 // Define a service using a base URL and expected endpoints
 export const eventDataApi = createApi({
@@ -73,6 +93,15 @@ export const eventDataApi = createApi({
                 ? 120 - event.pass.end_location[0]
                 : event.pass.end_location[0],
               event.pass.end_location[1],
+              Number(arg.stadiumId),
+            );
+          }
+          if (event.shot?.end_location) {
+            event.shot.end_location = getGeoCoordsFromUTM(
+              event.possession_team.id !== homeTeamId
+                ? 120 - event.shot.end_location[0]
+                : event.shot.end_location[0],
+              event.shot.end_location[1],
               Number(arg.stadiumId),
             );
           }

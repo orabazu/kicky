@@ -15,15 +15,18 @@ export const Map = () => {
   const { gmaps } = useMaps();
   const mapCenter = useSelector((state: RootState) => state.map.mapCenter);
   const passes = useSelector((state: RootState) => state.events.passes);
+  const shots = useSelector((state: RootState) => state.events.shots);
   const movements = useSelector((state: RootState) => state.events.movements);
   const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
+  const isShotsOverlayVisible = useSelector((state: RootState) => state.map.layers.shots);
   const isMobileMapOpen = useSelector((state: RootState) => state.map.isMobileMapOpen);
   const passFilters = useSelector((state: RootState) => state.map.passFilters);
 
   const dispatch = useDispatch();
 
   const [map, setMap] = React.useState<google.maps.Map>();
-  const [overlay, setOverlay] = React.useState<GoogleMapsOverlay>();
+  const [passOverlay, setPassOverlay] = React.useState<GoogleMapsOverlay>();
+  const [shotsOverlay, setShotsOverlay] = React.useState<GoogleMapsOverlay>();
 
   // 54.57861443976441, -1.217597210421821 riverside stadium
 
@@ -81,10 +84,9 @@ export const Map = () => {
 
   useEffect(() => {
     if (map && gmaps) {
-      console.log(`passes`, passes);
-      if (passes && overlay) {
-        console.log(`passes`, passes);
-        overlay.setMap(null);
+      if (passes && passOverlay) {
+        console.log('removing pass overlay');
+        passOverlay.setMap(null);
       }
 
       const filteredPasses = passes.filter((pass) => {
@@ -100,7 +102,7 @@ export const Map = () => {
         }
       });
 
-      console.log('filterePAsses', filteredPasses);
+      console.log(passes.length);
 
       const flightsLayer = new ArcLayer({
         id: 'flights',
@@ -127,7 +129,7 @@ export const Map = () => {
       });
 
       overlayInstance.setMap(map);
-      setOverlay(overlayInstance);
+      setPassOverlay(overlayInstance);
       dispatch(
         setMapCenter({
           lat: map.getCenter().lat() + 0.000001,
@@ -135,27 +137,50 @@ export const Map = () => {
         }),
       );
     }
-    //   passes.forEach((pass) => {
-    //     // eslint-disable-next-line no-unused-vars
-    //     const marker = new gmaps.maps.Polyline({
-    //       path: [
-    //         {
-    //           lat: pass.startX,
-    //           lng: pass.startY,
-    //         },
-    //         {
-    //           lat: pass.endX,
-    //           lng: pass.endY,
-    //         },
-    //       ],
-    //       map,
-    //       strokeColor: '#FF0000',
-    //       strokeOpacity: 1.0,
-    //       strokeWeight: 2,
-    //     });
-    //   });
-    // }
   }, [passes, map, passFilters]);
+
+  useEffect(() => {
+    if (map && gmaps) {
+      // TODO: overlays remove each other
+      // if (shots && shotsOverlay) {
+      //   console.log('removing shots overlay');
+      //   shotsOverlay.setMap(null);
+      // }
+
+      const shotsLayer = new ArcLayer({
+        id: 'shots',
+        data: shots,
+        //@ts-ignore
+        dataTransform: (d: PassType[]) => d.filter((f) => f),
+        //@ts-ignore
+        getSourcePosition: (f: PassType) => [f.startY, f.startX], // Prague
+        //@ts-ignore
+        getTargetPosition: (f: PassType) => [f.endY, f.endX],
+        //@ts-ignore
+        getSourceColor: (d: PassType) =>
+          d.height === 1 ? [255, 179, 179] : [0, 128, 200],
+        //@ts-ignore
+        getTargetColor: (d: PassType) =>
+          d.height === 1 ? [255, 0, 0] : d.height === 2 ? [166, 130, 255] : [0, 0, 80],
+        getWidth: 2,
+        //@ts-ignore
+        getHeight: (d: PassType) => (d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3),
+      });
+
+      const overlayInstance = new GoogleMapsOverlay({
+        layers: [shotsLayer],
+      });
+
+      overlayInstance.setMap(map);
+      setShotsOverlay(overlayInstance);
+      dispatch(
+        setMapCenter({
+          lat: map.getCenter().lat() + 0.000001,
+          lng: map.getCenter().lng() + 0.000001,
+        }),
+      );
+    }
+  }, [shots, map, passFilters]);
 
   //@ts-ignore
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
@@ -192,7 +217,7 @@ export const Map = () => {
         });
 
         const step = normalizeBetweenTwoRanges(currentTime, 0, 13000, 0, 260);
-        console.log(step);
+        // console.log(step);
 
         const iconLayer = new IconLayer({
           id: 'icon-layer',
@@ -249,10 +274,18 @@ export const Map = () => {
   }, [movements, map]);
 
   useEffect(() => {
-    if (overlay) {
-      overlay.setMap(isPassOverlayVisible === false ? null : map);
+    if (passOverlay) {
+      console.log('removing pass overlay from effect');
+      passOverlay.setMap(isPassOverlayVisible === false ? null : map);
     }
   }, [isPassOverlayVisible, map]);
+
+  useEffect(() => {
+    if (shotsOverlay) {
+      console.log('removing shot overlay from effect');
+      shotsOverlay.setMap(isShotsOverlayVisible === false ? null : map);
+    }
+  }, [isShotsOverlayVisible, map]);
 
   return (
     <div
