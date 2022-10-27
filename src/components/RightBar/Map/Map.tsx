@@ -129,7 +129,10 @@ export const Map = () => {
       overlayInstance.setMap(map);
       setOverlay(overlayInstance);
       dispatch(
-        setMapCenter({ lat: mapCenter.lat + 0.000001, lng: mapCenter.lng + 0.000001 }),
+        setMapCenter({
+          lat: map.getCenter().lat() + 0.000001,
+          lng: map.getCenter().lng() + 0.000001,
+        }),
       );
     }
     //   passes.forEach((pass) => {

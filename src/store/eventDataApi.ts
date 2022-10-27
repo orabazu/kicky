@@ -55,17 +55,23 @@ export const eventDataApi = createApi({
       query: ({ matchId }) => `events/${matchId}.json`,
       transformResponse: (response, _, arg) => {
         const events = response as Event[];
+        console.log(events);
+        const homeTeamId = events[0].possession_team.id;
         events?.forEach((event) => {
           if (event.location) {
             event.location = getGeoCoordsFromUTM(
-              event.location[0],
+              event.possession_team.id !== homeTeamId
+                ? 120 - event.location[0]
+                : event.location[0],
               event.location[1],
               Number(arg.stadiumId),
             );
           }
           if (event.pass?.end_location) {
             event.pass.end_location = getGeoCoordsFromUTM(
-              event.pass.end_location[0],
+              event.possession_team.id !== homeTeamId
+                ? 120 - event.pass.end_location[0]
+                : event.pass.end_location[0],
               event.pass.end_location[1],
               Number(arg.stadiumId),
             );

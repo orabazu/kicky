@@ -27,7 +27,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({
     (state: RootState) => state.map.passFilters.crosses,
   );
 
-  const passData = useMemo(() => {
+  const eventsFormatted = useMemo(() => {
     if (matchData) {
       let passes: PassType[] = [];
 
@@ -39,10 +39,8 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({
           event.team.id == teamId
         ) {
           passes.push({
-            // startX: isAway ? mirror(event.location[0], pitch) : event.location[0],
             startX: event.location![0],
             startY: event.location![1],
-            // endX: isAway ? mirror(event.pass.end_location[0], pitch)  : event.pass.end_location[0],
             endX: event.pass.end_location[0],
             endY: event.pass.end_location[1],
             length: event.pass.length,
@@ -55,29 +53,30 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({
             isAssist: !!event.pass['goal_assist'],
             isCross: !!event.pass.cross,
           });
-          // console.log('event', event);
         }
       }
 
-      return passes;
+      return { passes };
     }
 
-    return [];
+    return {
+      passes: [],
+    };
   }, [matchData, teamId]);
 
   useEffect(() => {
-    if (passData.length > 0) {
+    if (eventsFormatted?.passes.length > 0) {
       // const passes = getPassData(matchData);
-      console.log('SET PASSES', passData);
+      console.log('SET PASSES', eventsFormatted.passes);
       if (isPassOverlayVisible) {
-        dispatch(setPasses(passData));
+        dispatch(setPasses(eventsFormatted.passes));
       } else {
         dispatch(setPasses([]));
       }
     } else {
       dispatch(setPasses([]));
     }
-  }, [passData, isPassOverlayVisible]);
+  }, [eventsFormatted, isPassOverlayVisible]);
 
   const toggle = (layerType: LayerTypes) => {
     // dispatch(setPasses(isPassOverlayVisible ? [] : passData));
@@ -98,6 +97,39 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({
           <Timeline.Item>
             <div className="flex space-between">
               <span>Assists </span>
+              <Button
+                className="skinny-button"
+                type="link"
+                onClick={() => dispatch(toggleFilter('assists'))}
+                icon={isAssistFilterVisible ? <IoIosEye /> : <IoIosEyeOff />}
+              />
+            </div>
+          </Timeline.Item>
+          <Timeline.Item>
+            <div className="flex space-between">
+              Crosses{' '}
+              <Button
+                className="skinny-button"
+                type="link"
+                onClick={() => dispatch(toggleFilter('crosses'))}
+                icon={isCrossFilterVisible ? <IoIosEye /> : <IoIosEyeOff />}
+              />
+            </div>
+          </Timeline.Item>
+        </Timeline>
+      </div>
+      <div className="flex space-between">
+        <Title level={5}>Shots</Title>
+        <Button
+          onClick={() => toggle(LayerTypes.Pass)}
+          icon={isPassOverlayVisible ? <IoIosEye /> : <IoIosEyeOff />}
+        />
+      </div>
+      <div className="flex mt-20">
+        <Timeline style={{ width: '100%' }}>
+          <Timeline.Item>
+            <div className="flex space-between">
+              <span>Goals </span>
               <Button
                 className="skinny-button"
                 type="link"
