@@ -108,10 +108,10 @@ export const Map = () => {
   // SET CENTER
   useEffect(() => {
     console.log(mapCenter);
-    if (map) {
+    if (map && gmaps) {
       map.setCenter(mapCenter);
     }
-  }, [mapCenter, map]);
+  }, [mapCenter, map, gmaps]);
 
   //@ts-ignore
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
