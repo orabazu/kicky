@@ -1,15 +1,16 @@
 //@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 // import { latLngToVector3, ThreeJSOverlayView } from '@googlemaps/three';
-import { ArcLayer, IconLayer, TripsLayer } from 'deck.gl';
+import { IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import useDrawPasses from 'hooks/useDrawPasses';
+import useDrawShots from 'hooks/useDrawShots';
 import useMaps from 'hooks/useMaps';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useLazyGetEventByMatchIdQuery } from 'store/eventDataApi';
-import { MovementType, PassType, ShotType } from 'store/eventsSlice';
+import { MovementType } from 'store/eventsSlice';
 import { setMapCenter } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
@@ -29,22 +30,20 @@ export const Map = () => {
   const movements = useSelector((state: RootState) => state.events.movements);
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
 
-  const isShotsOverlayVisible = useSelector((state: RootState) => state.map.layers.shots);
   const isMobileMapOpen = useSelector((state: RootState) => state.map.isMobileMapOpen);
 
   const dispatch = useDispatch();
 
   const [map, setMap] = React.useState<google.maps.Map>();
-  const [shotsOverlay, setShotsOverlay] = React.useState<GoogleMapsOverlay>();
 
-  const forceRerender = useCallback(() => {
+  const forceRerender = () => {
     dispatch(
       setMapCenter({
         lat: map!.getCenter().lat() + 0.000001,
         lng: map!.getCenter().lng() + 0.000001,
       }),
     );
-  }, [dispatch, map]);
+  };
 
   const params = useParams();
   const [searchParams] = useSearchParams();
@@ -62,10 +61,18 @@ export const Map = () => {
     }
   }, [params.matchId, stadiumId]);
 
-  const [passOverlay] = useDrawPasses({
+  useDrawPasses({
     gmaps,
     map,
     passes: eventsData?.passes,
+    activeTeamId,
+    forceRerender,
+  });
+
+  useDrawShots({
+    gmaps,
+    map,
+    shots: eventsData?.shots,
     activeTeamId,
     forceRerender,
   });
@@ -100,58 +107,11 @@ export const Map = () => {
 
   // SET CENTER
   useEffect(() => {
+    console.log(mapCenter);
     if (map) {
       map.setCenter(mapCenter);
     }
   }, [mapCenter, map]);
-
-  useEffect(() => {
-    const shots = eventsData?.shots;
-    console.log('SET SHOTS OVERLAY');
-    if (map && gmaps) {
-      if (shots && shotsOverlay && !isShotsOverlayVisible) {
-        console.log('REMOVE SHOTS OVERLAY');
-        console.log(shotsOverlay);
-        console.log(passOverlay);
-
-        shotsOverlay.setMap(null);
-        forceRerender();
-      } else if (activeTeamId && isShotsOverlayVisible) {
-        console.log('RENDER SHOTS OVERLAY');
-
-        const shotsLayer = new ArcLayer({
-          id: 'shots',
-          data: shots,
-          //@ts-ignore
-          dataTransform: (d: ShotType[]) => d.filter((f) => f),
-          //@ts-ignore
-          getSourcePosition: (f: ShotType) => [f.startY, f.startX], // Prague
-          //@ts-ignore
-          getTargetPosition: (f: ShotType) => [f.endY, f.endX],
-          //@ts-ignore
-          getSourceColor: (d: PassType) =>
-            d.height === 1 ? [255, 179, 179] : [0, 128, 200],
-          //@ts-ignore
-          getTargetColor: (d: PassType) =>
-            d.height === 1 ? [255, 0, 0] : d.height === 2 ? [166, 130, 255] : [0, 0, 80],
-          getWidth: 2,
-          //@ts-ignore
-          getHeight: (d: PassType) =>
-            d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3,
-        });
-
-        const overlayInstance = new GoogleMapsOverlay({
-          layers: [shotsLayer],
-        });
-
-        console.log(map.overlayMapTypes);
-        shotsOverlay?.setMap(null);
-        overlayInstance.setMap(map);
-        setShotsOverlay(overlayInstance);
-        forceRerender();
-      }
-    }
-  }, [eventsData?.shots, map, isShotsOverlayVisible, activeTeamId]);
 
   //@ts-ignore
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {

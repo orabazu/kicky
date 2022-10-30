@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { PassType } from 'store/eventsSlice';
 import { RootState } from 'store/store';
 
-export type useDrawPassesType = {
+type useDrawPassesType = {
   map: google.maps.Map<Element> | undefined;
   gmaps: google | undefined;
   passes: PassType[] | undefined;
