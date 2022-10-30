@@ -3,8 +3,9 @@ import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 // import { latLngToVector3, ThreeJSOverlayView } from '@googlemaps/three';
 import { ArcLayer, IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
+import useDrawPasses from 'hooks/useDrawPasses';
 import useMaps from 'hooks/useMaps';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useLazyGetEventByMatchIdQuery } from 'store/eventDataApi';
@@ -28,16 +29,22 @@ export const Map = () => {
   const movements = useSelector((state: RootState) => state.events.movements);
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
 
-  const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
   const isShotsOverlayVisible = useSelector((state: RootState) => state.map.layers.shots);
   const isMobileMapOpen = useSelector((state: RootState) => state.map.isMobileMapOpen);
-  const passFilters = useSelector((state: RootState) => state.map.passFilters);
 
   const dispatch = useDispatch();
 
   const [map, setMap] = React.useState<google.maps.Map>();
-  const [passOverlay, setPassOverlay] = React.useState<GoogleMapsOverlay>();
   const [shotsOverlay, setShotsOverlay] = React.useState<GoogleMapsOverlay>();
+
+  const forceRerender = useCallback(() => {
+    dispatch(
+      setMapCenter({
+        lat: map!.getCenter().lat() + 0.000001,
+        lng: map!.getCenter().lng() + 0.000001,
+      }),
+    );
+  }, [dispatch, map]);
 
   const params = useParams();
   const [searchParams] = useSearchParams();
@@ -49,20 +56,19 @@ export const Map = () => {
     fetchEventData({ matchId, stadiumId });
   };
 
-  const forceRerender = () => {
-    dispatch(
-      setMapCenter({
-        lat: map!.getCenter().lat() + 0.000001,
-        lng: map!.getCenter().lng() + 0.000001,
-      }),
-    );
-  };
-
   useEffect(() => {
     if (params.matchId && stadiumId) {
       getMatchData(params.matchId, stadiumId);
     }
   }, [params.matchId, stadiumId]);
+
+  const [passOverlay] = useDrawPasses({
+    gmaps,
+    map,
+    passes: eventsData?.passes,
+    activeTeamId,
+    forceRerender,
+  });
 
   // SET MAP
   useEffect(() => {
@@ -98,65 +104,6 @@ export const Map = () => {
       map.setCenter(mapCenter);
     }
   }, [mapCenter, map]);
-
-  // SET PASS OVERLAY
-  useEffect(() => {
-    const passes = eventsData?.passes;
-    console.log('SET PASSES OVERLAY');
-    if (map && gmaps) {
-      if (passes && passOverlay && !isPassOverlayVisible) {
-        console.log('REMOVE PASSES OVERLAY');
-        passOverlay.setMap(null);
-        forceRerender();
-      } else if (activeTeamId && isPassOverlayVisible) {
-        console.log('RENDER PASS OVERLAY');
-        const filteredPasses = passes
-          ?.filter((pass) => pass.teamId === activeTeamId)
-          .filter((pass) => {
-            if (!passFilters.assists && !passFilters.crosses) {
-              return true;
-            }
-            if (passFilters.assists && passFilters.crosses) {
-              return pass.isAssist || pass.isCross;
-            } else if (passFilters.assists) {
-              return pass.isAssist;
-            } else if (passFilters.crosses) {
-              return pass.isCross;
-            }
-          });
-
-        const passesLayer = new ArcLayer({
-          id: 'passes',
-          data: filteredPasses,
-          //@ts-ignore
-          dataTransform: (d: PassType[]) => d.filter((f) => f),
-          //@ts-ignore
-          getSourcePosition: (f: PassType) => [f.startY, f.startX], // Prague
-          //@ts-ignore
-          getTargetPosition: (f: PassType) => [f.endY, f.endX],
-          //@ts-ignore
-          getSourceColor: (d: PassType) =>
-            d.height === 1 ? [255, 179, 179] : [0, 128, 200],
-          //@ts-ignore
-          getTargetColor: (d: PassType) =>
-            d.height === 1 ? [255, 0, 0] : d.height === 2 ? [166, 130, 255] : [0, 0, 80],
-          getWidth: 2,
-          //@ts-ignore
-          getHeight: (d: PassType) =>
-            d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3,
-        });
-
-        const overlayInstance = new GoogleMapsOverlay({
-          layers: [passesLayer],
-        });
-
-        passOverlay?.setMap(null);
-        overlayInstance.setMap(map);
-        setPassOverlay(overlayInstance);
-        forceRerender();
-      }
-    }
-  }, [eventsData?.passes, map, passFilters, isPassOverlayVisible, activeTeamId]);
 
   useEffect(() => {
     const shots = eventsData?.shots;
