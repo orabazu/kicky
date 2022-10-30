@@ -15,6 +15,8 @@ export type PassType = {
   height: number;
   isAssist: boolean;
   isCross: boolean;
+  teamId: number;
+  isHome: boolean;
 };
 
 export type ShotType = {
@@ -23,6 +25,8 @@ export type ShotType = {
   endX: number;
   endY: number;
   xGoal: number;
+  teamId: number;
+  isHome: boolean;
 };
 
 export type MovementType = {
@@ -31,15 +35,39 @@ export type MovementType = {
   players?: number[][];
 };
 
+export type TeamsType = {
+  home: {
+    id?: number;
+    name?: string;
+    shortName?: string;
+  };
+  away: {
+    id?: number;
+    name?: string;
+    shortName?: string;
+  };
+};
+
 export interface MapState {
-  passes: PassType[];
-  shots: ShotType[];
+  activeTeamId: number | undefined;
+  teams: TeamsType;
   movements: MovementType[];
 }
 
 const initialState: MapState = {
-  passes: [],
-  shots: [],
+  activeTeamId: undefined,
+  teams: {
+    home: {
+      name: '',
+      id: 0,
+      shortName: '',
+    },
+    away: {
+      name: '',
+      id: 0,
+      shortName: '',
+    },
+  },
   movements: [],
 };
 
@@ -47,11 +75,12 @@ export const eventsSlice = createSlice({
   name: 'map',
   initialState,
   reducers: {
-    setPasses: (state, action: PayloadAction<PassType[]>) => {
-      state.passes = action.payload;
+    setActiveTeamId: (state, action: PayloadAction<number | undefined>) => {
+      state.activeTeamId = action.payload;
     },
-    setShots: (state, action: PayloadAction<ShotType[]>) => {
-      state.shots = action.payload;
+    setTeams: (state, action: PayloadAction<TeamsType>) => {
+      state.teams.home = action.payload.home;
+      state.teams.away = action.payload.away;
     },
     setMovements: (state, action: PayloadAction<MovementType[]>) => {
       state.movements = action.payload;
@@ -59,6 +88,6 @@ export const eventsSlice = createSlice({
   },
 });
 
-export const { setPasses, setMovements, setShots } = eventsSlice.actions;
+export const { setMovements, setActiveTeamId, setTeams } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

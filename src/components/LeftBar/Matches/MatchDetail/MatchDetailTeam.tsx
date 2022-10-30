@@ -1,23 +1,15 @@
 import { Button, Timeline, Typography } from 'antd';
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { IoIosEye, IoIosEyeOff } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import { Event } from 'store/eventDataApi';
-import { PassType, setPasses, setShots } from 'store/eventsSlice';
 import { LayerTypes, toggleFilter, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
-type MatchDetailTeamProps = {
-  matchData?: Event[];
-  teamId?: number;
-};
+type MatchDetailTeamProps = {};
 
 const { Title } = Typography;
 
-export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({
-  matchData,
-  teamId,
-}) => {
+export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
   const dispatch = useDispatch();
   const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
   const isShotsOverlayVisible = useSelector((state: RootState) => state.map.layers.shots);
@@ -28,82 +20,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = ({
     (state: RootState) => state.map.passFilters.crosses,
   );
 
-  const eventsFormatted = useMemo(() => {
-    if (matchData) {
-      let passes: PassType[] = [];
-      let shots = [];
-
-      for (let index = 0; index < matchData?.length; index++) {
-        const event = matchData[index];
-        if (
-          event.type.name === 'Pass' &&
-          !!event.pass?.recipient?.id &&
-          event.team.id == teamId
-        ) {
-          passes.push({
-            startX: event.location![0],
-            startY: event.location![1],
-            endX: event.pass.end_location[0],
-            endY: event.pass.end_location[1],
-            length: event.pass.length,
-            angle: event.pass.angle,
-            passer: event.player?.id,
-            passerName: event.player?.name,
-            recipient: event.pass.recipient?.id,
-            type: event.type.name,
-            height: event.pass.height.id,
-            isAssist: !!event.pass['goal_assist'],
-            isCross: !!event.pass.cross,
-          });
-        } else if (event.type.name === 'Shot' && event.shot && event.team.id == teamId) {
-          shots.push({
-            startX: event.location![0],
-            startY: event.location![1],
-            endX: event.shot.end_location[0],
-            endY: event.shot.end_location[1],
-            xGoal: event.shot.statsbomb_xg,
-          });
-          // console.log(event);
-        }
-      }
-
-      return { passes, shots };
-    }
-
-    return {
-      passes: [],
-      shots: [],
-    };
-  }, [matchData, teamId]);
-
-  useEffect(() => {
-    if (eventsFormatted?.passes.length > 0) {
-      console.log('SET PASS', eventsFormatted.passes);
-      if (isPassOverlayVisible) {
-        dispatch(setPasses(eventsFormatted.passes));
-      } else {
-        dispatch(setPasses([]));
-      }
-    } else {
-      dispatch(setPasses([]));
-    }
-  }, [eventsFormatted?.passes, isPassOverlayVisible]);
-
-  useEffect(() => {
-    if (eventsFormatted?.shots.length > 0) {
-      console.log('SET SHOTS', eventsFormatted.shots);
-      if (isShotsOverlayVisible) {
-        dispatch(setShots(eventsFormatted.shots));
-      } else {
-        dispatch(setShots([]));
-      }
-    } else {
-      dispatch(setShots([]));
-    }
-  }, [eventsFormatted?.passes, isShotsOverlayVisible]);
-
   const toggle = (layerType: LayerTypes) => {
-    // dispatch(setPasses(isPassOverlayVisible ? [] : passData));
     dispatch(toggleLayer(layerType));
   };
 

@@ -1,6 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getGeoCoordsFromUTM } from 'src/utils';
 
+import { PassType, ShotType } from './eventsSlice';
+
+type EventRequestType = {
+  matchId: string;
+  stadiumId: string;
+};
+
+export type EventResponseType = {
+  events: Event[];
+  passes: PassType[];
+  shots: ShotType[];
+};
+
 export type Event = {
   id: string;
   index: number;
@@ -40,11 +53,6 @@ type PlayPattern = {
   name: string;
 };
 
-type EventRequestType = {
-  matchId: string;
-  stadiumId: string;
-};
-
 export type FreezeFrame = {
   location: number[];
   player: PlayPattern;
@@ -71,12 +79,15 @@ export const eventDataApi = createApi({
     baseUrl: 'https://raw.githubusercontent.com/statsbomb/open-data/master/data/',
   }),
   endpoints: (builder) => ({
-    getEventByMatchId: builder.query<Event[], EventRequestType>({
+    getEventByMatchId: builder.query<EventResponseType, EventRequestType>({
       query: ({ matchId }) => `events/${matchId}.json`,
       transformResponse: (response, _, arg) => {
         const events = response as Event[];
         console.log(events);
         const homeTeamId = events[0].possession_team.id;
+        let passes: PassType[] = [];
+        let shots: ShotType[] = [];
+
         events?.forEach((event) => {
           if (event.location) {
             event.location = getGeoCoordsFromUTM(
@@ -105,8 +116,41 @@ export const eventDataApi = createApi({
               Number(arg.stadiumId),
             );
           }
+          // create passes
+          if (event.type.name === 'Pass' && !!event.pass?.recipient?.id) {
+            passes.push({
+              startX: event.location![0],
+              startY: event.location![1],
+              endX: event.pass.end_location[0],
+              endY: event.pass.end_location[1],
+              length: event.pass.length,
+              angle: event.pass.angle,
+              passer: event.player?.id,
+              passerName: event.player?.name,
+              recipient: event.pass.recipient?.id,
+              type: event.type.name,
+              height: event.pass.height.id,
+              isAssist: !!event.pass['goal_assist'],
+              isCross: !!event.pass.cross,
+              teamId: event.team.id,
+              isHome: event.team.id === homeTeamId,
+            });
+          }
+
+          if (event.type.name === 'Shot' && event.shot) {
+            shots.push({
+              startX: event.location![0],
+              startY: event.location![1],
+              endX: event.shot.end_location[0],
+              endY: event.shot.end_location[1],
+              xGoal: event.shot.statsbomb_xg,
+              teamId: event.team.id,
+              isHome: event.team.id === homeTeamId,
+            });
+          }
         });
-        return events;
+
+        return { events, passes, shots };
       },
     }),
   }),

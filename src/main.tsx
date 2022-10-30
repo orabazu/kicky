@@ -9,8 +9,6 @@ import { store } from 'store/store';
 import App from './App';
 import { MapsProvider } from './contexts/mapContext';
 
-console.log('import.meta.env.REACT_APP_GOOGLE_MAPS_KEY', import.meta.env);
-
 //@ts-ignore
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
