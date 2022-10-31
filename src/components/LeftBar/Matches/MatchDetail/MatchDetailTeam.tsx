@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LayerTypes, toggleFilter, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
+import { DataAnalysisModal } from './DataAnalysisModal';
+
 type MatchDetailTeamProps = {};
 
 const { Title } = Typography;
@@ -66,6 +68,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
           icon={isShotsOverlayVisible ? <IoIosEye /> : <IoIosEyeOff />}
         />
       </div>
+      <DataAnalysisModal />
     </>
   );
 };

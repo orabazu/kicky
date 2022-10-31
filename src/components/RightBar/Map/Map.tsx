@@ -76,8 +76,8 @@ export const Map = () => {
       const mapInstance = new gmaps.maps.Map(document.getElementById('map')!, {
         center: { lng: -0.2805, lat: 51.55637 },
         zoom: 17,
-        heading: 0,
-        tilt: 40,
+        heading: 36,
+        tilt: 60,
         //@ts-ignore
         mapId: 'fb9023c973f94f3a',
       });

@@ -51,6 +51,9 @@ export type TeamsType = {
 export interface MapState {
   activeTeamId: number | undefined;
   teams: TeamsType;
+  passNetworks: {
+    [key: string]: any;
+  };
   movements: MovementType[];
 }
 
@@ -68,6 +71,7 @@ const initialState: MapState = {
       shortName: '',
     },
   },
+  passNetworks: {},
   movements: [],
 };
 
@@ -85,9 +89,19 @@ export const eventsSlice = createSlice({
     setMovements: (state, action: PayloadAction<MovementType[]>) => {
       state.movements = action.payload;
     },
+    setPassNetworkLayer: (
+      state,
+      action: PayloadAction<{ name: string; dataSet: any }>,
+    ) => {
+      state.passNetworks = {
+        ...state.passNetworks,
+        [action.payload.name]: { ...action.payload.dataSet },
+      };
+    },
   },
 });
 
-export const { setMovements, setActiveTeamId, setTeams } = eventsSlice.actions;
+export const { setMovements, setActiveTeamId, setTeams, setPassNetworkLayer } =
+  eventsSlice.actions;
 
 export default eventsSlice.reducer;

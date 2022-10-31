@@ -1,0 +1,18 @@
+.ProviderWrapper {
+  padding-top: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ProviderImage {
+  width: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.ProviderCard {
+  background-color: #141414;
+  :global(.ant-card-body) {
+    background-color: #141414;
+  }
+}

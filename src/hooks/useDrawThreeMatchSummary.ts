@@ -10,7 +10,7 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 type useDrawThreeMatchSummaryType = {
   map: google.maps.Map<Element> | undefined;
   gmaps: google | undefined;
-  activeMatch: Match;
+  activeMatch: Match | undefined;
   mapCenter: {
     lat: number;
     lng: number;

@@ -87,6 +87,8 @@ export const eventDataApi = createApi({
         const homeTeamId = events[0].possession_team.id;
         let passes: PassType[] = [];
         let shots: ShotType[] = [];
+        let passesUntilSubstitution: PassType[] = [];
+        let isSubtituted = false;
 
         events?.forEach((event) => {
           if (event.location) {
@@ -116,9 +118,12 @@ export const eventDataApi = createApi({
               Number(arg.stadiumId),
             );
           }
+          if (event.type.name === 'Substitution') {
+            isSubtituted = true;
+          }
           // create passes
           if (event.type.name === 'Pass' && !!event.pass?.recipient?.id) {
-            passes.push({
+            const pass = {
               startX: event.location![0],
               startY: event.location![1],
               endX: event.pass.end_location[0],
@@ -134,7 +139,9 @@ export const eventDataApi = createApi({
               isCross: !!event.pass.cross,
               teamId: event.team.id,
               isHome: event.team.id === homeTeamId,
-            });
+            };
+            passes.push(pass);
+            isSubtituted ? passesUntilSubstitution.push(pass) : null;
           }
 
           if (event.type.name === 'Shot' && event.shot) {
@@ -150,7 +157,7 @@ export const eventDataApi = createApi({
           }
         });
 
-        return { events, passes, shots };
+        return { events, passes, shots, passesUntilSubstitution };
       },
     }),
   }),
