@@ -1,9 +1,10 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
+import { Match } from 'const/arsenalMatches';
 
 export interface OpenDataState {
   data: {
-    [id: string]: any;
+    [id: string]: Match[];
   };
 }
 
@@ -15,7 +16,7 @@ export const openDataSlice = createSlice({
   name: 'openData',
   initialState,
   reducers: {
-    addData: (state, action: PayloadAction<{ name: string; dataSet: any }>) => {
+    addData: (state, action: PayloadAction<{ name: string; dataSet: Match[] }>) => {
       state.data = {
         ...state.data,
         [action.payload.name]: [...action.payload.dataSet],

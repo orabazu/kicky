@@ -1,10 +1,10 @@
 //@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
-// import { latLngToVector3, ThreeJSOverlayView } from '@googlemaps/three';
 import { IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import useDrawPasses from 'hooks/useDrawPasses';
 import useDrawShots from 'hooks/useDrawShots';
+import useThreeMatchSummary from 'hooks/useDrawThreeMatchSummary';
 import useMaps from 'hooks/useMaps';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,9 +14,6 @@ import { MovementType } from 'store/eventsSlice';
 import { setMapCenter } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
-// import * as THREE from 'three';
-// import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-// import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import styles from './style.module.scss';
 
@@ -25,14 +22,23 @@ const ICON_MAPPING = {
 };
 
 export const Map = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const [searchParams] = useSearchParams();
+
   const { gmaps } = useMaps();
   const mapCenter = useSelector((state: RootState) => state.map.mapCenter);
   const movements = useSelector((state: RootState) => state.events.movements);
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
-
   const isMobileMapOpen = useSelector((state: RootState) => state.map.isMobileMapOpen);
+  const matches = useSelector(
+    (state: RootState) => state.openData.data[params.datasetId as string],
+  );
 
-  const dispatch = useDispatch();
+  const stadiumId = searchParams.get('stadiumId');
+
+  const activeMatch =
+    params && matches?.find((match) => match.match_id.toString() === params.matchId);
 
   const [map, setMap] = React.useState<google.maps.Map>();
 
@@ -45,10 +51,6 @@ export const Map = () => {
     );
   };
 
-  const params = useParams();
-  const [searchParams] = useSearchParams();
-  const stadiumId = searchParams.get('stadiumId');
-
   const [fetchEventData, { data: eventsData }] = useLazyGetEventByMatchIdQuery();
 
   const getMatchData = async (matchId: string, stadiumId: string) => {
@@ -60,6 +62,41 @@ export const Map = () => {
       getMatchData(params.matchId, stadiumId);
     }
   }, [params.matchId, stadiumId]);
+
+  // SET MAP
+  useEffect(() => {
+    if (gmaps && !map) {
+      const style = [
+        {
+          featureType: 'all',
+          elementType: 'icon',
+          stylers: [{ visibility: 'off' }],
+        },
+      ];
+      const mapInstance = new gmaps.maps.Map(document.getElementById('map')!, {
+        center: { lng: -0.2805, lat: 51.55637 },
+        zoom: 17,
+        heading: 0,
+        tilt: 40,
+        //@ts-ignore
+        mapId: 'fb9023c973f94f3a',
+      });
+
+      mapInstance.set('styles', style);
+      mapInstance.addListener('click', (e) => {
+        console.log('click', e.latLng.lat(), e.latLng.lng());
+      });
+
+      setMap(mapInstance);
+    }
+  }, [gmaps, mapCenter]);
+
+  // SET CENTER
+  useEffect(() => {
+    if (map && gmaps) {
+      map.setCenter(mapCenter);
+    }
+  }, [mapCenter, map, gmaps]);
 
   useDrawPasses({
     gmaps,
@@ -77,41 +114,43 @@ export const Map = () => {
     forceRerender,
   });
 
-  // SET MAP
   useEffect(() => {
-    if (gmaps && !map) {
-      const style = [
-        {
-          featureType: 'all',
-          elementType: 'icon',
-          stylers: [{ visibility: 'off' }],
-        },
-      ];
-      const mapInstance = new gmaps.maps.Map(document.getElementById('map')!, {
-        center: { lng: -0.2805, lat: 51.55637 },
-        zoom: 17,
-        heading: 320,
-        tilt: 47.5,
+    if (activeMatch) {
+      let mapOptions = {
+        tilt: map?.getTilt() || 0,
+        heading: map?.getHeading() || 0,
+        zoom: map?.getZoom() || 0,
+      };
+      const animate = () => {
+        if (mapOptions.tilt < 67.5) {
+          mapOptions.tilt += 0.5;
+          mapOptions.heading += 1;
+          mapOptions.zoom += 0.005;
+        } else if (mapOptions.heading <= 180) {
+          mapOptions.heading += 1;
+          mapOptions.zoom += 0.005;
+        } else {
+          // exit animation loop
+          return;
+        }
+
+        let { tilt, heading, zoom } = mapOptions;
         //@ts-ignore
-        mapId: 'fb9023c973f94f3a',
-      });
+        map.moveCamera({ tilt, heading, zoom });
 
-      mapInstance.set('styles', style);
-      mapInstance.addListener('click', (e) => {
-        console.log('click', e.latLng.lat(), e.latLng.lng());
-      });
+        requestAnimationFrame(animate);
+      };
 
-      setMap(mapInstance);
+      requestAnimationFrame(animate);
     }
-  }, [gmaps, mapCenter]);
+  }, [activeMatch]);
 
-  // SET CENTER
-  useEffect(() => {
-    console.log(mapCenter);
-    if (map && gmaps) {
-      map.setCenter(mapCenter);
-    }
-  }, [mapCenter, map, gmaps]);
+  useThreeMatchSummary({
+    gmaps,
+    map,
+    activeMatch,
+    mapCenter,
+  });
 
   //@ts-ignore
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
@@ -203,13 +242,6 @@ export const Map = () => {
       overlay.setMap(map);
     }
   }, [movements, map]);
-
-  // useEffect(() => {
-  //   if (shotsOverlay) {
-  //     console.log('removing shot overlay from effect');
-  //     shotsOverlay.setMap(isShotsOverlayVisible === false ? null : map);
-  //   }
-  // }, [isShotsOverlayVisible, map]);
 
   return (
     <div
