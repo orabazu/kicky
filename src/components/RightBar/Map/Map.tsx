@@ -3,10 +3,11 @@ import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import useDrawPasses from 'hooks/useDrawPasses';
+import useDrawPassNetwork from 'hooks/useDrawPassNetwork';
 import useDrawShots from 'hooks/useDrawShots';
 import useThreeMatchSummary from 'hooks/useDrawThreeMatchSummary';
 import useMaps from 'hooks/useMaps';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useLazyGetEventByMatchIdQuery } from 'store/eventDataApi';
@@ -43,14 +44,14 @@ export const Map = () => {
 
   const [map, setMap] = React.useState<google.maps.Map>();
 
-  const forceRerender = () => {
+  const forceRerender = useCallback(() => {
     dispatch(
       setMapCenter({
         lat: map!.getCenter().lat() + 0.000001,
         lng: map!.getCenter().lng() + 0.000001,
       }),
     );
-  };
+  }, [map]);
 
   const [fetchEventData, { data: eventsData }] = useLazyGetEventByMatchIdQuery();
 
@@ -129,6 +130,22 @@ export const Map = () => {
     forceRerender,
   });
 
+  useThreeMatchSummary({
+    gmaps,
+    map,
+    activeMatch,
+    mapCenter,
+  });
+
+  useDrawPassNetwork({
+    gmaps,
+    map,
+    forceRerender,
+    activeTeamId,
+    activeMatch,
+    playerMarkerClassname: styles.playerName,
+  });
+
   useEffect(() => {
     if (activeMatch) {
       let mapOptions = {
@@ -160,49 +177,36 @@ export const Map = () => {
     }
   }, [activeMatch]);
 
-  useThreeMatchSummary({
-    gmaps,
-    map,
-    activeMatch,
-    mapCenter,
-  });
-
   useEffect(() => {
-    if (map && gmaps && passNetworks && activeTeamId && activeMatch) {
-      const activePassNetwork = passNetworks?.[activeMatch?.match_id!]?.[activeTeamId!];
-      console.log('activePassNetwork', activePassNetwork);
+    if (passNetworks) {
+      let mapOptions = {
+        tilt: map?.getTilt() || 0,
+        heading: map?.getHeading() || 0,
+        zoom: map?.getZoom() || 0,
+      };
+      const animate = () => {
+        if (mapOptions.tilt > 0) {
+          mapOptions.tilt -= 1;
+          mapOptions.heading += 1;
+          mapOptions.zoom += 0.005;
+        } else if (mapOptions.zoom < 18) {
+          mapOptions.zoom += 0.01;
+        } else {
+          // exit animation loop
+          return;
+        }
 
-      activePassNetwork?.forEach((passNetwork) => {
-        const playerName = document.createElement('div');
-        playerName.className = styles.playerName;
-        playerName.textContent =
-          passNetwork.passerName
-            .split(' ')
-            .filter((p) => p)
-            .pop() ?? null;
-
+        let { tilt, heading, zoom } = mapOptions;
+        console.log(zoom);
         //@ts-ignore
-        // eslint-disable-next-line no-unused-vars
-        const markerView = new gmaps.maps.marker.AdvancedMarkerView({
-          map: map,
-          position: { lng: passNetwork.startY, lat: passNetwork.startX, alt: 0 },
-          content: playerName,
-        });
-        const line = new gmaps.maps.Polyline({
-          path: [
-            { lng: passNetwork.endY, lat: passNetwork.endX },
-            { lng: passNetwork.startY, lat: passNetwork.startX },
-          ],
-          geodesic: false,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: passNetwork.count,
-        });
+        map.moveCamera({ tilt, heading, zoom });
 
-        line.setMap(map);
-      });
+        requestAnimationFrame(animate);
+      };
+
+      requestAnimationFrame(animate);
     }
-  }, [map, gmaps, passNetworks]);
+  }, [passNetworks]);
 
   //@ts-ignore
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {

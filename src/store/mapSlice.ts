@@ -76,7 +76,12 @@ export const mapSlice = createSlice({
   },
 });
 
-export const { setMapCenter, toggleLayer, toggleMobileMap, toggleFilter } =
-  mapSlice.actions;
+export const {
+  setMapCenter,
+  toggleLayer,
+  toggleMobileMap,
+  toggleFilter,
+  resetAllLayers,
+} = mapSlice.actions;
 
 export default mapSlice.reducer;

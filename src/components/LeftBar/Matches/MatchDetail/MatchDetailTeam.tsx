@@ -21,6 +21,11 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
   const isCrossFilterVisible = useSelector(
     (state: RootState) => state.map.passFilters.crosses,
   );
+  const isPassNetworOverlayVisible = useSelector(
+    (state: RootState) => state.map.layers.passNetwork,
+  );
+
+  const passNetworks = useSelector((state: RootState) => state.events.passNetworks);
 
   const toggle = (layerType: LayerTypes) => {
     dispatch(toggleLayer(layerType));
@@ -68,6 +73,15 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
           icon={isShotsOverlayVisible ? <IoIosEye /> : <IoIosEyeOff />}
         />
       </div>
+      {Object.keys(passNetworks).length > 0 && (
+        <div className="flex space-between">
+          <Title level={5}>Pass Network</Title>
+          <Button
+            onClick={() => toggle(LayerTypes.PassNetwork)}
+            icon={isPassNetworOverlayVisible ? <IoIosEye /> : <IoIosEyeOff />}
+          />
+        </div>
+      )}
       <DataAnalysisModal />
     </>
   );

@@ -8,6 +8,7 @@ import { BsPlusSquareDotted } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { setPassNetworkLayer } from 'store/eventsSlice';
+import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import styles from './DataAnalysisModal.module.scss';
@@ -31,6 +32,7 @@ export const DataAnalysisModal = () => {
   };
 
   const createPassNetwork = () => {
+    console.log('createPassNetwork');
     Object.keys(eventDataQueries).forEach((key) => {
       //@ts-ignore
       if (key.includes(params.matchId!)) {
@@ -86,6 +88,8 @@ export const DataAnalysisModal = () => {
       }
     });
     closeModal();
+    dispatch(resetAllLayers());
+    dispatch(toggleLayer(LayerTypes.PassNetwork));
   };
 
   return (
