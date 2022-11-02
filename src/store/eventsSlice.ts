@@ -48,11 +48,29 @@ export type TeamsType = {
   };
 };
 
+export type PassNetwork = {
+  endX: number;
+  endY: number;
+  startX: number;
+  startY: number;
+  passer: number;
+  recipient: number;
+  teamId: number;
+  passerName: string;
+  count: number;
+  teamId_1: number;
+  startX_mean: number;
+  startY_mean: number;
+  pass_count: number;
+};
+
 export interface MapState {
   activeTeamId: number | undefined;
   teams: TeamsType;
   passNetworks: {
-    [key: string]: any;
+    [key: string]: {
+      [key: string]: PassNetwork[];
+    };
   };
   movements: MovementType[];
 }

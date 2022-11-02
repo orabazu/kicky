@@ -28,7 +28,10 @@ export const MapsProvider = ({ children, writeKey }: MapsProviderProps): JSX.Ele
 
     // add enviroment local to test it locally
     if (writeKey) {
-      const options: LoaderOptions = {};
+      const options: LoaderOptions = {
+        version: 'beta',
+        libraries: ['marker'],
+      };
       const loader = new Loader(writeKey, options);
 
       const gmaps = await loader.load();

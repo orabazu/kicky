@@ -45,10 +45,8 @@ export const DataAnalysisModal = () => {
           .agg({ startX: 'mean', startY: ['mean', 'count'] })
           .rename({ startY_count: 'pass_count' });
 
-        console.log(avereagePositions);
-
         const passBetween = df
-          .groupby(['passer', 'recipient', 'teamId'])
+          .groupby(['passer', 'recipient', 'teamId', 'passerName'])
           .agg({ startY: ['count'] })
           .rename({ startY_count: 'count' });
 
@@ -64,18 +62,22 @@ export const DataAnalysisModal = () => {
         let mergedJson = danfo.toJSON(merged) as any[];
         const averagePositionsJSON = danfo.toJSON(avereagePositions) as any[];
 
+        console.log(averagePositionsJSON);
+        console.log(mergedJson);
+
         mergedJson = mergedJson.map((j) => ({
-          endX: averagePositionsJSON.find((a) => j.recipient === a.passer).startX_mean,
-          endY: averagePositionsJSON.find((a) => j.recipient === a.passer).startY_mean,
+          endX: averagePositionsJSON.find((a) => j.recipient === a.passer)?.startX_mean,
+          endY: averagePositionsJSON.find((a) => j.recipient === a.passer)?.startY_mean,
           startX: j.startX_mean,
           startY: j.startY_mean,
           ...j,
         }));
 
-        console.log(mergedJson);
-
         const homePasses = mergedJson.filter((m) => m.teamId === teams.home.id);
         const awayPasses = mergedJson.filter((m) => m.teamId === teams.away.id);
+
+        console.log(homePasses);
+        console.log(awayPasses);
 
         dispatch(
           setPassNetworkLayer({

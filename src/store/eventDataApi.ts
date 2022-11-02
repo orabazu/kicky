@@ -96,7 +96,9 @@ export const eventDataApi = createApi({
               event.possession_team.id !== homeTeamId
                 ? 120 - event.location[0]
                 : event.location[0],
-              event.location[1],
+              event.possession_team.id !== homeTeamId
+                ? 80 - event.location[1]
+                : event.location[1],
               Number(arg.stadiumId),
             );
           }
@@ -105,7 +107,9 @@ export const eventDataApi = createApi({
               event.possession_team.id !== homeTeamId
                 ? 120 - event.pass.end_location[0]
                 : event.pass.end_location[0],
-              event.pass.end_location[1],
+              event.possession_team.id !== homeTeamId
+                ? 80 - event.pass.end_location[1]
+                : event.pass.end_location[1],
               Number(arg.stadiumId),
             );
           }
@@ -141,7 +145,7 @@ export const eventDataApi = createApi({
               isHome: event.team.id === homeTeamId,
             };
             passes.push(pass);
-            isSubtituted ? passesUntilSubstitution.push(pass) : null;
+            !isSubtituted ? passesUntilSubstitution.push(pass) : null;
           }
 
           if (event.type.name === 'Shot' && event.shot) {

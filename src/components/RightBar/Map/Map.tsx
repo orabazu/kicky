@@ -34,6 +34,7 @@ export const Map = () => {
   const matches = useSelector(
     (state: RootState) => state.openData.data[params.datasetId as string],
   );
+  const passNetworks = useSelector((state: RootState) => state.events.passNetworks);
 
   const stadiumId = searchParams.get('stadiumId');
 
@@ -86,6 +87,20 @@ export const Map = () => {
       mapInstance.addListener('click', (e) => {
         console.log('click', e.latLng.lat(), e.latLng.lng());
       });
+
+      // const beachFlagImg = document.createElement('img');
+      // beachFlagImg.src =
+      //   'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+
+      // const priceTag = document.createElement('div');
+      // priceTag.className = styles.priceTag;
+      // priceTag.textContent = '$2.5M';
+
+      // const markerView = new gmaps.maps.marker.AdvancedMarkerView({
+      //   map: mapInstance,
+      //   position: { lng: -0.2805, lat: 51.55637, alt: 0 },
+      //   content: priceTag,
+      // });
 
       setMap(mapInstance);
     }
@@ -151,6 +166,43 @@ export const Map = () => {
     activeMatch,
     mapCenter,
   });
+
+  useEffect(() => {
+    if (map && gmaps && passNetworks && activeTeamId && activeMatch) {
+      const activePassNetwork = passNetworks?.[activeMatch?.match_id!]?.[activeTeamId!];
+      console.log('activePassNetwork', activePassNetwork);
+
+      activePassNetwork?.forEach((passNetwork) => {
+        const playerName = document.createElement('div');
+        playerName.className = styles.playerName;
+        playerName.textContent =
+          passNetwork.passerName
+            .split(' ')
+            .filter((p) => p)
+            .pop() ?? null;
+
+        //@ts-ignore
+        // eslint-disable-next-line no-unused-vars
+        const markerView = new gmaps.maps.marker.AdvancedMarkerView({
+          map: map,
+          position: { lng: passNetwork.startY, lat: passNetwork.startX, alt: 0 },
+          content: playerName,
+        });
+        const line = new gmaps.maps.Polyline({
+          path: [
+            { lng: passNetwork.endY, lat: passNetwork.endX },
+            { lng: passNetwork.startY, lat: passNetwork.startX },
+          ],
+          geodesic: false,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: passNetwork.count,
+        });
+
+        line.setMap(map);
+      });
+    }
+  }, [map, gmaps, passNetworks]);
 
   //@ts-ignore
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
