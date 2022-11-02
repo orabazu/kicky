@@ -14,5 +14,22 @@
   background-color: #141414;
   :global(.ant-card-body) {
     background-color: #141414;
+    height: 200px;
+  }
+}
+
+.AnalysisButton {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 200px;
+
+  button {
+    display: flex;
+  }
+  svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
   }
 }

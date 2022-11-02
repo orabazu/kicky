@@ -1,7 +1,10 @@
 import { Avatar, Button, Card, Col, Modal, Row } from 'antd';
 import Meta from 'antd/lib/card/Meta';
+import ClusterImage from 'assets/cluster.png';
+import PassNetworkImage from 'assets/passnetwork.png';
 import * as danfo from 'danfojs/dist/danfojs-browser/src';
 import React, { useState } from 'react';
+import { BsPlusSquareDotted } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { setPassNetworkLayer } from 'store/eventsSlice';
@@ -18,8 +21,6 @@ export const DataAnalysisModal = () => {
   const teams = useSelector((state: RootState) => state.events.teams);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  console.log(eventDataQueries);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -50,8 +51,6 @@ export const DataAnalysisModal = () => {
           .agg({ startY: ['count'] })
           .rename({ startY_count: 'count' });
 
-        console.log(passBetween);
-
         const merged = danfo.merge({
           left: passBetween,
           right: avereagePositions,
@@ -61,9 +60,6 @@ export const DataAnalysisModal = () => {
 
         let mergedJson = danfo.toJSON(merged) as any[];
         const averagePositionsJSON = danfo.toJSON(avereagePositions) as any[];
-
-        console.log(averagePositionsJSON);
-        console.log(mergedJson);
 
         mergedJson = mergedJson.map((j) => ({
           endX: averagePositionsJSON.find((a) => j.recipient === a.passer)?.startX_mean,
@@ -76,9 +72,6 @@ export const DataAnalysisModal = () => {
         const homePasses = mergedJson.filter((m) => m.teamId === teams.home.id);
         const awayPasses = mergedJson.filter((m) => m.teamId === teams.away.id);
 
-        console.log(homePasses);
-        console.log(awayPasses);
-
         dispatch(
           setPassNetworkLayer({
             name: params.matchId!,
@@ -89,15 +82,16 @@ export const DataAnalysisModal = () => {
           }),
         );
       } else {
-        alert('Data is not provided');
+        console.log('Data is not provided');
       }
     });
+    closeModal();
   };
 
   return (
     <div>
-      <div className="flex">
-        <Button type="primary" onClick={openModal}>
+      <div className={styles.AnalysisButton}>
+        <Button type="primary" onClick={openModal} icon={<BsPlusSquareDotted />}>
           {' '}
           Add Soccer Analysis{' '}
         </Button>
@@ -114,20 +108,7 @@ export const DataAnalysisModal = () => {
           <Col span={12}>
             <Card
               actions={[
-                <Button key={'run'} onClick={createPassNetwork}>
-                  {' '}
-                  Select{' '}
-                </Button>,
-              ]}
-              className={styles.ProviderCard}
-            >
-              <Meta
-                avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                title="Pass Networks"
-                description="For passing networks we use only accurate/successful passes made by a team until the first substitution along with average postion of the players."
-              />
-              <div className={styles.ProviderWrapper}>
-                <div className={styles.Provider}>
+                <div className={styles.Provider} key="powered">
                   <span>Powered by: </span>
                   <img
                     src={
@@ -136,22 +117,25 @@ export const DataAnalysisModal = () => {
                     alt="stats"
                     className={styles.ProviderImage}
                   />
-                </div>
-              </div>
+                </div>,
+                <Button key={'run'} onClick={createPassNetwork}>
+                  Run
+                </Button>,
+              ]}
+              className={styles.ProviderCard}
+            >
+              <Meta
+                avatar={<Avatar src={PassNetworkImage} />}
+                title="Pass Networks"
+                description="For passing networks we use only accurate/successful passes made by a team until the first substitution along with average postion of the players."
+              />
+              <div className={styles.ProviderWrapper}></div>
             </Card>
           </Col>
           <Col span={12}>
             <Card
-              actions={[<Button key={'run'}> Select </Button>]}
-              className={styles.ProviderCard}
-            >
-              <Meta
-                avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                title="Clustering K-Means of Passes"
-                description="Find a custom number of geospatial clusters from a set of passes"
-              />
-              <div className={styles.ProviderWrapper}>
-                <div className={styles.Provider}>
+              actions={[
+                <div className={styles.Provider} key="powered">
                   <span>Powered by: </span>
                   <img
                     src={
@@ -160,8 +144,17 @@ export const DataAnalysisModal = () => {
                     alt="stats"
                     className={styles.ProviderImage}
                   />
-                </div>
-              </div>
+                </div>,
+                <Button key={'run'}> Run </Button>,
+              ]}
+              className={styles.ProviderCard}
+            >
+              <Meta
+                avatar={<Avatar src={ClusterImage} />}
+                title="Clustering K-Means of Passes"
+                description="Find a custom number of geospatial clusters from a set of passes"
+              />
+              <div className={styles.ProviderWrapper}></div>
             </Card>
           </Col>
         </Row>

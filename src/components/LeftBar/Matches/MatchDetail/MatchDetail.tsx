@@ -63,7 +63,6 @@ export const MatchDetail = () => {
   }, [data?.events]);
 
   const onCurrentTeamSelected = (val: SegmentedValue) => {
-    console.log(val === 'Away' ? away.id : home.id);
     dispatch(setActiveTeamId(val === 'Away' ? away.id : home.id));
   };
 
