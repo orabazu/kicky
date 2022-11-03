@@ -21,6 +21,9 @@ export interface MapState {
     assists: boolean;
     crosses: boolean;
   };
+  kmeansFilters: {
+    [k: string]: boolean;
+  };
   isMobileMapOpen: boolean;
 }
 
@@ -38,6 +41,16 @@ const initialState: MapState = {
   passFilters: {
     assists: false,
     crosses: false,
+  },
+  kmeansFilters: {
+    '0': true,
+    '1': true,
+    '2': true,
+    '3': true,
+    '4': true,
+    '5': true,
+    '6': true,
+    '7': true,
   },
   isMobileMapOpen: false,
 };
@@ -73,8 +86,11 @@ export const mapSlice = createSlice({
     toggleMobileMap: (state) => {
       state.isMobileMapOpen = !state.isMobileMapOpen;
     },
-    toggleFilter: (state, action: PayloadAction<'assists' | 'crosses'>) => {
+    togglePassFilter: (state, action: PayloadAction<'assists' | 'crosses'>) => {
       state.passFilters[action.payload] = !state.passFilters[action.payload];
+    },
+    toggleKmeansFilter: (state, action: PayloadAction<string>) => {
+      state.kmeansFilters[action.payload] = !state.kmeansFilters[action.payload];
     },
   },
 });
@@ -83,7 +99,8 @@ export const {
   setMapCenter,
   toggleLayer,
   toggleMobileMap,
-  toggleFilter,
+  togglePassFilter,
+  toggleKmeansFilter,
   resetAllLayers,
 } = mapSlice.actions;
 

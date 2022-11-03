@@ -48,6 +48,7 @@ const useDrawKmeans = ({
   const isKmeansOverlayVisible = useSelector(
     (state: RootState) => state.map.layers.kmeans,
   );
+  const kmeansFilters = useSelector((state: RootState) => state.map.kmeansFilters);
 
   const [kmeansOverlay, setKmeansOverlay] = useState<GoogleMapsOverlay>();
 
@@ -64,9 +65,15 @@ const useDrawKmeans = ({
       ) {
         const activeKmeansCluster = kmeans?.[activeMatch?.match_id!]?.[activeTeamId!];
 
+        const data = activeKmeansCluster.data.filter((d) => {
+          if (kmeansFilters[d.cluster.toString()]) {
+            return true;
+          }
+        });
+
         const passesLayer = new ArcLayer({
           id: 'kmeans',
-          data: activeKmeansCluster.data,
+          data: data,
           //@ts-ignore
           dataTransform: (d: any[]) => d.filter((f) => f),
           //@ts-ignore
@@ -93,7 +100,7 @@ const useDrawKmeans = ({
         forceRerender();
       }
     }
-  }, [kmeans, isKmeansOverlayVisible, map, gmaps, activeTeamId]);
+  }, [kmeans, isKmeansOverlayVisible, map, gmaps, activeTeamId, kmeansFilters]);
 };
 
 export default useDrawKmeans;

@@ -6,7 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { radToDeg, rgbToHex } from 'src/utils';
 import { KmeansStatsType } from 'store/eventsSlice';
-import { LayerTypes, toggleFilter, toggleLayer } from 'store/mapSlice';
+import {
+  LayerTypes,
+  toggleKmeansFilter,
+  toggleLayer,
+  togglePassFilter,
+} from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import { DataAnalysisModal } from './DataAnalysisModal';
@@ -30,6 +35,8 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
   const isPassNetworOverlayVisible = useSelector(
     (state: RootState) => state.map.layers.passNetwork,
   );
+
+  const kmeansFilters = useSelector((state: RootState) => state.map.kmeansFilters);
 
   const passNetworks = useSelector((state: RootState) => state.events.passNetworks);
   const kmeans = useSelector((state: RootState) => state.events.kmeans);
@@ -62,7 +69,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
               <Button
                 className="skinny-button"
                 type="link"
-                onClick={() => dispatch(toggleFilter('assists'))}
+                onClick={() => dispatch(togglePassFilter('assists'))}
                 icon={isAssistFilterVisible ? <IoIosEye /> : <IoIosEyeOff />}
               />
             </div>
@@ -73,7 +80,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
               <Button
                 className="skinny-button"
                 type="link"
-                onClick={() => dispatch(toggleFilter('crosses'))}
+                onClick={() => dispatch(togglePassFilter('crosses'))}
                 icon={isCrossFilterVisible ? <IoIosEye /> : <IoIosEyeOff />}
               />
             </div>
@@ -121,8 +128,16 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
                       <Button
                         className="skinny-button"
                         type="link"
-                        onClick={() => dispatch(toggleFilter('assists'))}
-                        icon={isAssistFilterVisible ? <IoIosEye /> : <IoIosEyeOff />}
+                        onClick={() =>
+                          dispatch(toggleKmeansFilter(stat.cluster.toString()))
+                        }
+                        icon={
+                          kmeansFilters[stat.cluster.toString()] ? (
+                            <IoIosEye />
+                          ) : (
+                            <IoIosEyeOff />
+                          )
+                        }
                       />
                     </div>
                   </Timeline.Item>
