@@ -2,6 +2,7 @@
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
+import useDrawKmeans from 'hooks/useDrawKmeans';
 import useDrawPasses from 'hooks/useDrawPasses';
 import useDrawPassNetwork from 'hooks/useDrawPassNetwork';
 import useDrawShots from 'hooks/useDrawShots';
@@ -89,20 +90,6 @@ export const Map = () => {
         console.log('click', e.latLng.lat(), e.latLng.lng());
       });
 
-      // const beachFlagImg = document.createElement('img');
-      // beachFlagImg.src =
-      //   'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-
-      // const priceTag = document.createElement('div');
-      // priceTag.className = styles.priceTag;
-      // priceTag.textContent = '$2.5M';
-
-      // const markerView = new gmaps.maps.marker.AdvancedMarkerView({
-      //   map: mapInstance,
-      //   position: { lng: -0.2805, lat: 51.55637, alt: 0 },
-      //   content: priceTag,
-      // });
-
       setMap(mapInstance);
     }
   }, [gmaps, mapCenter]);
@@ -144,6 +131,14 @@ export const Map = () => {
     activeTeamId,
     activeMatch,
     playerMarkerClassname: styles.playerName,
+  });
+
+  useDrawKmeans({
+    gmaps,
+    map,
+    forceRerender,
+    activeTeamId,
+    activeMatch,
   });
 
   useEffect(() => {

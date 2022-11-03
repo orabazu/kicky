@@ -77,3 +77,15 @@ export const getGeoCoordsFromUTM = (
 function getAngle(x1: number, y1: number, x2: number, y2: number) {
   return Math.atan2(y2 - y1, x2 - x1);
 }
+
+// radian to degree
+export function radToDeg(rad: number) {
+  return rad * (180 / Math.PI);
+}
+
+//rgb to hex
+export function rgbToHex(colorArr?: number[]) {
+  const [r, g, b] = colorArr!;
+  if (r > 255 || g > 255 || b > 255) throw 'Invalid color component';
+  return `#${((r << 16) | (g << 8) | b).toString(16)}`;
+}

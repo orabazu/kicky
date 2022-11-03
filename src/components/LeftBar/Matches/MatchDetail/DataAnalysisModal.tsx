@@ -3,11 +3,12 @@ import Meta from 'antd/lib/card/Meta';
 import ClusterImage from 'assets/cluster.png';
 import PassNetworkImage from 'assets/passnetwork.png';
 import * as danfo from 'danfojs/dist/danfojs-browser/src';
+import ml5 from 'ml5';
 import React, { useState } from 'react';
 import { BsPlusSquareDotted } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { setPassNetworkLayer } from 'store/eventsSlice';
+import { setKmeansLayer, setPassNetworkLayer } from 'store/eventsSlice';
 import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
@@ -92,6 +93,98 @@ export const DataAnalysisModal = () => {
     dispatch(toggleLayer(LayerTypes.PassNetwork));
   };
 
+  const createKmeans = () => {
+    console.log('createKmeans');
+    Object.keys(eventDataQueries).forEach((key) => {
+      //@ts-ignore
+      if (key.includes(params.matchId!)) {
+        //@ts-ignore
+        const passes = eventDataQueries[key]?.data?.passes;
+        const homePasses = passes.filter((p: any) => p.teamId === teams.home.id);
+        const awayPasses = passes.filter((p: any) => p.teamId === teams.away.id);
+        const filteredHomePasses = homePasses.map((p: any) => ({
+          angle: p.angle,
+          length: p.length,
+        }));
+        const filteredAwayPasses = awayPasses.map((p: any) => ({
+          angle: p.angle,
+          length: p.length,
+        }));
+
+        const options = {
+          k: 7,
+          maxIter: 20,
+          threshold: 0.2,
+        };
+        // When the model is loaded
+
+        const kmeansHome = ml5.kmeans(filteredHomePasses, options, () => {
+          const kmeansArr: any[][] = Array.from(kmeansHome.dataset);
+          const kmeansHomeResult = kmeansArr.map((kmean, idx) => ({
+            //@ts-ignore
+            cluster: kmean.centroid,
+            ...homePasses[idx],
+          }));
+
+          const df = new danfo.DataFrame(kmeansHomeResult);
+
+          const clusterStats = df
+            .groupby(['cluster'])
+            .agg({ length: 'mean', angle: ['mean', 'count'] })
+            .rename({ angle_count: 'pass_count' });
+
+          const clusterStatsJSON = danfo.toJSON(clusterStats);
+
+          dispatch(
+            setKmeansLayer({
+              name: params.matchId!,
+              dataSet: {
+                [teams.home.id!.toString()]: {
+                  data: kmeansHomeResult,
+                  stats: clusterStatsJSON,
+                },
+              },
+            }),
+          );
+        });
+
+        const kmeansAway = ml5.kmeans(filteredAwayPasses, options, () => {
+          const kmeansArr: any[][] = Array.from(kmeansAway.dataset);
+          const kmeansAwayResult = kmeansArr.map((kmean, idx) => ({
+            //@ts-ignore
+            cluster: kmean.centroid,
+            ...awayPasses[idx],
+          }));
+
+          const df = new danfo.DataFrame(kmeansAwayResult);
+
+          const clusterStats = df
+            .groupby(['cluster'])
+            .agg({ length: 'mean', angle: ['mean', 'count'] })
+            .rename({ angle_count: 'pass_count' });
+
+          const clusterStatsJSON = danfo.toJSON(clusterStats);
+
+          dispatch(
+            setKmeansLayer({
+              name: params.matchId!,
+              dataSet: {
+                [teams.away.id!.toString()]: {
+                  data: kmeansAwayResult,
+                  stats: clusterStatsJSON,
+                },
+              },
+            }),
+          );
+        });
+      }
+    });
+
+    closeModal();
+    dispatch(resetAllLayers());
+    dispatch(toggleLayer(LayerTypes.Kmeans));
+  };
+
   return (
     <div>
       <div className={styles.AnalysisButton}>
@@ -149,7 +242,9 @@ export const DataAnalysisModal = () => {
                     className={styles.ProviderImage}
                   />
                 </div>,
-                <Button key={'run'}> Run </Button>,
+                <Button key={'run'} onClick={createKmeans}>
+                  Run
+                </Button>,
               ]}
               className={styles.ProviderCard}
             >

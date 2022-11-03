@@ -17,6 +17,7 @@
     "danfojs": "^1.1.2",
     "deck.gl": "^8.8.10",
     "google-maps": "^4.3.3",
+    "ml5": "^0.12.2",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",

@@ -64,12 +64,31 @@ export type PassNetwork = {
   pass_count: number;
 };
 
+export type KmeansType = PassNetwork & {
+  cluster: number;
+};
+
+export type KmeansStatsType = {
+  cluster: number;
+  length_mean: number;
+  angle_mean: number;
+  pass_count: number;
+};
+
 export interface MapState {
   activeTeamId: number | undefined;
   teams: TeamsType;
   passNetworks: {
     [key: string]: {
       [key: string]: PassNetwork[];
+    };
+  };
+  kmeans: {
+    [key: string]: {
+      [key: string]: {
+        data: KmeansType[];
+        stats: KmeansStatsType[];
+      };
     };
   };
   movements: MovementType[];
@@ -90,6 +109,7 @@ const initialState: MapState = {
     },
   },
   passNetworks: {},
+  kmeans: {},
   movements: [],
 };
 
@@ -116,10 +136,35 @@ export const eventsSlice = createSlice({
         [action.payload.name]: { ...action.payload.dataSet },
       };
     },
+    setKmeansLayer: (
+      state,
+      action: PayloadAction<{
+        name: string;
+        dataSet: {
+          [key: string]: {
+            data: KmeansType[];
+            stats: any;
+          };
+        };
+      }>,
+    ) => {
+      state.kmeans = {
+        ...state.kmeans,
+        [action.payload.name]: {
+          ...state.kmeans?.[action.payload.name],
+          ...action.payload.dataSet,
+        },
+      };
+    },
   },
 });
 
-export const { setMovements, setActiveTeamId, setTeams, setPassNetworkLayer } =
-  eventsSlice.actions;
+export const {
+  setMovements,
+  setActiveTeamId,
+  setTeams,
+  setPassNetworkLayer,
+  setKmeansLayer,
+} = eventsSlice.actions;
 
 export default eventsSlice.reducer;
