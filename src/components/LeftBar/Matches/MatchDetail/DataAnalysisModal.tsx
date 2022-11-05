@@ -16,9 +16,7 @@ import styles from './DataAnalysisModal.module.scss';
 
 export const DataAnalysisModal = () => {
   const dispatch = useDispatch();
-  // const [searchParams] = useSearchParams();
   const params = useParams();
-  // const stadiumId = searchParams.get('stadiumId');
   const eventDataQueries = useSelector((state: RootState) => state.eventDataApi.queries);
   const teams = useSelector((state: RootState) => state.events.teams);
 
