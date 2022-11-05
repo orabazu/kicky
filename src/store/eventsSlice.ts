@@ -27,6 +27,8 @@ export type ShotType = {
   xGoal: number;
   teamId: number;
   isHome: boolean;
+  shooterName: string;
+  shooterId: number;
 };
 
 export type MovementType = {
@@ -75,6 +77,12 @@ export type KmeansStatsType = {
   pass_count: number;
 };
 
+export type PlayerInPitch = {
+  passer: number;
+  passerName: string;
+  teamId: number;
+};
+
 export interface MapState {
   activeTeamId: number | undefined;
   teams: TeamsType;
@@ -91,6 +99,7 @@ export interface MapState {
       };
     };
   };
+  playersInPitch: PlayerInPitch[];
   movements: MovementType[];
 }
 
@@ -110,6 +119,7 @@ const initialState: MapState = {
   },
   passNetworks: {},
   kmeans: {},
+  playersInPitch: [],
   movements: [],
 };
 
@@ -156,6 +166,20 @@ export const eventsSlice = createSlice({
         },
       };
     },
+    setPlayersInPitch: (state, action: PayloadAction<PlayerInPitch[]>) => {
+      state.playersInPitch = action.payload;
+    },
+    setPlayerInPitch: (state, action: PayloadAction<PlayerInPitch>) => {
+      state.playersInPitch.push(action.payload);
+    },
+    removeAllPlayersInPitch: (state) => {
+      state.playersInPitch = [];
+    },
+    removePlayerInPitchById: (state, action: PayloadAction<number>) => {
+      state.playersInPitch = state.playersInPitch.filter(
+        (player) => player.passer !== action.payload,
+      );
+    },
   },
 });
 
@@ -165,6 +189,10 @@ export const {
   setTeams,
   setPassNetworkLayer,
   setKmeansLayer,
+  setPlayersInPitch,
+  removeAllPlayersInPitch,
+  removePlayerInPitchById,
+  setPlayerInPitch,
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

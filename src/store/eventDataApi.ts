@@ -157,6 +157,8 @@ export const eventDataApi = createApi({
               xGoal: event.shot.statsbomb_xg,
               teamId: event.team.id,
               isHome: event.team.id === homeTeamId,
+              shooterId: event.player.id,
+              shooterName: event.player.name,
             });
           }
         });

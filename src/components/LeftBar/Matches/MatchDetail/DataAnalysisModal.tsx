@@ -31,7 +31,6 @@ export const DataAnalysisModal = () => {
   };
 
   const createPassNetwork = () => {
-    console.log('createPassNetwork');
     Object.keys(eventDataQueries).forEach((key) => {
       //@ts-ignore
       if (key.includes(params.matchId!)) {
@@ -39,8 +38,6 @@ export const DataAnalysisModal = () => {
           //@ts-ignore
           eventDataQueries[key]?.data?.passesUntilSubstitution,
         );
-
-        console.log(df);
 
         const avereagePositions = df
           .groupby(['passer', 'teamId'])
@@ -92,7 +89,6 @@ export const DataAnalysisModal = () => {
   };
 
   const createKmeans = () => {
-    console.log('createKmeans');
     Object.keys(eventDataQueries).forEach((key) => {
       //@ts-ignore
       if (key.includes(params.matchId!)) {
