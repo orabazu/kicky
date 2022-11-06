@@ -77,10 +77,20 @@ export type KmeansStatsType = {
   pass_count: number;
 };
 
+export type PlayerInPitchFilterType = {
+  passes: boolean;
+  shots: boolean;
+  assists: boolean;
+  goals: boolean;
+  heatmap: boolean;
+};
+
 export type PlayerInPitch = {
   passer: number;
   passerName: string;
   teamId: number;
+  color: string;
+  filters: PlayerInPitchFilterType;
 };
 
 export interface MapState {
@@ -180,6 +190,24 @@ export const eventsSlice = createSlice({
         (player) => player.passer !== action.payload,
       );
     },
+    togglePlayerInPitchFilter: (
+      state,
+      action: PayloadAction<{ passer: number; filter: keyof PlayerInPitchFilterType }>,
+    ) => {
+      state.playersInPitch = state.playersInPitch.map((player) => {
+        if (player.passer === action.payload.passer) {
+          return {
+            ...player,
+            filters: {
+              ...player.filters,
+              [action.payload.filter]: !player.filters[action.payload.filter],
+            },
+          };
+        }
+        return player;
+      });
+      console.log(state.playersInPitch);
+    },
   },
 });
 
@@ -193,6 +221,7 @@ export const {
   removeAllPlayersInPitch,
   removePlayerInPitchById,
   setPlayerInPitch,
+  togglePlayerInPitchFilter,
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

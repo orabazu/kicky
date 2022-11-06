@@ -16,6 +16,7 @@
     "antd": "^4.23.1",
     "danfojs": "^1.1.2",
     "deck.gl": "^8.8.10",
+    "fast-average-color": "^9.1.1",
     "google-maps": "^4.3.3",
     "ml5": "^0.12.2",
     "react": "^18.2.0",

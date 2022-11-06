@@ -37,4 +37,21 @@ code {
   height: 29px !important;
   padding: 4px !important;
   font-size: 12px !important;
+
+  &:last-child {
+    border-radius: 0px 4px 4px 0px;
+  }
+  &:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+  &-selected {
+    @extend .playerButton;
+    background-color: #29916a !important;
+    border-color: #29916a !important;
+    color: #1b1b22 !important;
+  }
+}
+
+.playerButton:not(:last-child):not(:first-child) {
+  border-radius: 0;
 }

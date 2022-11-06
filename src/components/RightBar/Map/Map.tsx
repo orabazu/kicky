@@ -5,6 +5,7 @@ import { google } from 'google-maps';
 import useDrawKmeans from 'hooks/useDrawKmeans';
 import useDrawPasses from 'hooks/useDrawPasses';
 import useDrawPassNetwork from 'hooks/useDrawPassNetwork';
+import useDrawPlayerPasses from 'hooks/useDrawPlayerPasses';
 import useDrawShots from 'hooks/useDrawShots';
 import useThreeMatchSummary from 'hooks/useDrawThreeMatchSummary';
 import useMaps from 'hooks/useMaps';
@@ -139,6 +140,14 @@ export const Map = () => {
     forceRerender,
     activeTeamId,
     activeMatch,
+  });
+
+  useDrawPlayerPasses({
+    activeTeamId,
+    forceRerender,
+    gmaps,
+    map,
+    passes: eventsData?.passes,
   });
 
   useEffect(() => {
