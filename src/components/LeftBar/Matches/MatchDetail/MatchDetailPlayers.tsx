@@ -51,7 +51,6 @@ export const MatchDetailPlayers = () => {
   });
 
   const createUniquePassers = () => {
-    console.log('createPassNetwork');
     Object.keys(eventDataQueries).forEach((key) => {
       //@ts-ignore
       if (key.includes(params.matchId!)) {
@@ -64,8 +63,6 @@ export const MatchDetailPlayers = () => {
           //@ts-ignore
           eventDataQueries[key]?.data?.shots,
         );
-
-        console.log(passDf);
 
         const passers = passDf.groupby(['passer']);
         // const allPasses = passers.apply((x) => x);
@@ -84,7 +81,6 @@ export const MatchDetailPlayers = () => {
 
         let uniquePasserNames = danfo.toJSON(passerNames) as PassStateData[];
 
-        // const shooters = shotDf.groupby(['shooter']);
         const shotCount = shotDf
           .groupby(['shooterId', 'teamId'])
           .agg({ shooterId: ['count'] })
@@ -98,7 +94,6 @@ export const MatchDetailPlayers = () => {
           .agg({ passer: ['count'] })
           .rename({ passer_count: 'assist_count' });
 
-        console.log(assistCount);
         const assistStats = danfo.toJSON(assistCount) as [];
 
         const homePassers = uniquePasserNames.filter((m) => m.teamId === teams.home.id);
@@ -155,7 +150,6 @@ export const MatchDetailPlayers = () => {
     e
       ? dispatch(setPlayerInPitch(payload))
       : dispatch(removePlayerInPitchById(passer.passer));
-    console.log(passer);
   };
 
   const getClassName = (passer: number, filter: keyof PlayerInPitchFilterType) =>

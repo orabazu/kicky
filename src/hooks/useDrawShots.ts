@@ -27,20 +27,16 @@ const useDrawShots = ({
   const isShotsOverlayVisible = useSelector((state: RootState) => state.map.layers.shots);
 
   useEffect(() => {
-    console.log('SET SHOTS OVERLAY');
     if (map && gmaps) {
       if (shots && shotsOverlay && !isShotsOverlayVisible) {
-        console.log('REMOVE SHOTS OVERLAY');
-        console.log(shotsOverlay);
-
         shotsOverlay.setMap(null);
         forceRerender();
       } else if (activeTeamId && isShotsOverlayVisible) {
-        console.log('RENDER SHOTS OVERLAY');
+        const filteredShots = shots?.filter((shot) => shot.teamId === activeTeamId);
 
         const shotsLayer = new ArcLayer({
           id: 'shots',
-          data: shots,
+          data: filteredShots,
           //@ts-ignore
           dataTransform: (d: ShotType[]) => d.filter((f) => f),
           //@ts-ignore
@@ -62,7 +58,6 @@ const useDrawShots = ({
           layers: [shotsLayer],
         });
 
-        console.log(map.overlayMapTypes);
         shotsOverlay?.setMap(null);
         overlayInstance.setMap(map);
         setShotsOverlay(overlayInstance);

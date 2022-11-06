@@ -53,7 +53,6 @@ const useDrawKmeans = ({
   const [kmeansOverlay, setKmeansOverlay] = useState<GoogleMapsOverlay>();
 
   useEffect(() => {
-    console.log('SET PASSES OVERLAY');
     if (map && gmaps) {
       if (kmeans && kmeansOverlay && !isKmeansOverlayVisible) {
         kmeansOverlay.setMap(null);

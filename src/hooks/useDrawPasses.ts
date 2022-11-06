@@ -51,6 +51,8 @@ const useDrawPasses = ({
             }
           });
 
+        console.log(filteredPasses);
+
         const passesLayer = new ArcLayer({
           id: 'passes',
           data: filteredPasses,

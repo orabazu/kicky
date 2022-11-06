@@ -31,7 +31,7 @@ const useDrawPlayerPasses = ({
       if (passes && passOverlay && !isPlayerPassOverlayVisible) {
         passOverlay.setMap(null);
         forceRerender();
-      } else if (activeTeamId && isPlayerPassOverlayVisible) {
+      } else if (activeTeamId && Boolean(playersInPitch.length)) {
         const filteredPasses = passes
           ?.filter((pass) => pass.teamId === activeTeamId)
           .filter((pass) => playersInPitch.some((p) => p.passer === pass.passer));
@@ -64,8 +64,6 @@ const useDrawPlayerPasses = ({
           }
           return false;
         });
-
-        console.log('heatmapPasses', heatmapPassData);
 
         const passesLayer = new ArcLayer({
           id: 'playerPasses',

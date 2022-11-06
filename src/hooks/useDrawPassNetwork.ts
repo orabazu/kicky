@@ -37,8 +37,6 @@ const useDrawPassNetwork = ({
         lineOverlay &&
         !isPassNetworkOverlayVisible
       ) {
-        console.log('REMOVE PASS NETWORK');
-
         markerViewOverlay?.forEach((o) => (o.map = null));
         lineOverlay?.forEach((l) => l.setMap(null));
         forceRerender();

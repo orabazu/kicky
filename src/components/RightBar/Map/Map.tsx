@@ -201,7 +201,6 @@ export const Map = () => {
         }
 
         let { tilt, heading, zoom } = mapOptions;
-        console.log(zoom);
         //@ts-ignore
         map.moveCamera({ tilt, heading, zoom });
 
