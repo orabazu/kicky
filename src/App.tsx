@@ -23,9 +23,10 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Navigate to="/analytics/dataset" />} />
+
         <Route path="analytics" element={<Analytics />}>
           <Route path="dataset">
-            <Route element={<DataSets />} index />
+            <Route element={<DataSets />} />
             <Route path="" element={<DataSets />} />
             <Route path=":datasetId/matches" element={<Matches />} />
             <Route path=":datasetId/matches/:matchId" element={<MatchDetail />} />

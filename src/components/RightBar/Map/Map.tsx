@@ -6,6 +6,7 @@ import useDrawKmeans from 'hooks/useDrawKmeans';
 import useDrawPasses from 'hooks/useDrawPasses';
 import useDrawPassNetwork from 'hooks/useDrawPassNetwork';
 import useDrawPlayerPasses from 'hooks/useDrawPlayerPasses';
+import useDrawPlayerShots from 'hooks/useDrawPlayerShots';
 import useDrawShots from 'hooks/useDrawShots';
 import useThreeMatchSummary from 'hooks/useDrawThreeMatchSummary';
 import useMaps from 'hooks/useMaps';
@@ -148,6 +149,14 @@ export const Map = () => {
     gmaps,
     map,
     passes: eventsData?.passes,
+  });
+
+  useDrawPlayerShots({
+    activeTeamId,
+    forceRerender,
+    gmaps,
+    map,
+    shots: eventsData?.shots,
   });
 
   useEffect(() => {

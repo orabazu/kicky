@@ -29,6 +29,7 @@ export type ShotType = {
   isHome: boolean;
   shooterName: string;
   shooterId: number;
+  outcome: number;
 };
 
 export type MovementType = {

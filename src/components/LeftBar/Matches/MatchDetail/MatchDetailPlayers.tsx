@@ -15,19 +15,20 @@ import {
 import { resetAllLayers } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
-type PassStateData = {
+type EventStateData = {
   passer: number;
   passerName: string;
   teamId: number;
 };
 
-type PassersState = {
-  home: PassStateData[];
-  away: PassStateData[];
+type EventState = {
+  home: EventStateData[];
+  away: EventStateData[];
   stats: {
     passes: any[];
     shots: any[];
     assists: any[];
+    goals: any[];
   };
 };
 
@@ -40,13 +41,14 @@ export const MatchDetailPlayers = () => {
   const playersInPitch = useSelector((state: RootState) => state.events.playersInPitch);
   const fac = new FastAverageColor();
 
-  const [passers, setPassers] = React.useState<PassersState>({
+  const [events, setEvents] = React.useState<EventState>({
     home: [],
     away: [],
     stats: {
       passes: [],
       shots: [],
       assists: [],
+      goals: [],
     },
   });
 
@@ -79,13 +81,12 @@ export const MatchDetailPlayers = () => {
           .loc({ columns: ['passer', 'passerName', 'teamId'] })
           .setIndex({ column: 'passer' });
 
-        let uniquePasserNames = danfo.toJSON(passerNames) as PassStateData[];
+        let uniquePasserNames = danfo.toJSON(passerNames) as EventStateData[];
 
         const shotCount = shotDf
           .groupby(['shooterId', 'teamId'])
           .agg({ shooterId: ['count'] })
-          .rename({ shooter_count: 'shot_count' });
-
+          .rename({ shooterId_count: 'shot_count' });
         const shotStats = danfo.toJSON(shotCount) as [];
 
         const assistCount = passDf
@@ -93,19 +94,26 @@ export const MatchDetailPlayers = () => {
           .groupby(['passer', 'teamId', 'isAssist'])
           .agg({ passer: ['count'] })
           .rename({ passer_count: 'assist_count' });
-
         const assistStats = danfo.toJSON(assistCount) as [];
+
+        const goalCount = shotDf
+          .query(shotDf['outcome'].eq(97))
+          .groupby(['shooterId', 'teamId'])
+          .agg({ shooterId: ['count'] })
+          .rename({ shooterId_count: 'goal_count' });
+        const goalStats = danfo.toJSON(goalCount) as [];
 
         const homePassers = uniquePasserNames.filter((m) => m.teamId === teams.home.id);
         const awayPassers = uniquePasserNames.filter((m) => m.teamId === teams.away.id);
 
-        setPassers({
+        setEvents({
           home: homePassers,
           away: awayPassers,
           stats: {
             passes: passStats,
             shots: shotStats,
             assists: assistStats,
+            goals: goalStats,
           },
         });
       } else {
@@ -119,7 +127,10 @@ export const MatchDetailPlayers = () => {
     dispatch(resetAllLayers());
   }, [eventDataQueries]);
 
-  const toggleFilter = (passer: PassStateData, filter: keyof PlayerInPitchFilterType) => {
+  const toggleFilter = (
+    passer: EventStateData,
+    filter: keyof PlayerInPitchFilterType,
+  ) => {
     if (playersInPitch?.find((p) => p.passer === passer.passer)?.filters) {
       dispatch(togglePlayerInPitchFilter({ passer: passer.passer, filter }));
     } else {
@@ -129,7 +140,7 @@ export const MatchDetailPlayers = () => {
 
   const onCheck = async (
     e: boolean,
-    passer: PassStateData,
+    passer: EventStateData,
     filter: keyof PlayerInPitchFilterType,
   ) => {
     const color = await fac.getColorAsync(
@@ -161,7 +172,7 @@ export const MatchDetailPlayers = () => {
     <div>
       <List
         itemLayout="horizontal"
-        dataSource={activeTeamId === teams.home.id ? passers?.home : passers?.away}
+        dataSource={activeTeamId === teams.home.id ? events?.home : events?.away}
         renderItem={(player) => (
           <List.Item>
             <List.Item.Meta
@@ -179,7 +190,7 @@ export const MatchDetailPlayers = () => {
                   >
                     Pass (
                     {
-                      passers.stats.passes?.find((p: any) => p.passer === player.passer)
+                      events.stats.passes?.find((p: any) => p.passer === player.passer)
                         ?.pass_count
                     }
                     )
@@ -188,26 +199,38 @@ export const MatchDetailPlayers = () => {
                     className={getClassName(player.passer, 'assists')}
                     onClick={() => toggleFilter(player, 'assists')}
                     disabled={
-                      !passers.stats.assists?.find((p: any) => p.passer === player.passer)
+                      !events.stats.assists?.find((p: any) => p.passer === player.passer)
                         ?.assist_count
                     }
                   >
                     Assist (
-                    {passers.stats.assists?.find((p: any) => p.passer === player.passer)
+                    {events.stats.assists?.find((p: any) => p.passer === player.passer)
                       ?.assist_count || 0}
                     )
                   </Button>
                   <Button
                     className={getClassName(player.passer, 'shots')}
                     onClick={() => toggleFilter(player, 'shots')}
+                    disabled={
+                      !events.stats.shots?.find((s: any) => s.shooterId === player.passer)
+                        ?.shot_count
+                    }
                   >
-                    Shot
+                    Shot (
+                    {events.stats.shots?.find(
+                      (shooter: any) => shooter.shooterId === player.passer,
+                    )?.shot_count || 0}
+                    )
                   </Button>
                   <Button
                     className={getClassName(player.passer, 'goals')}
                     onClick={() => toggleFilter(player, 'goals')}
                   >
-                    Goal
+                    Goal (
+                    {events.stats.goals?.find(
+                      (shooter: any) => shooter.shooterId === player.passer,
+                    )?.goal_count || 0}
+                    )
                   </Button>
                   <Button
                     className={getClassName(player.passer, 'heatmap')}

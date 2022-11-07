@@ -149,6 +149,7 @@ export const eventDataApi = createApi({
           }
 
           if (event.type.name === 'Shot' && event.shot) {
+            console.log(event);
             shots.push({
               startX: event.location![0],
               startY: event.location![1],
@@ -159,6 +160,7 @@ export const eventDataApi = createApi({
               isHome: event.team.id === homeTeamId,
               shooterId: event.player.id,
               shooterName: event.player.name,
+              outcome: event.shot.outcome.id,
             });
           }
         });
