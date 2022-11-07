@@ -1,6 +1,6 @@
-import { Card } from 'antd';
+import { Card, Result } from 'antd';
 import React from 'react';
-import { FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight, FiLayers } from 'react-icons/fi';
 import { GiSoccerField } from 'react-icons/gi';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export const DataSets = () => {
   return (
     <>
       {!dataKeys.length ? (
-        'no data'
+        <Result icon={<FiLayers />} title="Add a dataset below to get started" />
       ) : (
         <>
           <div>

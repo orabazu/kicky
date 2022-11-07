@@ -6,7 +6,7 @@ import { MatchDetail } from 'components/LeftBar/Matches/MatchDetail';
 import { Matches } from 'components/LeftBar/Matches/Matches';
 import { Loading } from 'components/Loading';
 import React, { useEffect } from 'react';
-import { /*Link, Outlet,*/ Route, Routes } from 'react-router-dom';
+import { /*Link, Outlet,*/ Navigate, Route, Routes } from 'react-router-dom';
 
 import { Analytics } from './components/Analytics';
 
@@ -21,20 +21,18 @@ function App() {
     <>
       {showSplash && <Loading />}
       <Header />
-
-      {/* <nav>
-        <Link to="/analytics">Analytics</Link>
-        <Link to="/user">User</Link>
-      </nav> */}
       <Routes>
-        <Route index element={<Analytics />} />
+        <Route path="/" element={<Navigate to="/analytics/dataset" />} />
         <Route path="analytics" element={<Analytics />}>
-          <Route path="dataset" element={<DataSets />}></Route>
-          <Route path="dataset/:datasetId/matches" element={<Matches />} />
-          <Route path="dataset/:datasetId/matches/:matchId" element={<MatchDetail />} />
+          <Route path="dataset">
+            <Route element={<DataSets />} index />
+            <Route path="" element={<DataSets />} />
+            <Route path=":datasetId/matches" element={<Matches />} />
+            <Route path=":datasetId/matches/:matchId" element={<MatchDetail />} />
+          </Route>
+
           <Route path="map" element={'<Map />'} />
         </Route>
-        {/* <Route path="user" element={<User />} /> */}
 
         <Route path="*" element={`<NoMatch />`} />
       </Routes>
@@ -43,18 +41,3 @@ function App() {
 }
 
 export default App;
-
-// const User = () => {
-//   return (
-//     <>
-//       <h1>User</h1>
-
-//       <nav>
-//         <Link to="profile">Profile</Link>
-//         <Link to="account">Account</Link>
-//       </nav>
-
-//       <Outlet />
-//     </>
-//   );
-// };
