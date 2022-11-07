@@ -4,14 +4,22 @@ import { Header } from 'components/Header';
 import { DataSets } from 'components/LeftBar/DataSets/DataSets';
 import { MatchDetail } from 'components/LeftBar/Matches/MatchDetail';
 import { Matches } from 'components/LeftBar/Matches/Matches';
-import React from 'react';
+import { Loading } from 'components/Loading';
+import React, { useEffect } from 'react';
 import { /*Link, Outlet,*/ Route, Routes } from 'react-router-dom';
 
 import { Analytics } from './components/Analytics';
 
 function App() {
+  const [showSplash, setShowSplash] = React.useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 1500);
+  });
   return (
     <>
+      {showSplash && <Loading />}
       <Header />
 
       {/* <nav>

@@ -1,0 +1,56 @@
+.Loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  z-index: 100;
+  position: fixed;
+  width: 100vw;
+  background-color: #1b1b22;
+  animation: fadeOut 0.3s;
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
+}
+
+.LoadingImage {
+  scale: 0.3;
+  animation: fadeInLeft 1s forwards, swing 2s infinite alternate;
+}
+
+@keyframes swing {
+  0% {
+    transform: rotate(3deg);
+    animation-delay: 1s;
+  }
+  100% {
+    transform: rotate(-3deg);
+    animation-delay: 1s;
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-500px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0.01;
+    width: 100%;
+    height: 100%;
+  }
+  100% {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
