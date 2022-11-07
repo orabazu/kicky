@@ -45,7 +45,7 @@ const useDrawPlayerPasses = ({
                 color: playerInEpoch.color,
               };
             }
-            if (playerInEpoch.filters.assists) {
+            if (playerInEpoch.filters.assists && pass.isAssist) {
               return {
                 ...pass,
                 color: playerInEpoch.color,
