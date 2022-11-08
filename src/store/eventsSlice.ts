@@ -207,7 +207,6 @@ export const eventsSlice = createSlice({
         }
         return player;
       });
-      console.log(state.playersInPitch);
     },
   },
 });

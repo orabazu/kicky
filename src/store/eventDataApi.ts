@@ -83,7 +83,6 @@ export const eventDataApi = createApi({
       query: ({ matchId }) => `events/${matchId}.json`,
       transformResponse: (response, _, arg) => {
         const events = response as Event[];
-        console.log(events);
         const homeTeamId = events[0].possession_team.id;
         let passes: PassType[] = [];
         let shots: ShotType[] = [];
@@ -149,7 +148,6 @@ export const eventDataApi = createApi({
           }
 
           if (event.type.name === 'Shot' && event.shot) {
-            console.log(event);
             shots.push({
               startX: event.location![0],
               startY: event.location![1],
