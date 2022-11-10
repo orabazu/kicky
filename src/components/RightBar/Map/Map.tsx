@@ -2,6 +2,7 @@
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
+import useDrawFrames from 'hooks/useDrawFrames';
 import useDrawKmeans from 'hooks/useDrawKmeans';
 import useDrawPasses from 'hooks/useDrawPasses';
 import useDrawPassNetwork from 'hooks/useDrawPassNetwork';
@@ -157,6 +158,14 @@ export const Map = () => {
     gmaps,
     map,
     shots: eventsData?.shots,
+  });
+
+  useDrawFrames({
+    activeTeamId,
+    forceRerender,
+    gmaps,
+    map,
+    playerMarkerClassnames: styles,
   });
 
   useEffect(() => {

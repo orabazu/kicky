@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { ShotOutcome } from 'src/utils';
 import {
   PlayerInPitch,
   PlayerInPitchFilterType,
@@ -97,7 +98,7 @@ export const MatchDetailPlayers = () => {
         const assistStats = danfo.toJSON(assistCount) as [];
 
         const goalCount = shotDf
-          .query(shotDf['outcome'].eq(97))
+          .query(shotDf['outcome'].eq(ShotOutcome.Goal))
           .groupby(['shooterId', 'teamId'])
           .agg({ shooterId: ['count'] })
           .rename({ shooterId_count: 'goal_count' });

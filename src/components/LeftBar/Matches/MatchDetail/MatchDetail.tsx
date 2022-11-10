@@ -11,8 +11,8 @@ import { setActiveTeamId, setTeams, TeamsType } from 'store/eventsSlice';
 import { setMapCenter } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
+import { MatchDetailFrameAnalysis } from './MatchDetailFrameAnalysis';
 import { MatchDetailPlayers } from './MatchDetailPlayers';
-import { MatchDetailSummary } from './MatchDetailSummary';
 import { MatchDetailTeam } from './MatchDetailTeam';
 
 export const MatchDetail = () => {
@@ -88,11 +88,11 @@ export const MatchDetail = () => {
     {
       label: (
         <span>
-          <GiSoccerField /> Summary
+          <GiSoccerField /> Frame Analysis
         </span>
       ),
-      key: 'summary',
-      children: <MatchDetailSummary matchId={params.matchId} stadiumId={stadiumId} />,
+      key: 'FrameAnalysis',
+      children: <MatchDetailFrameAnalysis />,
     },
   ];
 

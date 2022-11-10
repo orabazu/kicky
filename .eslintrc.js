@@ -47,6 +47,7 @@ module.exports = {
         aspects: ['invalidHref', 'preferButton'],
       },
     ],
+    'no-unused-vars': 'off',
   },
   globals: {
     moment: true,

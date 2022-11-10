@@ -59,3 +59,15 @@ code {
 .ant-result-icon {
   font-size: 40px;
 }
+
+@keyframes drop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.drop {
+  animation: drop 0.3s linear forwards var(--delay-time);
+}

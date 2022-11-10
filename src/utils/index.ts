@@ -3,6 +3,10 @@ import * as UTM from 'utm-latlng';
 
 import { stadiums } from '../const/stadiumCoords';
 
+export enum ShotOutcome {
+  'Goal' = 97,
+}
+
 export const getGeoCoords = (pixelX: number, pixelY: number, stadiumId: number) => {
   const homeStadium = stadiums.find((stadium) => stadium.id === stadiumId);
   const { bottomLeft, bottomRight } = homeStadium!.coords;

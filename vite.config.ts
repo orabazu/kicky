@@ -19,4 +19,14 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      '/image': {
+        target: 'https://yb6is4z7hh.execute-api.eu-central-1.amazonaws.com/prod',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/image/, ''),
+      },
+    },
+  },
 });

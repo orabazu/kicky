@@ -1,0 +1,20 @@
+.FrameAnalysis {
+  display: flex;
+  gap: 6px;
+  line-height: 20px;
+  justify-content: space-between;
+}
+
+.GoTo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  :global(.ant-btn) {
+    height: 20px;
+    padding: 0 8px;
+  }
+}
+
+.Selected {
+  border-color: #34d499;
+}

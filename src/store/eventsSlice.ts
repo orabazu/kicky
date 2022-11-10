@@ -1,6 +1,8 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
+import { FreezeFrame } from './eventDataApi';
+
 export type PassType = {
   startX: number;
   startY: number;
@@ -30,6 +32,8 @@ export type ShotType = {
   shooterName: string;
   shooterId: number;
   outcome: number;
+  freezeFrame: FreezeFrame[];
+  id: string;
 };
 
 export type MovementType = {
@@ -111,6 +115,7 @@ export interface MapState {
     };
   };
   playersInPitch: PlayerInPitch[];
+  activeShotFrame: ShotType | undefined;
   movements: MovementType[];
 }
 
@@ -131,6 +136,7 @@ const initialState: MapState = {
   passNetworks: {},
   kmeans: {},
   playersInPitch: [],
+  activeShotFrame: undefined,
   movements: [],
 };
 
@@ -208,6 +214,10 @@ export const eventsSlice = createSlice({
         return player;
       });
     },
+
+    setActiveShotFrame: (state, action: PayloadAction<ShotType | undefined>) => {
+      state.activeShotFrame = action.payload;
+    },
   },
 });
 
@@ -222,6 +232,7 @@ export const {
   removePlayerInPitchById,
   setPlayerInPitch,
   togglePlayerInPitchFilter,
+  setActiveShotFrame,
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

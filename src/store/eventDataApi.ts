@@ -121,6 +121,19 @@ export const eventDataApi = createApi({
               Number(arg.stadiumId),
             );
           }
+
+          if (event.shot?.freeze_frame) {
+            event.shot.freeze_frame.forEach((frame) => {
+              frame.location = getGeoCoordsFromUTM(
+                event.possession_team.id !== homeTeamId
+                  ? 120 - frame.location[0]
+                  : frame.location[0],
+                frame.location[1],
+                Number(arg.stadiumId),
+              );
+            });
+          }
+
           if (event.type.name === 'Substitution') {
             isSubtituted = true;
           }
@@ -148,6 +161,7 @@ export const eventDataApi = createApi({
           }
 
           if (event.type.name === 'Shot' && event.shot) {
+            console.log(event);
             shots.push({
               startX: event.location![0],
               startY: event.location![1],
@@ -159,6 +173,8 @@ export const eventDataApi = createApi({
               shooterId: event.player.id,
               shooterName: event.player.name,
               outcome: event.shot.outcome.id,
+              freezeFrame: event.shot.freeze_frame,
+              id: event.id,
             });
           }
         });

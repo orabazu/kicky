@@ -4,7 +4,7 @@ import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { rgbToArray } from 'src/utils';
+import { rgbToArray, ShotOutcome } from 'src/utils';
 import { ShotType } from 'store/eventsSlice';
 import { RootState } from 'store/store';
 
@@ -45,7 +45,7 @@ const useDrawPlayerShots = ({
                 color: playerInEpoch.color,
               };
             }
-            if (playerInEpoch.filters.goals && shot.outcome === 97) {
+            if (playerInEpoch.filters.goals && shot.outcome === ShotOutcome.Goal) {
               return {
                 ...shot,
                 color: playerInEpoch.color,
