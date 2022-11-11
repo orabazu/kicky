@@ -25,7 +25,6 @@ const useDrawVoronoi = ({
   const activeShotFrame = useSelector((state: RootState) => state.events.activeShotFrame);
 
   const [voronoiOverlay, setVoronoiOverlay] = useState<GoogleMapsOverlay>();
-  console.log('VORONOI LAYER', voronoiLayer);
 
   useEffect(() => {
     if (map && gmaps) {

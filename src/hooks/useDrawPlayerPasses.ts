@@ -4,7 +4,7 @@ import { ArcLayer, HeatmapLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { rgbToArray } from 'src/utils';
+import { PassTechnique, rgbToArray } from 'src/utils';
 import { PassType } from 'store/eventsSlice';
 import { RootState } from 'store/store';
 
@@ -82,6 +82,19 @@ const useDrawPlayerPasses = ({
           //@ts-ignore
           getHeight: (d: PassType) =>
             d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3,
+          //@ts-ignore
+          getTilt: (d: PassType) => {
+            if (d.technique) {
+              if (d.technique.id === PassTechnique.Inswinging) {
+                return 30;
+              } else if (d.technique.id === PassTechnique.Outswinging) {
+                return -30;
+              } else {
+                return 0;
+              }
+            }
+            return 0;
+          },
         });
 
         const heatmapLayer = new HeatmapLayer({

@@ -28,14 +28,11 @@ const useDrawPasses = ({
   const [passOverlay, setPassOverlay] = useState<GoogleMapsOverlay>();
 
   useEffect(() => {
-    console.log('SET PASSES OVERLAY');
     if (map && gmaps) {
       if (passes && passOverlay && !isPassOverlayVisible) {
-        console.log('REMOVE PASSES OVERLAY');
         passOverlay.setMap(null);
         forceRerender();
       } else if (activeTeamId && isPassOverlayVisible) {
-        console.log('RENDER PASS OVERLAY');
         const filteredPasses = passes
           ?.filter((pass) => pass.teamId === activeTeamId)
           .filter((pass) => {
@@ -50,8 +47,6 @@ const useDrawPasses = ({
               return pass.isCross;
             }
           });
-
-        console.log(filteredPasses);
 
         const passesLayer = new ArcLayer({
           id: 'passes',

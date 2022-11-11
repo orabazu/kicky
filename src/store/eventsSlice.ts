@@ -1,5 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
+import { PassTechnique } from 'src/utils';
 
 import { FreezeFrame } from './eventDataApi';
 
@@ -19,6 +20,10 @@ export type PassType = {
   isCross: boolean;
   teamId: number;
   isHome: boolean;
+  technique?: {
+    name: string;
+    id: PassTechnique;
+  };
 };
 
 export type ShotType = {

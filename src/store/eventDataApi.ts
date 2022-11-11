@@ -34,6 +34,7 @@ export type Event = {
   related_events: string[];
   pass?: Pass;
   shot?: Shot;
+  technique?: PlayPattern;
 };
 
 type Pass = {
@@ -46,6 +47,7 @@ type Pass = {
   aerial_won: boolean;
   goal_assist: boolean;
   cross: boolean;
+  technique?: PlayPattern;
 };
 
 type PlayPattern = {
@@ -157,13 +159,13 @@ export const eventDataApi = createApi({
               isCross: !!event.pass.cross,
               teamId: event.team.id,
               isHome: event.team.id === homeTeamId,
+              technique: event.technique,
             };
             passes.push(pass);
             !isSubtituted ? passesUntilSubstitution.push(pass) : null;
           }
 
           if (event.type.name === 'Shot' && event.shot) {
-            console.log(event);
             shots.push({
               startX: event.location![0],
               startY: event.location![1],

@@ -7,6 +7,13 @@ export enum ShotOutcome {
   'Goal' = 97,
 }
 
+export enum PassTechnique {
+  Inswinging = 104,
+  Outswinging = 105,
+  Straight = 107,
+  ThroughBall = 108,
+}
+
 export const getGeoCoords = (pixelX: number, pixelY: number, stadiumId: number) => {
   const homeStadium = stadiums.find((stadium) => stadium.id === stadiumId);
   const { bottomLeft, bottomRight } = homeStadium!.coords;
