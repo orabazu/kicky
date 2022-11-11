@@ -87,6 +87,7 @@ export const Map = () => {
         tilt: 60,
         //@ts-ignore
         mapId: 'fb9023c973f94f3a',
+        minZoom: 16.5,
       });
 
       mapInstance.set('styles', style);
@@ -102,6 +103,18 @@ export const Map = () => {
   useEffect(() => {
     if (map && gmaps) {
       map.setCenter(mapCenter);
+      const bounds = {
+        north: mapCenter.lat + 0.01,
+        south: mapCenter.lat - 0.01,
+        west: mapCenter.lng - 0.01,
+        east: mapCenter.lng + 0.01,
+      };
+
+      map.setOptions({
+        restriction: {
+          latLngBounds: bounds,
+        },
+      });
     }
   }, [mapCenter, map, gmaps]);
 
