@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { ShotOutcome } from 'src/utils';
 import { EventResponseType } from 'store/eventDataApi';
 import { setActiveShotFrame, ShotType } from 'store/eventsSlice';
+import { removeAllPlayersInPitch } from 'store/eventsSlice';
 // import { setMovements } from 'store/eventsSlice';
 import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
@@ -27,6 +28,11 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
   const [shots, setShots] = useState<ShotType[]>([]);
   const activeShotFrame = useSelector((state: RootState) => state.events.activeShotFrame);
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
+
+  useEffect(() => {
+    dispatch(resetAllLayers());
+    dispatch(removeAllPlayersInPitch());
+  }, []);
 
   useEffect(() => {
     dispatch(resetAllLayers());

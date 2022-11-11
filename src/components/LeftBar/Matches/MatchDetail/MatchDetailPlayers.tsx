@@ -90,19 +90,30 @@ export const MatchDetailPlayers = () => {
           .rename({ shooterId_count: 'shot_count' });
         const shotStats = danfo.toJSON(shotCount) as [];
 
-        const assistCount = passDf
-          .query(passDf['isAssist'].gt(0))
-          .groupby(['passer', 'teamId', 'isAssist'])
-          .agg({ passer: ['count'] })
-          .rename({ passer_count: 'assist_count' });
-        const assistStats = danfo.toJSON(assistCount) as [];
+        let assistStats: any;
+        try {
+          const assistCount = passDf
+            .query(passDf['isAssist'].gt(0))
+            ?.groupby(['passer', 'teamId', 'isAssist'])
+            ?.agg({ passer: ['count'] })
+            ?.rename({ passer_count: 'assist_count' });
+          assistStats = danfo.toJSON(assistCount) as [];
+        } catch {
+          assistStats = [];
+          console.log('error');
+        }
 
-        const goalCount = shotDf
-          .query(shotDf['outcome'].eq(ShotOutcome.Goal))
-          .groupby(['shooterId', 'teamId'])
-          .agg({ shooterId: ['count'] })
-          .rename({ shooterId_count: 'goal_count' });
-        const goalStats = danfo.toJSON(goalCount) as [];
+        let goalStats: any;
+        try {
+          const goalCount = shotDf
+            .query(shotDf['outcome'].eq(ShotOutcome.Goal))
+            .groupby(['shooterId', 'teamId'])
+            .agg({ shooterId: ['count'] })
+            .rename({ shooterId_count: 'goal_count' });
+          goalStats = danfo.toJSON(goalCount) as [];
+        } catch (error) {
+          goalStats = [];
+        }
 
         const homePassers = uniquePasserNames.filter((m) => m.teamId === teams.home.id);
         const awayPassers = uniquePasserNames.filter((m) => m.teamId === teams.away.id);

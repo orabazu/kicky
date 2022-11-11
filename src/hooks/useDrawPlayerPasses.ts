@@ -28,7 +28,7 @@ const useDrawPlayerPasses = ({
   const isPlayerPassOverlayVisible = true;
   useEffect(() => {
     if (map && gmaps) {
-      if (passes && passOverlay && !isPlayerPassOverlayVisible) {
+      if (passes && passOverlay && !playersInPitch.length) {
         passOverlay.setMap(null);
         forceRerender();
       } else if (activeTeamId && Boolean(playersInPitch.length)) {
