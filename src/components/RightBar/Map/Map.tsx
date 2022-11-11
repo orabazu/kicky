@@ -10,6 +10,7 @@ import useDrawPlayerPasses from 'hooks/useDrawPlayerPasses';
 import useDrawPlayerShots from 'hooks/useDrawPlayerShots';
 import useDrawShots from 'hooks/useDrawShots';
 import useThreeMatchSummary from 'hooks/useDrawThreeMatchSummary';
+import useDrawVoronoi from 'hooks/useDrawVoronoi';
 import useMaps from 'hooks/useMaps';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -166,6 +167,13 @@ export const Map = () => {
     gmaps,
     map,
     playerMarkerClassnames: styles,
+  });
+
+  useDrawVoronoi({
+    activeTeamId,
+    forceRerender,
+    gmaps,
+    map,
   });
 
   useEffect(() => {

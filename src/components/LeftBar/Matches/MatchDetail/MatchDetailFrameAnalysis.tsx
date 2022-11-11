@@ -11,6 +11,7 @@ import { setActiveShotFrame, ShotType } from 'store/eventsSlice';
 import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
+import { DataAnalysisModal } from './DataAnalysisModal';
 // import { FreezeFrame, useLazyGetThreeSixtyByMatchIdQuery } from 'store/threeSixtyDataApi';
 import styles from './MatchDetailFrameAnalysis.module.scss';
 
@@ -37,7 +38,6 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
           (shot) => shot.teamId == activeTeamId,
         );
         setShots(shots);
-        console.log(shots);
       }
     });
   }, [activeTeamId]);
@@ -54,6 +54,8 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
               <div>Player: {shot.shooterName}</div>
               <div>Scored: {shot.outcome === ShotOutcome.Goal ? `⚽️🤪` : `😕`}</div>
               <div>#Players in action: {shot.freezeFrame.length}</div>
+              <div>xG: {shot.xGoal}</div>
+              {shot.id === activeShotFrame?.id && <DataAnalysisModal isFrameAnalysis />}
             </div>
             <div className={styles.GoTo}>
               <Button type="link" onClick={() => dispatch(setActiveShotFrame(shot))}>

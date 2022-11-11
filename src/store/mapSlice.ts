@@ -8,6 +8,7 @@ export enum LayerTypes {
   PassNetwork = 'passNetwork',
   Kmeans = 'kmeans',
   Frames = 'frames',
+  Voronoi = 'voronoi',
 }
 
 export interface MapState {
@@ -39,6 +40,7 @@ const initialState: MapState = {
     [LayerTypes.PassNetwork]: false,
     [LayerTypes.Kmeans]: false,
     [LayerTypes.Frames]: false,
+    [LayerTypes.Voronoi]: false,
   },
   passFilters: {
     assists: false,
@@ -84,6 +86,7 @@ export const mapSlice = createSlice({
         [LayerTypes.PassNetwork]: false,
         [LayerTypes.Kmeans]: false,
         [LayerTypes.Frames]: false,
+        [LayerTypes.Voronoi]: false,
       };
     },
     toggleMobileMap: (state) => {

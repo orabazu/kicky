@@ -116,6 +116,9 @@ export interface MapState {
   };
   playersInPitch: PlayerInPitch[];
   activeShotFrame: ShotType | undefined;
+  voronois: {
+    [key: string]: any[][];
+  };
   movements: MovementType[];
 }
 
@@ -138,6 +141,7 @@ const initialState: MapState = {
   playersInPitch: [],
   activeShotFrame: undefined,
   movements: [],
+  voronois: {},
 };
 
 export const eventsSlice = createSlice({
@@ -218,6 +222,15 @@ export const eventsSlice = createSlice({
     setActiveShotFrame: (state, action: PayloadAction<ShotType | undefined>) => {
       state.activeShotFrame = action.payload;
     },
+    setVoronoiLayer: (
+      state,
+      action: PayloadAction<{ eventId: string; dataSet: any[][] }>,
+    ) => {
+      state.voronois = {
+        ...state.voronois,
+        [action.payload.eventId]: action.payload.dataSet,
+      };
+    },
   },
 });
 
@@ -233,6 +246,7 @@ export const {
   setPlayerInPitch,
   togglePlayerInPitchFilter,
   setActiveShotFrame,
+  setVoronoiLayer,
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

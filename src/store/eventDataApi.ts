@@ -54,6 +54,8 @@ type PlayPattern = {
 };
 
 export type FreezeFrame = {
+  x: never;
+  y: never;
   location: number[];
   player: PlayPattern;
   position: PlayPattern;

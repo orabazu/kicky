@@ -2,22 +2,31 @@ import { Avatar, Button, Card, Col, Modal, Row } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import ClusterImage from 'assets/cluster.png';
 import PassNetworkImage from 'assets/passnetwork.png';
+import VoronoiImage from 'assets/voronoi.png';
+import { Delaunay } from 'd3-delaunay';
 import * as danfo from 'danfojs/dist/danfojs-browser/src';
 import ml5 from 'ml5';
 import React, { useState } from 'react';
 import { BsPlusSquareDotted } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { setKmeansLayer, setPassNetworkLayer } from 'store/eventsSlice';
+import { setKmeansLayer, setPassNetworkLayer, setVoronoiLayer } from 'store/eventsSlice';
 import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import styles from './DataAnalysisModal.module.scss';
 
-export const DataAnalysisModal = () => {
+type DataAnalysisModalProps = {
+  isFrameAnalysis?: boolean;
+};
+
+export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
+  isFrameAnalysis = false,
+}) => {
   const dispatch = useDispatch();
   const params = useParams();
   const eventDataQueries = useSelector((state: RootState) => state.eventDataApi.queries);
+  const activeShotFrame = useSelector((state: RootState) => state.events.activeShotFrame);
   const teams = useSelector((state: RootState) => state.events.teams);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -179,6 +188,31 @@ export const DataAnalysisModal = () => {
     dispatch(toggleLayer(LayerTypes.Kmeans));
   };
 
+  const createVoronoiDiagram = () => {
+    const points: any = [];
+    activeShotFrame!.freezeFrame!.forEach((f) =>
+      //@ts-ignore
+      points.push([f.location[0], f.location[1]]),
+    );
+
+    const delaunay = Delaunay.from(points);
+    const voronoi = delaunay.voronoi([
+      52.59016292531434, -2.1308935294774534, 52.59073803892923, -2.130050429133774,
+    ]);
+
+    const voronoiArr: any[] = [];
+
+    activeShotFrame!.freezeFrame!.forEach((c: any, idx: number) => {
+      const cell = voronoi.cellPolygon(idx);
+      const latLngCell = cell.map((c: any) => ({ lat: c[0], lng: c[1] }));
+      voronoiArr.push(latLngCell);
+    });
+
+    dispatch(setVoronoiLayer({ eventId: activeShotFrame!.id, dataSet: voronoiArr }));
+    dispatch(toggleLayer(LayerTypes.Voronoi));
+    console.log(voronoiArr);
+  };
+
   return (
     <div>
       <div className={styles.AnalysisButton}>
@@ -196,60 +230,84 @@ export const DataAnalysisModal = () => {
         footer={null}
       >
         <Row gutter={16}>
-          <Col span={12}>
-            <Card
-              actions={[
-                <div className={styles.Provider} key="powered">
-                  <span>Powered by: </span>
-                  <img
-                    src={
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGy1t3tz6CJKda8Flq8RRZWiV34uIK6jB4um0OnaK&s'
-                    }
-                    alt="stats"
-                    className={styles.ProviderImage}
+          {!isFrameAnalysis && (
+            <>
+              <Col span={12}>
+                <Card
+                  actions={[
+                    <div className={styles.Provider} key="powered">
+                      <span>Powered by: </span>
+                      <img
+                        src={
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGy1t3tz6CJKda8Flq8RRZWiV34uIK6jB4um0OnaK&s'
+                        }
+                        alt="stats"
+                        className={styles.ProviderImage}
+                      />
+                    </div>,
+                    <Button key={'run'} onClick={createPassNetwork}>
+                      Run
+                    </Button>,
+                  ]}
+                  className={styles.ProviderCard}
+                >
+                  <Meta
+                    avatar={<Avatar src={PassNetworkImage} />}
+                    title="Pass Networks"
+                    description="For passing networks we use only accurate/successful passes made by a team until the first substitution along with average postion of the players."
                   />
-                </div>,
-                <Button key={'run'} onClick={createPassNetwork}>
-                  Run
-                </Button>,
-              ]}
-              className={styles.ProviderCard}
-            >
-              <Meta
-                avatar={<Avatar src={PassNetworkImage} />}
-                title="Pass Networks"
-                description="For passing networks we use only accurate/successful passes made by a team until the first substitution along with average postion of the players."
-              />
-              <div className={styles.ProviderWrapper}></div>
-            </Card>
-          </Col>
-          <Col span={12}>
-            <Card
-              actions={[
-                <div className={styles.Provider} key="powered">
-                  <span>Powered by: </span>
-                  <img
-                    src={
-                      'https://ml5js.org/static/ml5_logo_purple-88e082b8dc81d8729f95bcc092db90c5.png'
-                    }
-                    alt="stats"
-                    className={styles.ProviderImage}
+                  <div className={styles.ProviderWrapper}></div>
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card
+                  actions={[
+                    <div className={styles.Provider} key="powered">
+                      <span>Powered by: </span>
+                      <img
+                        src={
+                          'https://ml5js.org/static/ml5_logo_purple-88e082b8dc81d8729f95bcc092db90c5.png'
+                        }
+                        alt="stats"
+                        className={styles.ProviderImage}
+                      />
+                    </div>,
+                    <Button key={'run'} onClick={createKmeans}>
+                      Run
+                    </Button>,
+                  ]}
+                  className={styles.ProviderCard}
+                >
+                  <Meta
+                    avatar={<Avatar src={ClusterImage} />}
+                    title="Clustering K-Means of Passes"
+                    description="Find a custom number of geospatial clusters from a set of passes"
                   />
-                </div>,
-                <Button key={'run'} onClick={createKmeans}>
-                  Run
-                </Button>,
-              ]}
-              className={styles.ProviderCard}
-            >
-              <Meta
-                avatar={<Avatar src={ClusterImage} />}
-                title="Clustering K-Means of Passes"
-                description="Find a custom number of geospatial clusters from a set of passes"
-              />
-              <div className={styles.ProviderWrapper}></div>
-            </Card>
-          </Col>
+                  <div className={styles.ProviderWrapper}></div>
+                </Card>
+              </Col>
+            </>
+          )}
+          {isFrameAnalysis && (
+            <Col span={12}>
+              <Card
+                actions={[
+                  <Button key={'run'} onClick={createVoronoiDiagram}>
+                    Run
+                  </Button>,
+                ]}
+                className={styles.ProviderCard}
+              >
+                <Meta
+                  avatar={<Avatar src={VoronoiImage} />}
+                  title="Voronoi Diagram"
+                  description="Voronoi Diagrams are a way of partitioning a plane into regions based on distance to points in a specific subset of the plane. 
+                  In this case tells about how well the team geometrically controls the pitch."
+                />
+                <div className={styles.ProviderWrapper}></div>
+              </Card>
+            </Col>
+          )}
         </Row>
       </Modal>
     </div>

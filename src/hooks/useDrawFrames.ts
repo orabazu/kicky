@@ -130,7 +130,6 @@ const useDrawFrames = ({
         if (activeShotFrame) {
           Promise.all(
             activeShotFrame?.freezeFrame.map(async (player) => {
-              console.log(player);
               let image = '';
               try {
                 image = await fetchImage(player.player.name + ' transfermarkt').unwrap();
@@ -145,7 +144,7 @@ const useDrawFrames = ({
               err.message; // Oops!
             })
             .finally(() => {
-              const player: FreezeFrame = {
+              const player = {
                 location: [activeShotFrame.startX, activeShotFrame.startY],
                 player: {
                   id: activeShotFrame.shooterId,
@@ -160,7 +159,12 @@ const useDrawFrames = ({
               fetchImage(activeShotFrame.shooterName + ' transfermarkt')
                 .unwrap()
                 .then((image) => {
-                  generatePlayerMarker(player, image, activeShotFrame, markerArr);
+                  generatePlayerMarker(
+                    player as FreezeFrame,
+                    image,
+                    activeShotFrame,
+                    markerArr,
+                  );
                 });
             });
         }
