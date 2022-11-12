@@ -5,6 +5,7 @@ import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { getClusterColor } from 'src/utils';
 import { RootState } from 'store/store';
 
 type useDrawKmeansType = {
@@ -13,28 +14,6 @@ type useDrawKmeansType = {
   forceRerender: () => void;
   activeTeamId: number | undefined;
   activeMatch: Match | undefined;
-};
-
-export const getClusterColor = (cluster: number) => {
-  if (cluster === 0) {
-    return [228, 26, 28];
-  } else if (cluster === 1) {
-    return [55, 126, 184];
-  } else if (cluster === 2) {
-    return [77, 175, 74];
-  } else if (cluster === 3) {
-    return [152, 78, 163];
-  } else if (cluster === 4) {
-    return [255, 127, 0];
-  } else if (cluster === 5) {
-    return [255, 255, 51];
-  } else if (cluster === 6) {
-    return [166, 86, 40];
-  } else if (cluster === 7) {
-    return [247, 129, 191];
-  } else {
-    return [128, 128, 128];
-  }
 };
 
 const useDrawKmeans = ({

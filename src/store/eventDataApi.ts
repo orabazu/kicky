@@ -35,6 +35,8 @@ export type Event = {
   pass?: Pass;
   shot?: Shot;
   technique?: PlayPattern;
+  originalLocation?: number[];
+  originalEndLocation?: number[];
 };
 
 type Pass = {
@@ -95,6 +97,7 @@ export const eventDataApi = createApi({
 
         events?.forEach((event) => {
           if (event.location) {
+            event.originalLocation = [...event.location];
             event.location = getGeoCoordsFromUTM(
               event.possession_team.id !== homeTeamId
                 ? 120 - event.location[0]
@@ -106,6 +109,7 @@ export const eventDataApi = createApi({
             );
           }
           if (event.pass?.end_location) {
+            event.originalEndLocation = [...event.pass.end_location];
             event.pass.end_location = getGeoCoordsFromUTM(
               event.possession_team.id !== homeTeamId
                 ? 120 - event.pass.end_location[0]
@@ -117,6 +121,7 @@ export const eventDataApi = createApi({
             );
           }
           if (event.shot?.end_location) {
+            event.originalEndLocation = { ...event.shot.end_location };
             event.shot.end_location = getGeoCoordsFromUTM(
               event.possession_team.id !== homeTeamId
                 ? 120 - event.shot.end_location[0]
@@ -160,6 +165,18 @@ export const eventDataApi = createApi({
               teamId: event.team.id,
               isHome: event.team.id === homeTeamId,
               technique: event.technique,
+              originalStartX: event.originalLocation![0],
+              originalStartY: event.originalLocation![1],
+              originalEndX: event.originalEndLocation![0],
+              originalEndY: event.originalEndLocation![1],
+              startGrid: {
+                x: 0,
+                y: 0,
+              },
+              endGrid: {
+                x: 0,
+                y: 0,
+              },
             };
             passes.push(pass);
             !isSubtituted ? passesUntilSubstitution.push(pass) : null;
@@ -179,6 +196,10 @@ export const eventDataApi = createApi({
               outcome: event.shot.outcome.id,
               freezeFrame: event.shot.freeze_frame,
               id: event.id,
+              originalStartX: event.originalLocation![0],
+              originalStartY: event.originalLocation![1],
+              originalEndX: event.originalEndLocation![0],
+              originalEndY: event.originalEndLocation![1],
             });
           }
         });

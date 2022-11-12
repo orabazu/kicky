@@ -24,7 +24,6 @@ export const AddSourceModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openData = useSelector((state: RootState) => state.openData);
-  console.debug(openData);
   const dispatch = useDispatch();
   const params = useParams();
 

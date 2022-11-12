@@ -20,9 +20,21 @@ export type PassType = {
   isCross: boolean;
   teamId: number;
   isHome: boolean;
+  originalStartX: number;
+  originalStartY: number;
+  originalEndX: number;
+  originalEndY: number;
   technique?: {
     name: string;
     id: PassTechnique;
+  };
+  startGrid?: {
+    x: number;
+    y: number;
+  };
+  endGrid?: {
+    x: number;
+    y: number;
   };
 };
 
@@ -39,6 +51,10 @@ export type ShotType = {
   outcome: number;
   freezeFrame: FreezeFrame[];
   id: string;
+  originalStartX: number;
+  originalStartY: number;
+  originalEndX: number;
+  originalEndY: number;
 };
 
 export type MovementType = {
@@ -124,6 +140,13 @@ export interface MapState {
   voronois: {
     [key: string]: any[][];
   };
+  xThreat: {
+    [matchId: string]: {
+      [teamId: string]: {
+        data: any[][];
+      };
+    };
+  };
   movements: MovementType[];
 }
 
@@ -147,6 +170,7 @@ const initialState: MapState = {
   activeShotFrame: undefined,
   movements: [],
   voronois: {},
+  xThreat: {},
 };
 
 export const eventsSlice = createSlice({
@@ -236,6 +260,25 @@ export const eventsSlice = createSlice({
         [action.payload.eventId]: action.payload.dataSet,
       };
     },
+    setXthreat: (
+      state,
+      action: PayloadAction<{
+        name: string;
+        dataSet: {
+          [key: string]: {
+            data: any[][];
+          };
+        };
+      }>,
+    ) => {
+      state.xThreat = {
+        ...state.xThreat,
+        [action.payload.name]: {
+          ...state.xThreat?.[action.payload.name],
+          ...action.payload.dataSet,
+        },
+      };
+    },
   },
 });
 
@@ -252,6 +295,7 @@ export const {
   togglePlayerInPitchFilter,
   setActiveShotFrame,
   setVoronoiLayer,
+  setXthreat,
 } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

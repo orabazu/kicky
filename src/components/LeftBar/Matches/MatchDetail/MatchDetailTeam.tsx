@@ -1,10 +1,9 @@
 import { Button, Timeline, Typography } from 'antd';
-import { getClusterColor } from 'hooks/useDrawKmeans';
 import React from 'react';
 import { IoIosEye, IoIosEyeOff } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { radToDeg, rgbToHex } from 'src/utils';
+import { getClusterColor, radToDeg, rgbToHex } from 'src/utils';
 import { KmeansStatsType } from 'store/eventsSlice';
 import {
   LayerTypes,
@@ -35,11 +34,13 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
   const isPassNetworOverlayVisible = useSelector(
     (state: RootState) => state.map.layers.passNetwork,
   );
+  const isXTFilterVisible = useSelector((state: RootState) => state.map.layers.xThreat);
 
   const kmeansFilters = useSelector((state: RootState) => state.map.kmeansFilters);
 
   const passNetworks = useSelector((state: RootState) => state.events.passNetworks);
   const kmeans = useSelector((state: RootState) => state.events.kmeans);
+  const xt = useSelector((state: RootState) => state.events.xThreat);
 
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
   const matches = useSelector(
@@ -146,6 +147,16 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
             </Timeline>
           </div>
         </>
+      )}
+
+      {Object.keys(xt).length > 0 && (
+        <div className="flex space-between">
+          <Title level={5}>Pass Probability </Title>
+          <Button
+            onClick={() => toggle(LayerTypes.xThreat)}
+            icon={isPassNetworOverlayVisible ? <IoIosEye /> : <IoIosEyeOff />}
+          />
+        </div>
       )}
 
       <DataAnalysisModal />

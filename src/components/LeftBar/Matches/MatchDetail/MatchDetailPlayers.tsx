@@ -100,7 +100,6 @@ export const MatchDetailPlayers = () => {
           assistStats = danfo.toJSON(assistCount) as [];
         } catch {
           assistStats = [];
-          console.log('error');
         }
 
         let goalStats: any;

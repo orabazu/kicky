@@ -2,6 +2,7 @@
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { IconLayer, TripsLayer } from 'deck.gl';
 import { google } from 'google-maps';
+import useDrawExpectedThreat from 'hooks/useDrawExpectedThreat';
 import useDrawFrames from 'hooks/useDrawFrames';
 import useDrawKmeans from 'hooks/useDrawKmeans';
 import useDrawPasses from 'hooks/useDrawPasses';
@@ -102,7 +103,6 @@ export const Map = () => {
   // SET CENTER
   useEffect(() => {
     if (map && gmaps) {
-      map.setCenter(mapCenter);
       const bounds = {
         north: mapCenter.lat + 0.01,
         south: mapCenter.lat - 0.01,
@@ -115,8 +115,10 @@ export const Map = () => {
           latLngBounds: bounds,
         },
       });
+
+      map.setCenter(mapCenter);
     }
-  }, [mapCenter, map, gmaps]);
+  }, [mapCenter, map, gmaps, activeMatch]);
 
   useDrawPasses({
     gmaps,
@@ -189,8 +191,16 @@ export const Map = () => {
     map,
   });
 
+  useDrawExpectedThreat({
+    activeMatch,
+    activeTeamId,
+    forceRerender,
+    gmaps,
+    map,
+  });
+
   useEffect(() => {
-    if (activeMatch) {
+    if (activeMatch && map) {
       let mapOptions = {
         tilt: map?.getTilt() || 0,
         heading: map?.getHeading() || 0,
@@ -221,7 +231,7 @@ export const Map = () => {
   }, [activeMatch]);
 
   useEffect(() => {
-    if (passNetworks) {
+    if (passNetworks && map) {
       let mapOptions = {
         tilt: map?.getTilt() || 0,
         heading: map?.getHeading() || 0,
@@ -241,7 +251,7 @@ export const Map = () => {
 
         let { tilt, heading, zoom } = mapOptions;
         //@ts-ignore
-        map.moveCamera({ tilt, heading, zoom });
+        map?.moveCamera({ tilt, heading, zoom });
 
         requestAnimationFrame(animate);
       };
@@ -257,8 +267,6 @@ export const Map = () => {
 
   useEffect(() => {
     if (movements.length) {
-      console.log(`movements`, movements);
-
       let currentTime = 0;
 
       const overlay = new GoogleMapsOverlay({});
@@ -285,7 +293,6 @@ export const Map = () => {
         });
 
         const step = normalizeBetweenTwoRanges(currentTime, 0, 13000, 0, 260);
-        // console.log(step);
 
         const iconLayer = new IconLayer({
           id: 'icon-layer',

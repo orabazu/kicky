@@ -105,3 +105,30 @@ export function rgbToArray(color: string) {
   const rgb = color.replace(/^rgb\(|\s+|\)$/g, '').split(',');
   return rgb.map((num) => Number(num));
 }
+
+export const getClusterColor = (cluster: number) => {
+  if (cluster === 0) {
+    return [228, 26, 28];
+  } else if (cluster === 1) {
+    return [55, 126, 184];
+  } else if (cluster === 2) {
+    return [77, 175, 74];
+  } else if (cluster === 3) {
+    return [152, 78, 163];
+  } else if (cluster === 4) {
+    return [255, 127, 0];
+  } else if (cluster === 5) {
+    return [255, 255, 51];
+  } else if (cluster === 6) {
+    return [166, 86, 40];
+  } else if (cluster === 7) {
+    return [247, 129, 191];
+  } else {
+    return [128, 128, 128];
+  }
+};
+
+export const getWeightedColor = (weight: number) => {
+  const hue = ((weight - 1) * 120).toString(10);
+  return ['hsl(', hue, ',100%,50%)'].join('');
+};

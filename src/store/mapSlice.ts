@@ -9,6 +9,7 @@ export enum LayerTypes {
   Kmeans = 'kmeans',
   Frames = 'frames',
   Voronoi = 'voronoi',
+  xThreat = 'xThreat',
 }
 
 export interface MapState {
@@ -41,6 +42,7 @@ const initialState: MapState = {
     [LayerTypes.Kmeans]: false,
     [LayerTypes.Frames]: false,
     [LayerTypes.Voronoi]: false,
+    [LayerTypes.xThreat]: false,
   },
   passFilters: {
     assists: false,
@@ -87,6 +89,7 @@ export const mapSlice = createSlice({
         [LayerTypes.Kmeans]: false,
         [LayerTypes.Frames]: false,
         [LayerTypes.Voronoi]: false,
+        [LayerTypes.xThreat]: false,
       };
     },
     toggleMobileMap: (state) => {

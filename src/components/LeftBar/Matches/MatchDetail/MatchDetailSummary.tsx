@@ -52,7 +52,6 @@ export const MatchDetailSummary: React.FC<MatchDetailSummaryProps> = ({
       });
     }
     dispatch(setMovements(movements));
-    // console.log(movements);
   }, [threeSixty]);
 
   return <div>{isThreeSixtyFetching || threeSixty?.[0]?.event_uuid}</div>;

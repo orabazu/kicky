@@ -14,8 +14,7 @@ export const Header = () => {
             <img src={HeaderLogo} alt="logo" />
           </Link>
         </div>
-        <div className={styles.siteHeaderButton}>Analyzer</div>
-        <div className={styles.siteHeaderButton}>Discover</div>
+        {/* <div className={styles.siteHeaderButton}>Analyzer</div> */}
       </div>
     </div>
   );

@@ -1,16 +1,26 @@
+//@ts-ignore
+import nj from '@d4c/numjs/build/module/numjs.min.js';
 import { Avatar, Button, Card, Col, Modal, Row } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import ClusterImage from 'assets/cluster.png';
 import PassNetworkImage from 'assets/passnetwork.png';
 import VoronoiImage from 'assets/voronoi.png';
+import xTImage from 'assets/xT.png';
 import { Delaunay } from 'd3-delaunay';
 import * as danfo from 'danfojs/dist/danfojs-browser/src';
 import ml5 from 'ml5';
 import React, { useState } from 'react';
 import { BsPlusSquareDotted } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { setKmeansLayer, setPassNetworkLayer, setVoronoiLayer } from 'store/eventsSlice';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { getGeoCoordsFromUTM } from 'src/utils';
+import {
+  PassType,
+  setKmeansLayer,
+  setPassNetworkLayer,
+  setVoronoiLayer,
+  setXthreat,
+} from 'store/eventsSlice';
 import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
@@ -28,6 +38,9 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
   const eventDataQueries = useSelector((state: RootState) => state.eventDataApi.queries);
   const activeShotFrame = useSelector((state: RootState) => state.events.activeShotFrame);
   const teams = useSelector((state: RootState) => state.events.teams);
+  const [searchParams] = useSearchParams();
+  const stadiumId = searchParams.get('stadiumId');
+  const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -213,6 +226,98 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
     console.log(voronoiArr);
   };
 
+  const calculateXt = () => {
+    Object.keys(eventDataQueries).forEach((key) => {
+      //@ts-ignore
+      if (key.includes(params.matchId!)) {
+        //@ts-ignore
+        const passes = eventDataQueries[key]?.data?.passes;
+        const homePasses = passes.filter(
+          (p: any) => p.teamId === activeTeamId,
+        ) as PassType[];
+
+        const geoGrid = new Array(12);
+        const stadId = parseInt(stadiumId!);
+        for (let i = 0; i < 12; i++) {
+          geoGrid[i] = new Array(8);
+          for (let j = 0; j < 8; j++) {
+            const [upperLeftLat, upperLeftLng] = getGeoCoordsFromUTM(
+              i * 10,
+              j * 10,
+              stadId,
+            );
+            const [upperRightLat, upperRightLng] = getGeoCoordsFromUTM(
+              i * 10,
+              j * 10 + 10,
+              stadId,
+            );
+            const [lowerLeftLat, lowerLeftLng] = getGeoCoordsFromUTM(
+              i * 10 + 10,
+              j * 10,
+              stadId,
+            );
+            const [lowerRightLat, lowerRightLng] = getGeoCoordsFromUTM(
+              i * 10 + 10,
+              j * 10 + 10,
+              stadId,
+            );
+            geoGrid[i][j] = {
+              geom: [
+                {
+                  lat: upperLeftLat,
+                  lng: upperLeftLng,
+                },
+                {
+                  lat: lowerLeftLat,
+                  lng: lowerLeftLng,
+                },
+                {
+                  lat: lowerRightLat,
+                  lng: lowerRightLng,
+                },
+                {
+                  lat: upperRightLat,
+                  lng: upperRightLng,
+                },
+              ],
+            };
+          }
+        }
+
+        const gridNp = nj.zeros([12, 8]) as nj.NdArray<number>;
+
+        for (let i = 0; i < homePasses.length; i++) {
+          const pass = homePasses[i];
+          const xGrid = Math.floor(pass.originalStartX / 12);
+          const yGrid = Math.floor(pass.originalStartY / 8);
+          gridNp.set(xGrid, yGrid, gridNp.get(xGrid, yGrid) + 1);
+        }
+        const moveProbability = gridNp.multiply(1 / homePasses.length);
+
+        const moveProbabilityList = moveProbability.tolist();
+        moveProbabilityList.forEach((element: any, i: number) => {
+          element.forEach((e: any, j: number) => {
+            geoGrid[i][j] = { ...geoGrid[i][j], probability: e };
+          });
+        });
+
+        dispatch(
+          setXthreat({
+            name: params.matchId!,
+            dataSet: {
+              [activeTeamId!.toString()]: {
+                data: geoGrid,
+              },
+            },
+          }),
+        );
+        dispatch(resetAllLayers());
+        dispatch(toggleLayer(LayerTypes.xThreat));
+        closeModal();
+      }
+    });
+  };
+
   return (
     <div>
       <div className={styles.AnalysisButton}>
@@ -282,6 +387,23 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                     avatar={<Avatar src={ClusterImage} />}
                     title="Clustering K-Means of Passes"
                     description="Find a custom number of geospatial clusters from a set of passes"
+                  />
+                  <div className={styles.ProviderWrapper}></div>
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card
+                  actions={[
+                    <Button key={'run'} onClick={calculateXt}>
+                      Run
+                    </Button>,
+                  ]}
+                  className={styles.ProviderCard}
+                >
+                  <Meta
+                    avatar={<Avatar src={xTImage} />}
+                    title="Calculate pass probability"
+                    description="12x8 grid of pass probability shows where the teams are going to pass most likely. Each grid cell is approx.10x10 meters."
                   />
                   <div className={styles.ProviderWrapper}></div>
                 </Card>
