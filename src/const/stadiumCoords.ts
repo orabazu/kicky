@@ -263,4 +263,88 @@ export const stadiums = [
       upperRightInUTM: [6092968, 588167],
     },
   },
+  {
+    id: 67,
+    name: 'AESSEAL New York Stadium ',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      upperLeftInUTM: [5920976, 608753],
+      upperRightInUTM: [5921068, 608798],
+    },
+  },
+  {
+    id: 25,
+    name: 'Stadium MK',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      upperLeftInUTM: [5764474, 655540],
+      upperRightInUTM: [5764572, 655503],
+    },
+  },
+  {
+    id: 203,
+    name: 'The American Express Community Stadium',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      upperLeftInUTM: [5638429, 705259],
+      upperRightInUTM: [5638480, 705167],
+    },
+  },
+  {
+    id: 116926,
+    name: 'Brentford Community Stadium',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      upperLeftInUTM: [5707888, 688149],
+      upperRightInUTM: [5707949, 688239],
+    },
+  },
+  {
+    id: 4979,
+    name: 'Leigh Sports Village Stadium',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      upperLeftInUTM: [5926817, 531131],
+      upperRightInUTM: [5926916, 531166],
+    },
+  },
+  {
+    id: 99,
+    name: 'Academy Stadium ',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      upperLeftInUTM: [5926056, 553542],
+      upperRightInUTM: [5926158, 553521],
+    },
+  },
+  {
+    id: 216,
+    name: 'Bramall Lane',
+    country: {
+      id: 68,
+      name: 'England',
+    },
+    coords: {
+      upperLeftInUTM: [5914580, 601684],
+      upperRightInUTM: [5914602, 601782],
+    },
+  },
 ];
