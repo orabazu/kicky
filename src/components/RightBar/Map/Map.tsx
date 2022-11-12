@@ -149,7 +149,7 @@ export const Map = () => {
     forceRerender,
     activeTeamId,
     activeMatch,
-    playerMarkerClassname: styles.playerName,
+    playerMarkerClassname: styles.PlayerName,
   });
 
   useDrawKmeans({
