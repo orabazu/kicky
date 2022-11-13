@@ -14,30 +14,30 @@ export enum PassTechnique {
   ThroughBall = 108,
 }
 
-export const getGeoCoords = (pixelX: number, pixelY: number, stadiumId: number) => {
-  const homeStadium = stadiums.find((stadium) => stadium.id === stadiumId);
-  const { bottomLeft, bottomRight } = homeStadium!.coords;
+// export const getGeoCoords = (pixelX: number, pixelY: number, stadiumId: number) => {
+//   const homeStadium = stadiums.find((stadium) => stadium.id === stadiumId);
+//   const { bottomLeft, bottomRight } = homeStadium!.coords;
 
-  const [bottomRightX, bottomRightY] = bottomRight;
-  const [bottomLeftX, bottomLeftY] = bottomLeft;
+//   const [bottomRightX, bottomRightY] = bottomRight;
+//   const [bottomLeftX, bottomLeftY] = bottomLeft;
 
-  const rotationinRadians = getAngle(
-    bottomLeftX,
-    bottomLeftY,
-    bottomRightX,
-    bottomRightY,
-  );
-  const convertedX =
-    (pixelX * Math.cos(rotationinRadians) + pixelY * Math.sin(rotationinRadians)) *
-      -0.000009 +
-    bottomRightX;
-  const convertedY =
-    (pixelX * -Math.sin(rotationinRadians) + pixelY * Math.cos(rotationinRadians)) *
-      0.000014 +
-    bottomRightY;
+//   const rotationinRadians = getAngle(
+//     bottomLeftX,
+//     bottomLeftY,
+//     bottomRightX,
+//     bottomRightY,
+//   );
+//   const convertedX =
+//     (pixelX * Math.cos(rotationinRadians) + pixelY * Math.sin(rotationinRadians)) *
+//       -0.000009 +
+//     bottomRightX;
+//   const convertedY =
+//     (pixelX * -Math.sin(rotationinRadians) + pixelY * Math.cos(rotationinRadians)) *
+//       0.000014 +
+//     bottomRightY;
 
-  return [convertedX, convertedY];
-};
+//   return [convertedX, convertedY];
+// };
 
 export const getGeoCoordsFromUTM = (
   pixelX: number,

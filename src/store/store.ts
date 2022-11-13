@@ -6,11 +6,9 @@ import eventsReducer from './eventsSlice';
 import { imageSearchApi } from './imageSearchApi';
 import mapReducer from './mapSlice';
 import openDataReducer from './openDataSlice';
-import { threeSixtyDataApi } from './threeSixtyDataApi';
 
 const reducer = combineReducers({
   [eventDataApi.reducerPath]: eventDataApi.reducer,
-  [threeSixtyDataApi.reducerPath]: threeSixtyDataApi.reducer,
   [imageSearchApi.reducerPath]: imageSearchApi.reducer,
   events: eventsReducer,
   map: mapReducer,
@@ -22,7 +20,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(eventDataApi.middleware)
-      .concat(threeSixtyDataApi.middleware)
       .concat(imageSearchApi.middleware),
 });
 

@@ -8,20 +8,15 @@ import { ShotOutcome } from 'src/utils';
 import { EventResponseType } from 'store/eventDataApi';
 import { setActiveShotFrame, ShotType } from 'store/eventsSlice';
 import { removeAllPlayersInPitch } from 'store/eventsSlice';
-// import { setMovements } from 'store/eventsSlice';
 import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import { DataAnalysisModal } from './DataAnalysisModal';
-// import { FreezeFrame, useLazyGetThreeSixtyByMatchIdQuery } from 'store/threeSixtyDataApi';
 import styles from './MatchDetailFrameAnalysis.module.scss';
 
 type MatchDetailFrameAnalysisProps = {};
 
 export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> = () => {
-  // const [fetchThreeSixtyData, { data: threeSixty, isFetching: isThreeSixtyFetching }] =
-  //   useLazyGetThreeSixtyByMatchIdQuery();
-
   const params = useParams();
   const eventDataQueries = useSelector((state: RootState) => state.eventDataApi.queries);
   const dispatch = useDispatch();
