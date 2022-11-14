@@ -39,7 +39,3 @@ After loading data, we visualised all actions on a map using [Deck.GL](https://d
 ## What we learned
 
 Google Maps is capable of powerful data visualisations by easily integrating with libraries such as Three.js, Deck.GL etc. We learned how to build a data analytics and visualisation platform using solely client-side technologies.
-
-## What's next for Kicky
-
-From soccer scouts to non-soccer people, we want to provide an efficient and playful platform. It can be an even more powerful and unified experience with possible integrations with other data sources. With user authentication, users can even share their analyses. Freelance scouts can share or sell their analytics data to small teams which have no indoor analysts. With possible backend integration or frontend implementation, further analysis such as xT (expected threat), PPDA (passes made and defensive actions) or more complex ones. We want to make it possible to run your machine-learning models by uploading them using Tensorflow.js
