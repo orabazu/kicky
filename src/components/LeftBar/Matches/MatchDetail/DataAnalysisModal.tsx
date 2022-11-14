@@ -4,7 +4,7 @@ import Meta from 'antd/lib/card/Meta';
 import ClusterImage from 'assets/cluster.png';
 import PassNetworkImage from 'assets/passnetwork.png';
 import VoronoiImage from 'assets/voronoi.png';
-import xTImage from 'assets/xT.png';
+import xTImage from 'assets/xt.png';
 import { DataFrame, merge, toJSON } from 'danfojs/dist/danfojs-browser/src';
 import ml5 from 'ml5';
 import React, { useState } from 'react';
@@ -86,7 +86,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
               [teams.home.id!.toString()]: homePasses,
               [teams.away.id!.toString()]: awayPasses,
             },
-          })
+          }),
         );
       } else {
         console.log('Data is not provided');
@@ -144,7 +144,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                   stats: clusterStatsJSON,
                 },
               },
-            })
+            }),
           );
         });
 
@@ -173,7 +173,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                   stats: clusterStatsJSON,
                 },
               },
-            })
+            }),
           );
         });
       }
@@ -207,7 +207,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
             const [lowerRightLat, lowerRightLng] = getGeoCoordsFromUTM(
               i * 10 + 10,
               j * 10 + 10,
-              stadId
+              stadId,
             );
             geoGrid[i][j] = {
               geom: [
@@ -257,7 +257,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                 data: geoGrid,
               },
             },
-          })
+          }),
         );
         dispatch(resetAllLayers());
         dispatch(toggleLayer(LayerTypes.xThreat));
