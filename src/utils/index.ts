@@ -78,7 +78,10 @@ export const getGeoCoordsFromUTM = (
     normalizedPixelY * Math.cos(rotationinRadians) +
     eastingUpperLeft;
 
-  const { lat, lng } = utm.convertUtmToLatLng(convertedYUTM, convertedXUTM, '30', 'N');
+  const { lat, lng } = utm.convertUtmToLatLng(convertedYUTM, convertedXUTM, 30, 'N') as {
+    lat: number;
+    lng: number;
+  };
 
   return [lat, lng];
 };
