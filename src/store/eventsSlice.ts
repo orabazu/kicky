@@ -49,7 +49,7 @@ export type ShotType = {
   shooterName: string;
   shooterId: number;
   outcome: number;
-  freezeFrame: FreezeFrame[];
+  freezeFrame?: FreezeFrame[];
   id: string;
   originalStartX: number;
   originalStartY: number;

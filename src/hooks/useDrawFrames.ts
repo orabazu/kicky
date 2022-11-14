@@ -128,7 +128,7 @@ const useDrawFrames = ({
         shotOverlay?.setMap(null);
         const markerArr: any[] = [];
 
-        if (activeShotFrame) {
+        if (activeShotFrame && activeShotFrame?.freezeFrame) {
           Promise.all(
             activeShotFrame?.freezeFrame.map(async (player) => {
               let image = '';
