@@ -38,11 +38,7 @@ export enum PassTechnique {
 //   return [convertedX, convertedY];
 // };
 
-export const getGeoCoordsFromUTM = (
-  pixelX: number,
-  pixelY: number,
-  stadiumId: number,
-) => {
+export const getGeoCoordsFromUTM = (pixelX: number, pixelY: number, stadiumId: number) => {
   const homeStadium = stadiums.find((stadium) => stadium.id === stadiumId);
   const utm = new UTM();
 
@@ -57,7 +53,7 @@ export const getGeoCoordsFromUTM = (
     eastingUpperLeft,
     northingUpperLeft,
     eastingUpperRight,
-    northingUpperRight,
+    northingUpperRight
   );
 
   const rotationinDegrees = (rotationinRadians * 180) / Math.PI;
@@ -103,9 +99,12 @@ export function rgbToHex(colorArr?: number[]) {
   return `#${((r << 16) | (g << 8) | b).toString(16)}`;
 }
 
-export function rgbToArray(color: string) {
-  const rgb = color.replace(/^rgb\(|\s+|\)$/g, '').split(',');
-  return rgb.map((num) => Number(num));
+export function rgbToArray(color?: string) {
+  if (color) {
+    const rgb = color.replace(/^rgb\(|\s+|\)$/g, '').split(',');
+    return rgb.map((num) => Number(num));
+  }
+  return [0, 0, 0];
 }
 
 export const getClusterColor = (cluster: number) => {

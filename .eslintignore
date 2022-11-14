@@ -1,8 +1,7 @@
 node_modules
-.DS_Store
 dist
-dist-ssr
-*.local
-node_modules/*
-types
-vite.config.ts
+*.d.ts
+*.config.js
+.json
+webpack
+webpack.**

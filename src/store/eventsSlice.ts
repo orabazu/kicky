@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { PassTechnique } from 'src/utils';
+import { PassTechnique } from 'utils/index';
 
 import { FreezeFrame } from './eventDataApi';
 
@@ -36,6 +36,7 @@ export type PassType = {
     x: number;
     y: number;
   };
+  color?: string;
 };
 
 export type ShotType = {
@@ -187,10 +188,7 @@ export const eventsSlice = createSlice({
     setMovements: (state, action: PayloadAction<MovementType[]>) => {
       state.movements = action.payload;
     },
-    setPassNetworkLayer: (
-      state,
-      action: PayloadAction<{ name: string; dataSet: any }>,
-    ) => {
+    setPassNetworkLayer: (state, action: PayloadAction<{ name: string; dataSet: any }>) => {
       state.passNetworks = {
         ...state.passNetworks,
         [action.payload.name]: { ...action.payload.dataSet },
@@ -206,7 +204,7 @@ export const eventsSlice = createSlice({
             stats: any;
           };
         };
-      }>,
+      }>
     ) => {
       state.kmeans = {
         ...state.kmeans,
@@ -227,12 +225,12 @@ export const eventsSlice = createSlice({
     },
     removePlayerInPitchById: (state, action: PayloadAction<number>) => {
       state.playersInPitch = state.playersInPitch.filter(
-        (player) => player.passer !== action.payload,
+        (player) => player.passer !== action.payload
       );
     },
     togglePlayerInPitchFilter: (
       state,
-      action: PayloadAction<{ passer: number; filter: keyof PlayerInPitchFilterType }>,
+      action: PayloadAction<{ passer: number; filter: keyof PlayerInPitchFilterType }>
     ) => {
       state.playersInPitch = state.playersInPitch.map((player) => {
         if (player.passer === action.payload.passer) {
@@ -251,10 +249,7 @@ export const eventsSlice = createSlice({
     setActiveShotFrame: (state, action: PayloadAction<ShotType | undefined>) => {
       state.activeShotFrame = action.payload;
     },
-    setVoronoiLayer: (
-      state,
-      action: PayloadAction<{ eventId: string; dataSet: any[][] }>,
-    ) => {
+    setVoronoiLayer: (state, action: PayloadAction<{ eventId: string; dataSet: any[][] }>) => {
       state.voronois = {
         ...state.voronois,
         [action.payload.eventId]: action.payload.dataSet,
@@ -269,7 +264,7 @@ export const eventsSlice = createSlice({
             data: any[][];
           };
         };
-      }>,
+      }>
     ) => {
       state.xThreat = {
         ...state.xThreat,

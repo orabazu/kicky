@@ -12,7 +12,7 @@ type MapsContextProps = {
   gmaps: Maps | undefined;
 };
 
-const defaultMapsContext = {
+const defaultMapsContext: MapsContextProps = {
   gmaps: undefined,
 };
 

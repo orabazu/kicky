@@ -1,6 +1,7 @@
-node_modules
-.DS_Store
+# Ignore artifacts:
 dist
-dist-ssr
-*.local
-node_modules/*
+coverage
+node_modules
+
+# Ignore all HTML files:
+*.json

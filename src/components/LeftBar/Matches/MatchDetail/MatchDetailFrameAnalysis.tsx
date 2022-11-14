@@ -4,7 +4,7 @@ import { FiChevronRight } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { ShotOutcome } from 'src/utils';
+import { ShotOutcome } from 'utils/index';
 import { EventResponseType } from 'store/eventDataApi';
 import { setActiveShotFrame, ShotType } from 'store/eventsSlice';
 import { removeAllPlayersInPitch } from 'store/eventsSlice';
@@ -36,7 +36,7 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
       //@ts-ignore
       if (key.includes(params.matchId!)) {
         const shots = (eventDataQueries[key]?.data as EventResponseType).shots.filter(
-          (shot) => shot.teamId == activeTeamId,
+          (shot) => shot.teamId == activeTeamId
         );
         setShots(shots);
       }
@@ -46,10 +46,7 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
   return (
     <div>
       {shots.map((shot) => (
-        <Card
-          key={shot.id}
-          className={shot.id === activeShotFrame?.id ? styles.Selected : ''}
-        >
+        <Card key={shot.id} className={shot.id === activeShotFrame?.id ? styles.Selected : ''}>
           <div className={styles.FrameAnalysis}>
             <div>
               <div>Player: {shot.shooterName}</div>

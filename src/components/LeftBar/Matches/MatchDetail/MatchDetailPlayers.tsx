@@ -1,11 +1,11 @@
 import { Avatar, Button, List } from 'antd';
-import * as danfo from 'danfojs/dist/danfojs-browser/src';
+import { DataFrame, toJSON } from 'danfojs/dist/danfojs-browser/src';
 import { FastAverageColor } from 'fast-average-color';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { ShotOutcome } from 'src/utils';
+import { ShotOutcome } from 'utils/index';
 import {
   PlayerInPitch,
   PlayerInPitchFilterType,
@@ -57,14 +57,14 @@ export const MatchDetailPlayers = () => {
     Object.keys(eventDataQueries).forEach((key) => {
       //@ts-ignore
       if (key.includes(params.matchId!)) {
-        const passDf = new danfo.DataFrame(
+        const passDf = new DataFrame(
           //@ts-ignore
-          eventDataQueries[key]?.data?.passes,
+          eventDataQueries[key]?.data?.passes
         );
 
-        const shotDf = new danfo.DataFrame(
+        const shotDf = new DataFrame(
           //@ts-ignore
-          eventDataQueries[key]?.data?.shots,
+          eventDataQueries[key]?.data?.shots
         );
 
         const passers = passDf.groupby(['passer']);
@@ -75,20 +75,20 @@ export const MatchDetailPlayers = () => {
           .agg({ passer: ['count'] })
           .rename({ passer_count: 'pass_count' });
 
-        const passStats = danfo.toJSON(passCount) as [];
+        const passStats = toJSON(passCount) as [];
 
         const passerNames = passers
           .first()
           .loc({ columns: ['passer', 'passerName', 'teamId'] })
           .setIndex({ column: 'passer' });
 
-        let uniquePasserNames = danfo.toJSON(passerNames) as EventStateData[];
+        let uniquePasserNames = toJSON(passerNames) as EventStateData[];
 
         const shotCount = shotDf
           .groupby(['shooterId', 'teamId'])
           .agg({ shooterId: ['count'] })
           .rename({ shooterId_count: 'shot_count' });
-        const shotStats = danfo.toJSON(shotCount) as [];
+        const shotStats = toJSON(shotCount) as [];
 
         let assistStats: any;
         try {
@@ -97,7 +97,7 @@ export const MatchDetailPlayers = () => {
             ?.groupby(['passer', 'teamId', 'isAssist'])
             ?.agg({ passer: ['count'] })
             ?.rename({ passer_count: 'assist_count' });
-          assistStats = danfo.toJSON(assistCount) as [];
+          assistStats = toJSON(assistCount) as [];
         } catch {
           assistStats = [];
         }
@@ -109,7 +109,7 @@ export const MatchDetailPlayers = () => {
             .groupby(['shooterId', 'teamId'])
             .agg({ shooterId: ['count'] })
             .rename({ shooterId_count: 'goal_count' });
-          goalStats = danfo.toJSON(goalCount) as [];
+          goalStats = toJSON(goalCount) as [];
         } catch (error) {
           goalStats = [];
         }
@@ -138,10 +138,7 @@ export const MatchDetailPlayers = () => {
     dispatch(resetAllLayers());
   }, [eventDataQueries]);
 
-  const toggleFilter = (
-    passer: EventStateData,
-    filter: keyof PlayerInPitchFilterType,
-  ) => {
+  const toggleFilter = (passer: EventStateData, filter: keyof PlayerInPitchFilterType) => {
     if (playersInPitch?.find((p) => p.passer === passer.passer)?.filters) {
       dispatch(togglePlayerInPitchFilter({ passer: passer.passer, filter }));
     } else {
@@ -152,10 +149,10 @@ export const MatchDetailPlayers = () => {
   const onCheck = async (
     e: boolean,
     passer: EventStateData,
-    filter: keyof PlayerInPitchFilterType,
+    filter: keyof PlayerInPitchFilterType
   ) => {
     const color = await fac.getColorAsync(
-      `https://avatars.dicebear.com/api/bottts/${passer.passer}.svg`,
+      `https://avatars.dicebear.com/api/bottts/${passer.passer}.svg`
     );
     const payload: PlayerInPitch = {
       ...passer,
@@ -169,9 +166,7 @@ export const MatchDetailPlayers = () => {
         ...{ [filter]: true },
       },
     };
-    e
-      ? dispatch(setPlayerInPitch(payload))
-      : dispatch(removePlayerInPitchById(passer.passer));
+    e ? dispatch(setPlayerInPitch(payload)) : dispatch(removePlayerInPitchById(passer.passer));
   };
 
   const getClassName = (passer: number, filter: keyof PlayerInPitchFilterType) =>
@@ -188,9 +183,7 @@ export const MatchDetailPlayers = () => {
           <List.Item>
             <List.Item.Meta
               avatar={
-                <Avatar
-                  src={`https://avatars.dicebear.com/api/bottts/${player.passer}.svg`}
-                />
+                <Avatar src={`https://avatars.dicebear.com/api/bottts/${player.passer}.svg`} />
               }
               title={<a href="https://ant.design">{player.passerName}</a>}
               description={
@@ -200,11 +193,7 @@ export const MatchDetailPlayers = () => {
                     onClick={() => toggleFilter(player, 'passes')}
                   >
                     Pass (
-                    {
-                      events.stats.passes?.find((p: any) => p.passer === player.passer)
-                        ?.pass_count
-                    }
-                    )
+                    {events.stats.passes?.find((p: any) => p.passer === player.passer)?.pass_count})
                   </Button>
                   <Button
                     className={getClassName(player.passer, 'assists')}
@@ -228,9 +217,8 @@ export const MatchDetailPlayers = () => {
                     }
                   >
                     Shot (
-                    {events.stats.shots?.find(
-                      (shooter: any) => shooter.shooterId === player.passer,
-                    )?.shot_count || 0}
+                    {events.stats.shots?.find((shooter: any) => shooter.shooterId === player.passer)
+                      ?.shot_count || 0}
                     )
                   </Button>
                   <Button
@@ -238,9 +226,8 @@ export const MatchDetailPlayers = () => {
                     onClick={() => toggleFilter(player, 'goals')}
                   >
                     Goal (
-                    {events.stats.goals?.find(
-                      (shooter: any) => shooter.shooterId === player.passer,
-                    )?.goal_count || 0}
+                    {events.stats.goals?.find((shooter: any) => shooter.shooterId === player.passer)
+                      ?.goal_count || 0}
                     )
                   </Button>
                   <Button
@@ -253,7 +240,7 @@ export const MatchDetailPlayers = () => {
               }
             />
 
-            {/* <span> TODO: Add eye icon to show/hide player in pitch</span> 
+            {/* <span> TODO: Add eye icon to show/hide player in pitch</span>
               <Checkbox onChange={(e) => onCheck(e.target.checked, player)}></Checkbox>
             </span> */}
           </List.Item>

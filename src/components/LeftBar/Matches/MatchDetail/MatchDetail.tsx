@@ -42,7 +42,7 @@ export const MatchDetail = () => {
       setMapCenter({
         lat: stadium?.coords.bottomLeft[0]!,
         lng: stadium?.coords.bottomLeft[1]!,
-      }),
+      })
     );
 
     const teamsPayload: TeamsType = {
@@ -106,6 +106,8 @@ export const MatchDetail = () => {
           options={['Home', 'Away']}
           onChange={onCurrentTeamSelected}
           style={{ textAlign: 'center' }}
+          onResize={undefined}
+          onResizeCapture={undefined}
         />
       </div>
       {isFetching ? <div>Loading...</div> : <Tabs items={tabs} defaultActiveKey="1" />}

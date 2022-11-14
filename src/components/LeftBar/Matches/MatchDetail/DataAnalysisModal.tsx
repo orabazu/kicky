@@ -1,4 +1,3 @@
-//@ts-ignore
 import nj from '@d4c/numjs/build/module/numjs.min.js';
 import { Avatar, Button, Card, Col, Modal, Row } from 'antd';
 import Meta from 'antd/lib/card/Meta';
@@ -6,21 +5,14 @@ import ClusterImage from 'assets/cluster.png';
 import PassNetworkImage from 'assets/passnetwork.png';
 import VoronoiImage from 'assets/voronoi.png';
 import xTImage from 'assets/xT.png';
-import { Delaunay } from 'd3-delaunay';
-import * as danfo from 'danfojs/dist/danfojs-browser/src';
+import { DataFrame, merge, toJSON } from 'danfojs/dist/danfojs-browser/src';
 import ml5 from 'ml5';
 import React, { useState } from 'react';
 import { BsPlusSquareDotted } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { getGeoCoordsFromUTM } from 'src/utils';
-import {
-  PassType,
-  setKmeansLayer,
-  setPassNetworkLayer,
-  setVoronoiLayer,
-  setXthreat,
-} from 'store/eventsSlice';
+import { getGeoCoordsFromUTM } from 'utils/index';
+import { PassType, setKmeansLayer, setPassNetworkLayer, setXthreat } from 'store/eventsSlice';
 import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
@@ -36,7 +28,6 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
   const dispatch = useDispatch();
   const params = useParams();
   const eventDataQueries = useSelector((state: RootState) => state.eventDataApi.queries);
-  const activeShotFrame = useSelector((state: RootState) => state.events.activeShotFrame);
   const teams = useSelector((state: RootState) => state.events.teams);
   const [searchParams] = useSearchParams();
   const stadiumId = searchParams.get('stadiumId');
@@ -54,12 +45,8 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
 
   const createPassNetwork = () => {
     Object.keys(eventDataQueries).forEach((key) => {
-      //@ts-ignore
       if (key.includes(params.matchId!)) {
-        const df = new danfo.DataFrame(
-          //@ts-ignore
-          eventDataQueries[key]?.data?.passesUntilSubstitution,
-        );
+        const df = new DataFrame((eventDataQueries[key]?.data as any)?.passesUntilSubstitution);
 
         const avereagePositions = df
           .groupby(['passer', 'teamId'])
@@ -71,15 +58,15 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
           .agg({ startY: ['count'] })
           .rename({ startY_count: 'count' });
 
-        const merged = danfo.merge({
+        const merged = merge({
           left: passBetween,
           right: avereagePositions,
           on: ['passer'],
           how: 'left',
         });
 
-        let mergedJson = danfo.toJSON(merged) as any[];
-        const averagePositionsJSON = danfo.toJSON(avereagePositions) as any[];
+        let mergedJson = toJSON(merged) as any[];
+        const averagePositionsJSON = toJSON(avereagePositions) as any[];
 
         mergedJson = mergedJson.map((j) => ({
           endX: averagePositionsJSON.find((a) => j.recipient === a.passer)?.startX_mean,
@@ -99,7 +86,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
               [teams.home.id!.toString()]: homePasses,
               [teams.away.id!.toString()]: awayPasses,
             },
-          }),
+          })
         );
       } else {
         console.log('Data is not provided');
@@ -112,10 +99,8 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
 
   const createKmeans = () => {
     Object.keys(eventDataQueries).forEach((key) => {
-      //@ts-ignore
       if (key.includes(params.matchId!)) {
-        //@ts-ignore
-        const passes = eventDataQueries[key]?.data?.passes;
+        const passes = (eventDataQueries[key]?.data as any)?.passes;
         const homePasses = passes.filter((p: any) => p.teamId === teams.home.id);
         const awayPasses = passes.filter((p: any) => p.teamId === teams.away.id);
         const filteredHomePasses = homePasses.map((p: any) => ({
@@ -137,19 +122,18 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
         const kmeansHome = ml5.kmeans(filteredHomePasses, options, () => {
           const kmeansArr: any[][] = Array.from(kmeansHome.dataset);
           const kmeansHomeResult = kmeansArr.map((kmean, idx) => ({
-            //@ts-ignore
-            cluster: kmean.centroid,
+            cluster: (kmean as any).centroid,
             ...homePasses[idx],
           }));
 
-          const df = new danfo.DataFrame(kmeansHomeResult);
+          const df = new DataFrame(kmeansHomeResult);
 
           const clusterStats = df
             .groupby(['cluster'])
             .agg({ length: 'mean', angle: ['mean', 'count'] })
             .rename({ angle_count: 'pass_count' });
 
-          const clusterStatsJSON = danfo.toJSON(clusterStats);
+          const clusterStatsJSON = toJSON(clusterStats);
 
           dispatch(
             setKmeansLayer({
@@ -160,26 +144,25 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                   stats: clusterStatsJSON,
                 },
               },
-            }),
+            })
           );
         });
 
         const kmeansAway = ml5.kmeans(filteredAwayPasses, options, () => {
           const kmeansArr: any[][] = Array.from(kmeansAway.dataset);
           const kmeansAwayResult = kmeansArr.map((kmean, idx) => ({
-            //@ts-ignore
-            cluster: kmean.centroid,
+            cluster: (kmean as any).centroid,
             ...awayPasses[idx],
           }));
 
-          const df = new danfo.DataFrame(kmeansAwayResult);
+          const df = new DataFrame(kmeansAwayResult);
 
           const clusterStats = df
             .groupby(['cluster'])
             .agg({ length: 'mean', angle: ['mean', 'count'] })
             .rename({ angle_count: 'pass_count' });
 
-          const clusterStatsJSON = danfo.toJSON(clusterStats);
+          const clusterStatsJSON = toJSON(clusterStats);
 
           dispatch(
             setKmeansLayer({
@@ -190,7 +173,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                   stats: clusterStatsJSON,
                 },
               },
-            }),
+            })
           );
         });
       }
@@ -202,28 +185,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
   };
 
   const createVoronoiDiagram = () => {
-    const points: any = [];
-    activeShotFrame!.freezeFrame!.forEach((f) =>
-      //@ts-ignore
-      points.push([f.location[0], f.location[1]]),
-    );
-
-    const delaunay = Delaunay.from(points);
-    const voronoi = delaunay.voronoi([
-      52.59016292531434, -2.1308935294774534, 52.59073803892923, -2.130050429133774,
-    ]);
-
-    const voronoiArr: any[] = [];
-
-    activeShotFrame!.freezeFrame!.forEach((c: any, idx: number) => {
-      const cell = voronoi.cellPolygon(idx);
-      const latLngCell = cell.map((c: any) => ({ lat: c[0], lng: c[1] }));
-      voronoiArr.push(latLngCell);
-    });
-
-    dispatch(setVoronoiLayer({ eventId: activeShotFrame!.id, dataSet: voronoiArr }));
-    dispatch(toggleLayer(LayerTypes.Voronoi));
-    console.log(voronoiArr);
+    console.log('createVoronoiDiagram');
   };
 
   const calculateXt = () => {
@@ -232,34 +194,20 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
       if (key.includes(params.matchId!)) {
         //@ts-ignore
         const passes = eventDataQueries[key]?.data?.passes;
-        const homePasses = passes.filter(
-          (p: any) => p.teamId === activeTeamId,
-        ) as PassType[];
+        const homePasses = passes.filter((p: any) => p.teamId === activeTeamId) as PassType[];
 
         const geoGrid = new Array(12);
         const stadId = parseInt(stadiumId!);
         for (let i = 0; i < 12; i++) {
           geoGrid[i] = new Array(8);
           for (let j = 0; j < 8; j++) {
-            const [upperLeftLat, upperLeftLng] = getGeoCoordsFromUTM(
-              i * 10,
-              j * 10,
-              stadId,
-            );
-            const [upperRightLat, upperRightLng] = getGeoCoordsFromUTM(
-              i * 10,
-              j * 10 + 10,
-              stadId,
-            );
-            const [lowerLeftLat, lowerLeftLng] = getGeoCoordsFromUTM(
-              i * 10 + 10,
-              j * 10,
-              stadId,
-            );
+            const [upperLeftLat, upperLeftLng] = getGeoCoordsFromUTM(i * 10, j * 10, stadId);
+            const [upperRightLat, upperRightLng] = getGeoCoordsFromUTM(i * 10, j * 10 + 10, stadId);
+            const [lowerLeftLat, lowerLeftLng] = getGeoCoordsFromUTM(i * 10 + 10, j * 10, stadId);
             const [lowerRightLat, lowerRightLng] = getGeoCoordsFromUTM(
               i * 10 + 10,
               j * 10 + 10,
-              stadId,
+              stadId
             );
             geoGrid[i][j] = {
               geom: [
@@ -309,7 +257,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                 data: geoGrid,
               },
             },
-          }),
+          })
         );
         dispatch(resetAllLayers());
         dispatch(toggleLayer(LayerTypes.xThreat));
@@ -340,7 +288,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
               <Col span={12}>
                 <Card
                   actions={[
-                    <div className={styles.Provider} key="powered">
+                    <div key="powered">
                       <span>Powered by: </span>
                       <img
                         src={
@@ -367,7 +315,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
               <Col span={12}>
                 <Card
                   actions={[
-                    <div className={styles.Provider} key="powered">
+                    <div key="powered">
                       <span>Powered by: </span>
                       <img
                         src={
@@ -423,7 +371,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                 <Meta
                   avatar={<Avatar src={VoronoiImage} />}
                   title="Voronoi Diagram"
-                  description="Voronoi Diagrams are a way of partitioning a plane into regions based on distance to points in a specific subset of the plane. 
+                  description="Voronoi Diagrams are a way of partitioning a plane into regions based on distance to points in a specific subset of the plane.
                   In this case tells about how well the team geometrically controls the pitch."
                 />
                 <div className={styles.ProviderWrapper}></div>

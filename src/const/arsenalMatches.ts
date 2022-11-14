@@ -1,4 +1,4 @@
-export const arsenalMatches = [
+export const arsenalMatches: any = [
   {
     match_id: 3749052,
     match_date: '2004-02-07',

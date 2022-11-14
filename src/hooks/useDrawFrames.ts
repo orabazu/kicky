@@ -4,7 +4,7 @@ import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ShotOutcome } from 'src/utils';
+import { ShotOutcome } from 'utils/index';
 import { FreezeFrame } from 'store/eventDataApi';
 import { ShotType } from 'store/eventsSlice';
 import { useLazyGetImageQuery } from 'store/imageSearchApi';
@@ -12,10 +12,10 @@ import { RootState } from 'store/store';
 
 type useDrawFramesType = {
   map: google.maps.Map<Element> | undefined;
-  gmaps: google | undefined;
+  gmaps: any;
   forceRerender: () => void;
   activeTeamId: number | undefined;
-  playerMarkerClassnames: { [key: string]: string };
+  playerMarkerClassnames: any;
 };
 
 const useDrawFrames = ({
@@ -30,9 +30,7 @@ const useDrawFrames = ({
   const activeShotFrame = useSelector((state: RootState) => state.events.activeShotFrame);
   const [shotOverlay, setShotOverlay] = useState<GoogleMapsOverlay>();
 
-  const isFramesOverlayVisible = useSelector(
-    (state: RootState) => state.map.layers.frames,
-  );
+  const isFramesOverlayVisible = useSelector((state: RootState) => state.map.layers.frames);
 
   const highlight = (markerView: any) => {
     markerView.content.classList.add(playerMarkerClassnames.Highlight);
@@ -58,7 +56,7 @@ const useDrawFrames = ({
     image: string,
     activeShotFrame: ShotType,
     markerArr: any[],
-    xG = false,
+    xG = false
   ) => {
     const playerContent = document.createElement('div');
 
@@ -69,14 +67,13 @@ const useDrawFrames = ({
     playerContent.innerHTML = `
       <div>
         <image src=${image} width="20px" />
-      </div> 
+      </div>
       <div class=${playerMarkerClassnames.Details}>
         <div>${player.player.name}</div>
         ${xG ? `<div class="address">xG: ${activeShotFrame.xGoal}</div>` : ''}
       </div>
     `;
 
-    //@ts-ignore
     const playerMarker = new gmaps.maps.marker.AdvancedMarkerView({
       map,
       position: {
@@ -139,7 +136,7 @@ const useDrawFrames = ({
               }
 
               generatePlayerMarker(player, image, activeShotFrame, markerArr);
-            }),
+            })
           )
             .catch((err) => {
               err.message; // Oops!
@@ -165,7 +162,7 @@ const useDrawFrames = ({
                     image,
                     activeShotFrame,
                     markerArr,
-                    true,
+                    true
                   );
                 });
             });
@@ -174,20 +171,14 @@ const useDrawFrames = ({
         const shotsLayer = new ArcLayer({
           id: 'playerShots',
           data: [activeShotFrame],
-          //@ts-ignore
           dataTransform: (d: ShotType[]) => d.filter((f) => f),
-          //@ts-ignore
           getSourcePosition: (f: ShotType) => [f.startY, f.startX],
-          //@ts-ignore
           getTargetPosition: (f: ShotType) => [f.endY, f.endX],
-          //@ts-ignore
           getSourceColor: (d: ShotType) =>
             d.outcome === ShotOutcome.Goal ? [0, 255, 0] : [255, 0, 0],
-          //@ts-ignore
           getTargetColor: (d: ShotType) =>
             d.outcome === ShotOutcome.Goal ? [0, 255, 0] : [255, 0, 0],
           getWidth: 4,
-          //@ts-ignore
           getHeight: () => 0.15,
         });
 

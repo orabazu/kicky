@@ -37,21 +37,14 @@ const useDrawShots = ({
         const shotsLayer = new ArcLayer({
           id: 'shots',
           data: filteredShots,
-          //@ts-ignore
-          dataTransform: (d: ShotType[]) => d.filter((f) => f),
-          //@ts-ignore
-          getSourcePosition: (f: ShotType) => [f.startY, f.startX], // Prague
-          //@ts-ignore
-          getTargetPosition: (f: ShotType) => [f.endY, f.endX],
-          //@ts-ignore
-          getSourceColor: (d) => (d.height === 1 ? [255, 179, 179] : [0, 128, 200]),
-          //@ts-ignore
-          getTargetColor: (d) =>
-            //@ts-ignore
+          dataTransform: (d: any) => d.filter((f: ShotType[]) => f),
+          getSourcePosition: (f: any) => [(f as ShotType).startY, (f as ShotType).startX],
+          getTargetPosition: (f: any) => [f.endY, f.endX],
+          getSourceColor: (d: any) => (d.height === 1 ? [255, 179, 179] : [0, 128, 200]),
+          getTargetColor: (d: any) =>
             d.height === 1 ? [255, 0, 0] : d.height === 2 ? [166, 130, 255] : [0, 0, 80],
           getWidth: 2,
-          //@ts-ignore
-          getHeight: (d) => (d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3),
+          getHeight: (d: any) => (d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3),
         });
 
         const overlayInstance = new GoogleMapsOverlay({

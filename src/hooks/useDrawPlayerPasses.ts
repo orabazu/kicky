@@ -1,10 +1,9 @@
-//@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { ArcLayer, HeatmapLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { PassTechnique, rgbToArray } from 'src/utils';
+import { PassTechnique, rgbToArray } from 'utils/index';
 import { PassType } from 'store/eventsSlice';
 import { RootState } from 'store/store';
 
@@ -25,7 +24,7 @@ const useDrawPlayerPasses = ({
 }: useDrawPlayerPassesType) => {
   const playersInPitch = useSelector((state: RootState) => state.events.playersInPitch);
   const [passOverlay, setPassOverlay] = useState<GoogleMapsOverlay>();
-  const isPlayerPassOverlayVisible = true;
+  // const isPlayerPassOverlayVisible = true;
   useEffect(() => {
     if (map && gmaps) {
       if (passes && passOverlay && !playersInPitch.length) {
@@ -68,21 +67,14 @@ const useDrawPlayerPasses = ({
         const passesLayer = new ArcLayer({
           id: 'playerPasses',
           data: passData,
-          //@ts-ignore
+
           dataTransform: (d: PassType[]) => d.filter((f) => f),
-          //@ts-ignore
           getSourcePosition: (f: PassType) => [f.startY, f.startX],
-          //@ts-ignore
           getTargetPosition: (f: PassType) => [f.endY, f.endX],
-          //@ts-ignore
           getSourceColor: (d: PassType) => rgbToArray(d.color),
-          //@ts-ignore
           getTargetColor: (d: PassType) => rgbToArray(d.color),
           getWidth: 2,
-          //@ts-ignore
-          getHeight: (d: PassType) =>
-            d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3,
-          //@ts-ignore
+          getHeight: (d: PassType) => (d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3),
           getTilt: (d: PassType) => {
             if (d.technique) {
               if (d.technique.id === PassTechnique.Inswinging) {
@@ -100,12 +92,11 @@ const useDrawPlayerPasses = ({
         const heatmapLayer = new HeatmapLayer({
           id: 'heatmapLayer',
           data: heatmapPassData,
-          getPosition: (d) => [d.startY, d.startX],
+          getPosition: (d: any) => [d.startY, d.startX],
           // getWeight: (d) => 1,
           threshold: 0.01,
           aggregation: 'SUM',
           radiusPixels: 150,
-          //@ts-ignore
           weightsTextureSize: 512,
         });
 

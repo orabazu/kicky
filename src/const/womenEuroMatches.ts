@@ -1,4 +1,4 @@
-export const womenEuroMatches = [
+export const womenEuroMatches: any = [
   {
     match_id: 3847567,
     match_date: '2022-07-31',
