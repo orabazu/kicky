@@ -1,37 +1,42 @@
-# Vite + React + Typescript + Eslint + Prettier
-
-A starter for React with Typescript with the fast Vite and all static code testing with Eslint and formatting with Prettier.
-
-![Vite + React + Typescript + Eslint + Prettier](/resources/screenshot.png)
-
-I found out about Vite and I wanted to have a boilerplate for the technologies that I use. You can find more about these in the following links: [Vite](https://github.com/vitejs/vite), [React](https://reactjs.org/), [Typescript](https://www.typescriptlang.org/), [Eslint](https://eslint.org/), [Prettier](https://prettier.io/).
-
 ## Installation
 
 Clone the repo and run `yarn install`
-
-or Run command
-
-```
-npx degit TheSwordBreaker/vite-reactts-eslint-prettier project-name
-```
 
 ## Start
 
 After the successfull installation of the packages: `yarn dev`
 
-## Steps in Vscode
+## Inspiration
 
-#### (works with better with this template)
+Football, or soccer as you may call it, is a [billion-dollar industry](https://www.imarcgroup.com/football-market#:~:text=Market%20Overview:,4.10%25%20during%202022-2027.), and nowadays, it is shaped around data science. Clubs like Brentford have been promoted to the premier league using sports analytics, especially for recruitment. Nowadays, every major club in football has a data scientist, and the usual choice of language is Python. Even though it is powerful for data visualisations, it usually generates a [static](https://twitter.com/ChelseaDatabase/status/1579943956808609794) analysis result. Our motivation was to make it a more **dynamic**, **interactive** and **playful** browser experience even for **non-analyst people** with the help of **google maps**.
 
-1. Install Eslint and prettier extension for vs code.
-2. Make Sure Both are enabled
-3. Make sure all packages are Installed. (Mostly Eslint and prettier in node_modules)
-4. Enable formatOnSave of vs code
-5. Open a .tsx file and check if the bottom right corners of vs code have Eslint and Prettier with a double tick
+## What it does
 
-![Screenshot (253)_LI](https://user-images.githubusercontent.com/52120562/162486286-7383a737-d555-4f9b-a4dd-c4a81deb7b96.jpg)
+Kicky uses freely accessible soccer analytics data sources. It **visualises soccer moments on google maps** in real-world coordinates. It enables users to analyse data using some machine learning and statistics libraries in the background. Users can see distinct player movements on the **3D** map. Furthermore, they can even see a snapshot of selected events, including player positions and the direction of the shot.
 
-If Everything is Good Then It Should Work, but let me new if something else happens
+## How we built it
 
-Made with ❤️ by theSwordBreaker(we Destory all types of sword ⚡)
+First, we evaluated the free soccer [data](https://github.com/statsbomb/open-data). Since all events are provided with pixel coordinates, it was not applicable on a map. At this stage, we used 2D affine transformation to convert coordinates using corner coordinates of stadiums which we derived from a map.
+After loading data, we visualised all actions on a map using [Deck.GL](https://deck.gl/) arc layer. [Three.js](https://threejs.org/) scene is used to show game results on a map, enabling us to visualise low and high passes in 3D. To analyse pass events, firstly, we integrated danfo.js, which replaces pandas in the python ecosystem. With the help of danfo library, we calculated pass networks. To integrate machine learning analytics into the platform, we use a simple unsupervised learning algorithm (K-means) by using [ml5.js](https://github.com/ml5js/ml5-library) library. All of the calculations are done on the client side using javascript.
+
+## Challenges we ran into
+
+- Since it is a competitive area, it is hard to find free study data
+- Converting soccer events to geographic coordinates
+- Running complex calculations and filters in the browser with javascript.
+- When multiple players and events are applied on a map, it is a bit of a hustle to provide distinctive visualisation
+
+## Accomplishments that we're proud of
+
+- Even though we use a tiny portion of the map, it provides a unique experience and proves that maps can be used to visualise events in open court sports such as soccer, football, tennis etc.
+- We made all calculations on the client side, which make sense for low-cost operations, showing reducing server cost could be possible for data analytics applications.
+- Using integrated ArcLayer on Google Maps provides a 3D interactive experience.
+- Advanced markers let users reconstruct important moments by creating a marker for each player, pictures included whenever possible.
+
+## What we learned
+
+Google Maps is capable of powerful data visualisations by easily integrating with libraries such as Three.js, Deck.GL etc. We learned how to build a data analytics and visualisation platform using solely client-side technologies.
+
+## What's next for Kicky
+
+From soccer scouts to non-soccer people, we want to provide an efficient and playful platform. It can be an even more powerful and unified experience with possible integrations with other data sources. With user authentication, users can even share their analyses. Freelance scouts can share or sell their analytics data to small teams which have no indoor analysts. With possible backend integration or frontend implementation, further analysis such as xT (expected threat), PPDA (passes made and defensive actions) or more complex ones. We want to make it possible to run your machine-learning models by uploading them using Tensorflow.js
