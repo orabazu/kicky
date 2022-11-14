@@ -1,8 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const tailwindcss = require('tailwindcss')
-const autoprefixer = require('autoprefixer') // help tailwindcss to work
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: './src/index.tsx',
@@ -83,7 +82,6 @@ module.exports = {
             options: {
               postcssOptions: {
                 ident: 'postcss',
-                plugins: [tailwindcss, autoprefixer],
               },
             },
           },
@@ -112,12 +110,12 @@ module.exports = {
         ],
       },
       {
-        test: /\.(jpe?g|png|gif|ico|svg)$/,
+        test: /\.(jpe?g|png|gif|ico|svg|json)$/,
         type: 'asset/resource',
       },
       {
         test: /\.json$/,
-        loader: 'json-loader'
+        loader: 'file-loader'
       }
     ],
   },
@@ -130,6 +128,11 @@ module.exports = {
       filename: '[name].[hash].css',
       chunkFilename: '[id].[hash].css',
     }),
+    new CopyPlugin({
+      patterns: [
+        { from: "src/fonts", to: "fonts" },
+      ]
+    })
   ],
   devServer: {
     historyApiFallback: true,
