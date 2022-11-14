@@ -1,5 +1,4 @@
-//@ts-ignore
-import * as UTM from 'utm-latlng';
+import UTM from 'utm-latlng-orabazu';
 
 import { stadiums } from '../const/stadiumCoords';
 

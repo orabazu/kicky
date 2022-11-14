@@ -31,7 +31,7 @@
     "three": "^0.146.0",
     "turf-featurecollection": "^1.0.1",
     "turf-point": "^2.0.1",
-    "utm-latlng": "^1.0.7"
+    "utm-latlng-orabazu": "^1.0.7"
   },
   "devDependencies": {
     "@danmarshall/deckgl-typings": "^4.9.27",

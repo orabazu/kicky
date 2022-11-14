@@ -5919,10 +5919,10 @@ util-deprecate@~1.0.1:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
-utm-latlng@^1.0.7:
+utm-latlng-orabazu@^1.0.7:
   version "1.0.7"
-  resolved "https://registry.yarnpkg.com/utm-latlng/-/utm-latlng-1.0.7.tgz#50d5cc331db6a7f061d00a2fb2fcbf6bb12579ec"
-  integrity sha512-Ij1TCHzrThdHSwYM7SJh3yPNSOqUVnUNQPnF1Dpy1OfaK+ej4a0sDfymMvIrHBzJlERCS114VBW/94WKF++Big==
+  resolved "https://registry.yarnpkg.com/utm-latlng-orabazu/-/utm-latlng-orabazu-1.0.7.tgz#d0151ef64a6b8220eff108a4e4c0ecc90337f3c4"
+  integrity sha512-bePEBWQMDd3kg0XcRtGgPpyrRxOhmvGQIpdKEpOufVqfnvitRgJTZpOBkUuAr0c6x38CcPVExdOH7esX7b31uQ==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
