@@ -190,10 +190,8 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
 
   const calculateXt = () => {
     Object.keys(eventDataQueries).forEach((key) => {
-      //@ts-ignore
       if (key.includes(params.matchId!)) {
-        //@ts-ignore
-        const passes = eventDataQueries[key]?.data?.passes;
+        const passes = (eventDataQueries[key]?.data as any)?.passes;
         const homePasses = passes.filter((p: any) => p.teamId === activeTeamId) as PassType[];
 
         const geoGrid = new Array(12);
