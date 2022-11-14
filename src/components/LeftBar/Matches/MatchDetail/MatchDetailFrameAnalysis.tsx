@@ -56,7 +56,7 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
               <div>Scored: {shot.outcome === ShotOutcome.Goal ? `⚽️🤪` : `😕`}</div>
               <div>#Players in action: {shot.freezeFrame.length}</div>
               <div>xG: {shot.xGoal}</div>
-              {shot.id === activeShotFrame?.id && <DataAnalysisModal isFrameAnalysis />}
+              {/* {shot.id === activeShotFrame?.id && <DataAnalysisModal isFrameAnalysis />} */}
             </div>
             <div className={styles.GoTo}>
               <Button type="link" onClick={() => dispatch(setActiveShotFrame(shot))}>

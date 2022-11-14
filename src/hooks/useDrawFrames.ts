@@ -58,6 +58,7 @@ const useDrawFrames = ({
     image: string,
     activeShotFrame: ShotType,
     markerArr: any[],
+    xG = false,
   ) => {
     const playerContent = document.createElement('div');
 
@@ -71,7 +72,7 @@ const useDrawFrames = ({
       </div> 
       <div class=${playerMarkerClassnames.Details}>
         <div>${player.player.name}</div>
-        <div class="address">xG: ${activeShotFrame.xGoal}</div>
+        ${xG ? `<div class="address">xG: ${activeShotFrame.xGoal}</div>` : ''}
       </div>
     `;
 
@@ -164,6 +165,7 @@ const useDrawFrames = ({
                     image,
                     activeShotFrame,
                     markerArr,
+                    true,
                   );
                 });
             });

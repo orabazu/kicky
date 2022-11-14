@@ -32,7 +32,7 @@ function App() {
             <Route path=":datasetId/matches/:matchId" element={<MatchDetail />} />
           </Route>
 
-          <Route path="map" element={'<Map />'} />
+          <Route path="map" element={'Powered by google maps'} />
         </Route>
 
         <Route path="*" element={`<NoMatch />`} />

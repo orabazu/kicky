@@ -123,7 +123,7 @@ export const AddSourceModal = () => {
           style={{ width: 240 }}
           cover={<img alt="example" src={StatsBomb} />}
         >
-          <Meta title="Europe Street beat" description="www.instagram.com" />
+          <Meta title="Soccer data provider" description="" />
         </Card>
       </Col>
     </Row>

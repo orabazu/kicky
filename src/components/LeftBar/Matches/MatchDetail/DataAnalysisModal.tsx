@@ -334,7 +334,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
         style={{ top: 20, minWidth: '60%' }}
         footer={null}
       >
-        <Row gutter={16}>
+        <Row gutter={[16, 16]}>
           {!isFrameAnalysis && (
             <>
               <Col span={12}>
