@@ -14,10 +14,10 @@ createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <MapsProvider writeKey={'AIzaSyDI5xMgEfYEvmyTun_GuSAtdetEuAIxoy0'}>
+        <MapsProvider writeKey={process.env.REACT_GOOGLE_MAPS_KEY}>
           <App />
         </MapsProvider>
       </Provider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

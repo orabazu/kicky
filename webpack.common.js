@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 module.exports = {
   entry: './src/index.tsx',
@@ -132,7 +133,10 @@ module.exports = {
       patterns: [
         { from: "src/fonts", to: "fonts" },
       ]
-    })
+    }),
+    new Dotenv({
+      systemvars: true,
+    }),
   ],
   devServer: {
     historyApiFallback: true,
