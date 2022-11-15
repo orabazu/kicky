@@ -34,11 +34,12 @@ export const Map = () => {
 
   const { gmaps } = useMaps();
   const mapCenter = useSelector((state: RootState) => state.map.mapCenter);
+  const mapTypeId = useSelector((state: RootState) => state.map.mapTypeId);
   const movements = useSelector((state: RootState) => state.events.movements);
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
   const isMobileMapOpen = useSelector((state: RootState) => state.map.isMobileMapOpen);
   const matches = useSelector(
-    (state: RootState) => state.openData.data[params.datasetId as string]
+    (state: RootState) => state.openData.data[params.datasetId as string],
   );
   const passNetworks = useSelector((state: RootState) => state.events.passNetworks);
 
@@ -54,7 +55,7 @@ export const Map = () => {
       setMapCenter({
         lat: map!.getCenter().lat() + 0.000001,
         lng: map!.getCenter().lng() + 0.000001,
-      })
+      }),
     );
   }, [map]);
 
@@ -249,6 +250,12 @@ export const Map = () => {
       requestAnimationFrame(animate);
     }
   }, [passNetworks]);
+
+  useEffect(() => {
+    if (map && mapTypeId) {
+      map.setMapTypeId(mapTypeId);
+    }
+  }, [map, mapTypeId]);
 
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
     return Math.round(newMin + ((val - minVal) * (newMax - newMin)) / (maxVal - minVal));

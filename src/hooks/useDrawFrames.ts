@@ -1,4 +1,3 @@
-//@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
@@ -56,7 +55,7 @@ const useDrawFrames = ({
     image: string,
     activeShotFrame: ShotType,
     markerArr: any[],
-    xG = false
+    xG = false,
   ) => {
     const playerContent = document.createElement('div');
 
@@ -136,7 +135,7 @@ const useDrawFrames = ({
               }
 
               generatePlayerMarker(player, image, activeShotFrame, markerArr);
-            })
+            }),
           )
             .catch((err) => {
               err.message; // Oops!
@@ -162,7 +161,7 @@ const useDrawFrames = ({
                     image,
                     activeShotFrame,
                     markerArr,
-                    true
+                    true,
                   );
                 });
             });

@@ -23,7 +23,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
   const isAssistFilterVisible = useSelector((state: RootState) => state.map.passFilters.assists);
   const isCrossFilterVisible = useSelector((state: RootState) => state.map.passFilters.crosses);
   const isPassNetworOverlayVisible = useSelector(
-    (state: RootState) => state.map.layers.passNetwork
+    (state: RootState) => state.map.layers.passNetwork,
   );
   const isXTFilterVisible = useSelector((state: RootState) => state.map.layers.xThreat);
 
@@ -35,7 +35,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
 
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
   const matches = useSelector(
-    (state: RootState) => state.openData.data[params.datasetId as string]
+    (state: RootState) => state.openData.data[params.datasetId as string],
   );
   const activeMatch =
     params && matches?.find((match) => match.match_id.toString() === params.matchId);
@@ -106,7 +106,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
           </div>
           <div className="flex mt-20">
             <Timeline style={{ width: '100%' }}>
-              {kmeans?.[activeMatch?.match_id!]?.[activeTeamId!].stats.map(
+              {kmeans?.[activeMatch?.match_id]?.[activeTeamId!].stats.map(
                 (stat: KmeansStatsType) => (
                   <Timeline.Item key={stat.cluster} color={rgbToHex(getClusterColor(stat.cluster))}>
                     <div className="flex space-between">
@@ -124,7 +124,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
                       />
                     </div>
                   </Timeline.Item>
-                )
+                ),
               )}
             </Timeline>
           </div>
@@ -136,7 +136,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
           <Title level={5}>Pass Probability </Title>
           <Button
             onClick={() => toggle(LayerTypes.xThreat)}
-            icon={isPassNetworOverlayVisible ? <IoIosEye /> : <IoIosEyeOff />}
+            icon={isXTFilterVisible ? <IoIosEye /> : <IoIosEyeOff />}
           />
         </div>
       )}

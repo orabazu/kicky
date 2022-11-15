@@ -122,7 +122,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src', 'index.html'),
-      // favicon: './src/favicon.ico',
+      favicon: './src/assets/favicon.ico',
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[hash].css',
@@ -138,6 +138,14 @@ module.exports = {
     historyApiFallback: true,
     port: 8080,
     hot: true,
+    proxy: {
+      '/image': {
+        target: 'https://yb6is4z7hh.execute-api.eu-central-1.amazonaws.com/prod',
+        pathRewrite: { '^/image': '' },
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   externals: {
     ml5: 'ml5',
