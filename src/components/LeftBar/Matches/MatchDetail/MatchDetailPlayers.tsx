@@ -55,16 +55,15 @@ export const MatchDetailPlayers = () => {
 
   const createUniquePassers = () => {
     Object.keys(eventDataQueries).forEach((key) => {
-      //@ts-ignore
-      if (key.includes(params.matchId!)) {
+      if (params.matchId && key.includes(params.matchId)) {
         const passDf = new DataFrame(
           //@ts-ignore
-          eventDataQueries[key]?.data?.passes
+          eventDataQueries[key]?.data?.passes,
         );
 
         const shotDf = new DataFrame(
           //@ts-ignore
-          eventDataQueries[key]?.data?.shots
+          eventDataQueries[key]?.data?.shots,
         );
 
         const passers = passDf.groupby(['passer']);
@@ -82,7 +81,7 @@ export const MatchDetailPlayers = () => {
           .loc({ columns: ['passer', 'passerName', 'teamId'] })
           .setIndex({ column: 'passer' });
 
-        let uniquePasserNames = toJSON(passerNames) as EventStateData[];
+        const uniquePasserNames = toJSON(passerNames) as EventStateData[];
 
         const shotCount = shotDf
           .groupby(['shooterId', 'teamId'])
@@ -149,10 +148,10 @@ export const MatchDetailPlayers = () => {
   const onCheck = async (
     e: boolean,
     passer: EventStateData,
-    filter: keyof PlayerInPitchFilterType
+    filter: keyof PlayerInPitchFilterType,
   ) => {
     const color = await fac.getColorAsync(
-      `https://avatars.dicebear.com/api/bottts/${passer.passer}.svg`
+      `https://avatars.dicebear.com/api/bottts/${passer.passer}.svg`,
     );
     const payload: PlayerInPitch = {
       ...passer,

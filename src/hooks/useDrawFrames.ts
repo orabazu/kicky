@@ -163,6 +163,15 @@ const useDrawFrames = ({
                     markerArr,
                     true,
                   );
+                })
+                .catch(() => {
+                  generatePlayerMarker(
+                    player as FreezeFrame,
+                    `https://avatars.dicebear.com/api/bottts/${player.player.id}.svg`,
+                    activeShotFrame,
+                    markerArr,
+                    true,
+                  );
                 });
             });
         }
