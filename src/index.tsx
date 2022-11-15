@@ -1,20 +1,20 @@
 import './index.scss';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
+
 import { store } from 'store/store';
 
 import App from './App';
 import { MapsProvider } from './contexts/mapContext';
+import { BrowserRouter } from 'react-router-dom';
 
-//@ts-ignore
-ReactDOM.createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <MapsProvider writeKey={import.meta.env.VITE_GOOGLE_MAPS_KEY}>
+        <MapsProvider writeKey={process.env.REACT_GOOGLE_MAPS_KEY}>
           <App />
         </MapsProvider>
       </Provider>

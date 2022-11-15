@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import * as THREE from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import daFont from 'assets/helvetiker_regular.typeface.json';
 
 type useDrawThreeMatchSummaryType = {
   map: google.maps.Map<Element> | undefined;
@@ -36,22 +37,20 @@ const useThreeMatchSummary = ({
 
       const fontLoader = new FontLoader();
 
-      const title = `${activeMatch.home_team.home_team_name
+      const title = `${activeMatch.home_team.home_team_name.substring(0, 3).toLocaleUpperCase()} ${
+        activeMatch.home_score
+      } - ${activeMatch.away_score} ${activeMatch.away_team.away_team_name
         .substring(0, 3)
-        .toLocaleUpperCase()} ${activeMatch.home_score} - ${
-        activeMatch.away_score
-      } ${activeMatch.away_team.away_team_name.substring(0, 3).toLocaleUpperCase()}`;
+        .toLocaleUpperCase()}`;
 
       const stadium = `${activeMatch.stadium.name}`;
 
       const matchDate = new Date(activeMatch.match_date);
 
-      const activeStadium = stadiums.find(
-        (stadium) => stadium.id === activeMatch.stadium.id,
-      );
+      const activeStadium = stadiums.find((stadium) => stadium.id === activeMatch.stadium.id);
 
       fontLoader.load(
-        '../../../../resources/helvetiker_regular.typeface.json',
+        '../../../../../fonts/helvetiker_regular.typeface.json',
         function (font) {
           const titleGeo = new TextGeometry(title, {
             font: font,
@@ -162,6 +161,16 @@ const useThreeMatchSummary = ({
           dateMesh.receiveShadow = true;
 
           scene.add(dateMesh);
+        },
+
+        // onProgress callback
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+        },
+        // onError callback
+        function (err: any) {
+          console.log('An error happened');
+          console.error(err);
         },
       );
 

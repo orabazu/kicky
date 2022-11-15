@@ -1,10 +1,9 @@
-//@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { rgbToArray, ShotOutcome } from 'src/utils';
+import { rgbToArray, ShotOutcome } from 'utils/index';
 import { ShotType } from 'store/eventsSlice';
 import { RootState } from 'store/store';
 

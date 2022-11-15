@@ -17,16 +17,12 @@ export const MatchScore: React.FC<MatchScoreProps> = ({
 }) => {
   return (
     <>
-      <span className={styles.TeamName}>
-        {homeTeamName.substring(0, 3).toLocaleUpperCase()}
-      </span>
+      <span>{homeTeamName.substring(0, 3).toLocaleUpperCase()}</span>
       <div className={styles.Score}>
         <div className={styles.TeamScore}>{homeScore}</div>
         <span className={styles.TeamScore}>{awayScore}</span>
       </div>
-      <span className={styles.TeamName}>
-        {awayTeamName.substring(0, 3).toLocaleUpperCase()}
-      </span>
+      <span>{awayTeamName.substring(0, 3).toLocaleUpperCase()}</span>
     </>
   );
 };

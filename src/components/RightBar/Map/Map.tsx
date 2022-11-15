@@ -11,7 +11,6 @@ import useDrawPlayerPasses from 'hooks/useDrawPlayerPasses';
 import useDrawPlayerShots from 'hooks/useDrawPlayerShots';
 import useDrawShots from 'hooks/useDrawShots';
 import useThreeMatchSummary from 'hooks/useDrawThreeMatchSummary';
-import useDrawVoronoi from 'hooks/useDrawVoronoi';
 import useMaps from 'hooks/useMaps';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +34,7 @@ export const Map = () => {
 
   const { gmaps } = useMaps();
   const mapCenter = useSelector((state: RootState) => state.map.mapCenter);
+  const mapTypeId = useSelector((state: RootState) => state.map.mapTypeId);
   const movements = useSelector((state: RootState) => state.events.movements);
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
   const isMobileMapOpen = useSelector((state: RootState) => state.map.isMobileMapOpen);
@@ -184,13 +184,6 @@ export const Map = () => {
     playerMarkerClassnames: styles,
   });
 
-  useDrawVoronoi({
-    activeTeamId,
-    forceRerender,
-    gmaps,
-    map,
-  });
-
   useDrawExpectedThreat({
     activeMatch,
     activeTeamId,
@@ -201,7 +194,7 @@ export const Map = () => {
 
   useEffect(() => {
     if (activeMatch && map) {
-      let mapOptions = {
+      const mapOptions = {
         tilt: map?.getTilt() || 0,
         heading: map?.getHeading() || 0,
         zoom: map?.getZoom() || 0,
@@ -219,9 +212,8 @@ export const Map = () => {
           return;
         }
 
-        let { tilt, heading, zoom } = mapOptions;
-        //@ts-ignore
-        map.moveCamera({ tilt, heading, zoom });
+        const { tilt, heading, zoom } = mapOptions;
+        (map as any).moveCamera({ tilt, heading, zoom });
 
         requestAnimationFrame(animate);
       };
@@ -232,7 +224,7 @@ export const Map = () => {
 
   useEffect(() => {
     if (passNetworks && map) {
-      let mapOptions = {
+      const mapOptions = {
         tilt: map?.getTilt() || 0,
         heading: map?.getHeading() || 0,
         zoom: map?.getZoom() || 0,
@@ -249,9 +241,8 @@ export const Map = () => {
           return;
         }
 
-        let { tilt, heading, zoom } = mapOptions;
-        //@ts-ignore
-        map?.moveCamera({ tilt, heading, zoom });
+        const { tilt, heading, zoom } = mapOptions;
+        (map as any)?.moveCamera({ tilt, heading, zoom });
 
         requestAnimationFrame(animate);
       };
@@ -260,7 +251,12 @@ export const Map = () => {
     }
   }, [passNetworks]);
 
-  //@ts-ignore
+  useEffect(() => {
+    if (map && mapTypeId) {
+      map.setMapTypeId(mapTypeId);
+    }
+  }, [map, mapTypeId]);
+
   const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
     return Math.round(newMin + ((val - minVal) * (newMax - newMin)) / (maxVal - minVal));
   };
@@ -280,9 +276,7 @@ export const Map = () => {
         const tripsLayer = new TripsLayer({
           id: 'trips',
           data: movements,
-          //@ts-ignore
           getPath: (d: MovementType & { players: [] }) => d.path,
-          //@ts-ignore
           getTimestamps: (d: MovementType) => d.timestamps,
           getColor: () => [255, 0, 0],
           opacity: 0.5,
@@ -306,7 +300,6 @@ export const Map = () => {
           getIcon: () => 'marker',
 
           sizeScale: 15,
-          //@ts-ignore
           getPosition: (d) => d,
           getSize: () => 3,
           getColor: () => [0, 140, 0],
@@ -349,10 +342,7 @@ export const Map = () => {
   }, [movements, map]);
 
   return (
-    <div
-      id="map"
-      className={isMobileMapOpen ? `${styles.Map} ${styles.MapOpen}` : styles.Map}
-    >
+    <div id="map" className={isMobileMapOpen ? `${styles.Map} ${styles.MapOpen}` : styles.Map}>
       Map
     </div>
   );

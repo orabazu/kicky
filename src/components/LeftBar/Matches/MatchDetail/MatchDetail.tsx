@@ -7,8 +7,8 @@ import { HiUser, HiUserGroup } from 'react-icons/hi';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useLazyGetEventByMatchIdQuery } from 'store/eventDataApi';
-import { setActiveTeamId, setTeams, TeamsType } from 'store/eventsSlice';
-import { setMapCenter } from 'store/mapSlice';
+import { removeAllPlayersInPitch, setActiveTeamId, setTeams, TeamsType } from 'store/eventsSlice';
+import { resetAllLayers, setMapCenter, setMapTypeId } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import { MatchDetailFrameAnalysis } from './MatchDetailFrameAnalysis';
@@ -66,6 +66,14 @@ export const MatchDetail = () => {
     dispatch(setActiveTeamId(val === 'Away' ? away.id : home.id));
   };
 
+  const onTabChange = (val: string) => {
+    dispatch(resetAllLayers());
+    dispatch(removeAllPlayersInPitch());
+    if (val == 'frameAnalysis') {
+      dispatch(setMapTypeId('satellite'));
+    }
+  };
+
   const tabs = [
     {
       label: (
@@ -91,7 +99,7 @@ export const MatchDetail = () => {
           <GiSoccerField /> Frame Analysis
         </span>
       ),
-      key: 'FrameAnalysis',
+      key: 'frameAnalysis',
       children: <MatchDetailFrameAnalysis />,
     },
   ];
@@ -106,9 +114,15 @@ export const MatchDetail = () => {
           options={['Home', 'Away']}
           onChange={onCurrentTeamSelected}
           style={{ textAlign: 'center' }}
+          onResize={undefined}
+          onResizeCapture={undefined}
         />
       </div>
-      {isFetching ? <div>Loading...</div> : <Tabs items={tabs} defaultActiveKey="1" />}
+      {isFetching ? (
+        <div>Loading...</div>
+      ) : (
+        <Tabs items={tabs} defaultActiveKey="1" onChange={onTabChange} />
+      )}
     </>
   );
 };

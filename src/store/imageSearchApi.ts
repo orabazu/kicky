@@ -10,12 +10,15 @@ type SearchResult = string;
 export const imageSearchApi = createApi({
   reducerPath: 'imageSearchApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/image',
+    baseUrl:
+      process.env.NODE_ENV === 'production'
+        ? 'https://yb6is4z7hh.execute-api.eu-central-1.amazonaws.com/prod'
+        : 'http://localhost:8080/image',
     method: 'GET',
   }),
   endpoints: (builder) => ({
     getImage: builder.query<SearchResult, string>({
-      query: (search) => `?search=${search}`,
+      query: (search) => encodeURI(`?search=${search}`),
       transformResponse: (response) => {
         const url = response as SearchResponse;
         return url.params;

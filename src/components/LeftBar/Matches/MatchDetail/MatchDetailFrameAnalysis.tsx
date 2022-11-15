@@ -4,11 +4,11 @@ import { FiChevronRight } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { ShotOutcome } from 'src/utils';
+import { ShotOutcome } from 'utils/index';
 import { EventResponseType } from 'store/eventDataApi';
 import { setActiveShotFrame, ShotType } from 'store/eventsSlice';
 import { removeAllPlayersInPitch } from 'store/eventsSlice';
-import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
+import { LayerTypes, openLayer, resetAllLayers, setMapCenter, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import { DataAnalysisModal } from './DataAnalysisModal';
@@ -33,8 +33,7 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
     dispatch(resetAllLayers());
     dispatch(toggleLayer(LayerTypes.Frames));
     Object.keys(eventDataQueries).forEach((key) => {
-      //@ts-ignore
-      if (key.includes(params.matchId!)) {
+      if (params.matchId && key.includes(params.matchId)) {
         const shots = (eventDataQueries[key]?.data as EventResponseType).shots.filter(
           (shot) => shot.teamId == activeTeamId,
         );
@@ -43,13 +42,21 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
     });
   }, [activeTeamId]);
 
+  const onActiveShotFrameChange = (shot: ShotType) => {
+    dispatch(setActiveShotFrame(shot));
+    dispatch(openLayer(LayerTypes.Frames));
+    dispatch(
+      setMapCenter({
+        lat: shot.startX,
+        lng: shot.startY,
+      }),
+    );
+  };
+
   return (
     <div>
       {shots.map((shot) => (
-        <Card
-          key={shot.id}
-          className={shot.id === activeShotFrame?.id ? styles.Selected : ''}
-        >
+        <Card key={shot.id} className={shot.id === activeShotFrame?.id ? styles.Selected : ''}>
           <div className={styles.FrameAnalysis}>
             <div>
               <div>Player: {shot.shooterName}</div>
@@ -59,7 +66,7 @@ export const MatchDetailFrameAnalysis: React.FC<MatchDetailFrameAnalysisProps> =
               {/* {shot.id === activeShotFrame?.id && <DataAnalysisModal isFrameAnalysis />} */}
             </div>
             <div className={styles.GoTo}>
-              <Button type="link" onClick={() => dispatch(setActiveShotFrame(shot))}>
+              <Button type="link" onClick={() => onActiveShotFrameChange(shot)}>
                 <FiChevronRight />
               </Button>
             </div>

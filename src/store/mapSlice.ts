@@ -28,6 +28,7 @@ export interface MapState {
     [k: string]: boolean;
   };
   isMobileMapOpen: boolean;
+  mapTypeId: string;
 }
 
 const initialState: MapState = {
@@ -59,6 +60,7 @@ const initialState: MapState = {
     '7': true,
   },
   isMobileMapOpen: false,
+  mapTypeId: '',
 };
 
 export const mapSlice = createSlice({
@@ -78,8 +80,14 @@ export const mapSlice = createSlice({
         lng: action.payload.lng,
       };
     },
+    setMapTypeId: (state, action: PayloadAction<string>) => {
+      state.mapTypeId = action.payload;
+    },
     toggleLayer: (state, action: PayloadAction<LayerTypes>) => {
       state.layers[action.payload] = !state.layers[action.payload];
+    },
+    openLayer: (state, action: PayloadAction<LayerTypes>) => {
+      state.layers[action.payload] = true;
     },
     resetAllLayers: (state) => {
       state.layers = {
@@ -111,6 +119,8 @@ export const {
   togglePassFilter,
   toggleKmeansFilter,
   resetAllLayers,
+  openLayer,
+  setMapTypeId,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

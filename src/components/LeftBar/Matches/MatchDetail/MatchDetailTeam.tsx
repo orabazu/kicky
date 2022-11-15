@@ -3,14 +3,9 @@ import React from 'react';
 import { IoIosEye, IoIosEyeOff } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getClusterColor, radToDeg, rgbToHex } from 'src/utils';
+import { getClusterColor, radToDeg, rgbToHex } from 'utils/index';
 import { KmeansStatsType } from 'store/eventsSlice';
-import {
-  LayerTypes,
-  toggleKmeansFilter,
-  toggleLayer,
-  togglePassFilter,
-} from 'store/mapSlice';
+import { LayerTypes, toggleKmeansFilter, toggleLayer, togglePassFilter } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import { DataAnalysisModal } from './DataAnalysisModal';
@@ -25,12 +20,8 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
 
   const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
   const isShotsOverlayVisible = useSelector((state: RootState) => state.map.layers.shots);
-  const isAssistFilterVisible = useSelector(
-    (state: RootState) => state.map.passFilters.assists,
-  );
-  const isCrossFilterVisible = useSelector(
-    (state: RootState) => state.map.passFilters.crosses,
-  );
+  const isAssistFilterVisible = useSelector((state: RootState) => state.map.passFilters.assists);
+  const isCrossFilterVisible = useSelector((state: RootState) => state.map.passFilters.crosses);
   const isPassNetworOverlayVisible = useSelector(
     (state: RootState) => state.map.layers.passNetwork,
   );
@@ -115,12 +106,9 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
           </div>
           <div className="flex mt-20">
             <Timeline style={{ width: '100%' }}>
-              {kmeans?.[activeMatch?.match_id!]?.[activeTeamId!].stats.map(
+              {kmeans?.[activeMatch?.match_id]?.[activeTeamId!].stats.map(
                 (stat: KmeansStatsType) => (
-                  <Timeline.Item
-                    key={stat.cluster}
-                    color={rgbToHex(getClusterColor(stat.cluster))}
-                  >
+                  <Timeline.Item key={stat.cluster} color={rgbToHex(getClusterColor(stat.cluster))}>
                     <div className="flex space-between">
                       <span>Class: {stat.cluster} </span>
                       <span>Mean Angle: {Math.round(radToDeg(stat.angle_mean))} °</span>
@@ -129,15 +117,9 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
                       <Button
                         className="skinny-button"
                         type="link"
-                        onClick={() =>
-                          dispatch(toggleKmeansFilter(stat.cluster.toString()))
-                        }
+                        onClick={() => dispatch(toggleKmeansFilter(stat.cluster.toString()))}
                         icon={
-                          kmeansFilters[stat.cluster.toString()] ? (
-                            <IoIosEye />
-                          ) : (
-                            <IoIosEyeOff />
-                          )
+                          kmeansFilters[stat.cluster.toString()] ? <IoIosEye /> : <IoIosEyeOff />
                         }
                       />
                     </div>
@@ -154,7 +136,7 @@ export const MatchDetailTeam: React.FC<MatchDetailTeamProps> = () => {
           <Title level={5}>Pass Probability </Title>
           <Button
             onClick={() => toggle(LayerTypes.xThreat)}
-            icon={isPassNetworOverlayVisible ? <IoIosEye /> : <IoIosEyeOff />}
+            icon={isXTFilterVisible ? <IoIosEye /> : <IoIosEyeOff />}
           />
         </div>
       )}

@@ -1,12 +1,8 @@
-//@ts-ignore
-import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { Match } from 'const/arsenalMatches';
-import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getWeightedColor } from 'src/utils';
-import { PassType } from 'store/eventsSlice';
+import { getWeightedColor } from 'utils/index';
 import { RootState } from 'store/store';
 
 type useDrawExpectedThreatType = {
@@ -31,7 +27,7 @@ const useDrawExpectedThreat = ({
 
   useEffect(() => {
     if (map && gmaps && activeTeamId) {
-      const activeXThreat = xThreat?.[activeMatch?.match_id!]?.[activeTeamId!];
+      const activeXThreat = xThreat?.[activeMatch?.match_id]?.[activeTeamId!];
 
       if (activeXThreat && isVisible) {
         const polygonArray: google.maps.Polygon[] = [];

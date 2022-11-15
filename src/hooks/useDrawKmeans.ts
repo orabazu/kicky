@@ -1,11 +1,10 @@
-//@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { Match } from 'const/arsenalMatches';
 import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getClusterColor } from 'src/utils';
+import { getClusterColor } from 'utils/index';
 import { RootState } from 'store/store';
 
 type useDrawKmeansType = {
@@ -24,9 +23,7 @@ const useDrawKmeans = ({
   activeTeamId,
 }: useDrawKmeansType) => {
   const kmeans = useSelector((state: RootState) => state.events.kmeans);
-  const isKmeansOverlayVisible = useSelector(
-    (state: RootState) => state.map.layers.kmeans,
-  );
+  const isKmeansOverlayVisible = useSelector((state: RootState) => state.map.layers.kmeans);
   const kmeansFilters = useSelector((state: RootState) => state.map.kmeansFilters);
 
   const [kmeansOverlay, setKmeansOverlay] = useState<GoogleMapsOverlay>();
@@ -39,9 +36,9 @@ const useDrawKmeans = ({
       } else if (
         activeTeamId &&
         isKmeansOverlayVisible &&
-        kmeans?.[activeMatch?.match_id!]?.[activeTeamId!]
+        kmeans?.[activeMatch?.match_id]?.[activeTeamId!]
       ) {
-        const activeKmeansCluster = kmeans?.[activeMatch?.match_id!]?.[activeTeamId!];
+        const activeKmeansCluster = kmeans?.[activeMatch?.match_id]?.[activeTeamId!];
 
         const data = activeKmeansCluster.data.filter((d) => {
           if (kmeansFilters[d.cluster.toString()]) {
@@ -52,19 +49,13 @@ const useDrawKmeans = ({
         const passesLayer = new ArcLayer({
           id: 'kmeans',
           data: data,
-          //@ts-ignore
           dataTransform: (d: any[]) => d.filter((f) => f),
-          //@ts-ignore
           getSourcePosition: (f: any) => [f.startY, f.startX],
-          //@ts-ignore
           getTargetPosition: (f: any) => [f.endY, f.endX],
-          //@ts-ignore
 
           getSourceColor: (d: any) => getClusterColor(d.cluster),
-          //@ts-ignore
           getTargetColor: (d: any) => getClusterColor(d.cluster),
           getWidth: 2,
-          //@ts-ignore
           getHeight: (d: any) => (d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3),
         });
 

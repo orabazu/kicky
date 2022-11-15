@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { getGeoCoordsFromUTM } from 'src/utils';
+import { getGeoCoordsFromUTM } from 'utils/index';
 
 import { PassType, ShotType } from './eventsSlice';
 
@@ -90,22 +90,18 @@ export const eventDataApi = createApi({
       transformResponse: (response, _, arg) => {
         const events = response as Event[];
         const homeTeamId = events[0].possession_team.id;
-        let passes: PassType[] = [];
-        let shots: ShotType[] = [];
-        let passesUntilSubstitution: PassType[] = [];
+        const passes: PassType[] = [];
+        const shots: ShotType[] = [];
+        const passesUntilSubstitution: PassType[] = [];
         let isSubtituted = false;
 
         events?.forEach((event) => {
           if (event.location) {
             event.originalLocation = [...event.location];
             event.location = getGeoCoordsFromUTM(
-              event.possession_team.id !== homeTeamId
-                ? 120 - event.location[0]
-                : event.location[0],
-              event.possession_team.id !== homeTeamId
-                ? 80 - event.location[1]
-                : event.location[1],
-              Number(arg.stadiumId),
+              event.possession_team.id !== homeTeamId ? 120 - event.location[0] : event.location[0],
+              event.possession_team.id !== homeTeamId ? 80 - event.location[1] : event.location[1],
+              Number(arg.stadiumId)
             );
           }
           if (event.pass?.end_location) {
@@ -117,7 +113,7 @@ export const eventDataApi = createApi({
               event.possession_team.id !== homeTeamId
                 ? 80 - event.pass.end_location[1]
                 : event.pass.end_location[1],
-              Number(arg.stadiumId),
+              Number(arg.stadiumId)
             );
           }
           if (event.shot?.end_location) {
@@ -127,7 +123,7 @@ export const eventDataApi = createApi({
                 ? 120 - event.shot.end_location[0]
                 : event.shot.end_location[0],
               event.shot.end_location[1],
-              Number(arg.stadiumId),
+              Number(arg.stadiumId)
             );
           }
 
@@ -138,7 +134,7 @@ export const eventDataApi = createApi({
                   ? 120 - frame.location[0]
                   : frame.location[0],
                 frame.location[1],
-                Number(arg.stadiumId),
+                Number(arg.stadiumId)
               );
             });
           }

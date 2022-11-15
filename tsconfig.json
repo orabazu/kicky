@@ -1,38 +1,79 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
+    "target": "es5",
+    "lib": [
+      "DOM",
+      "es2020"
+    ],
+    "jsx": "react",
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "outDir": "./dist/",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
+    // "noEmit": true,
+    // "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "components/*": ["src/components/*"],
-      "types/*": ["src/types/*"],
-      "const/*": ["src/const/*"],
-      "contexts/*": ["src/contexts/*"],
-      "reducers/*": ["src/reducers/*"],
-      "managers/*": ["src/managers/*"],
-      "views/*": ["src/views/*"],
-      "hooks/*": ["src/hooks/*"],
-      "assets/*": ["src/assets/*"],
-      "store/*": ["src/store/*"]
-    }
+      "components/*": [
+        "src/components/*"
+      ],
+      "types/*": [
+        "src/types/*"
+      ],
+      "const/*": [
+        "src/const/*"
+      ],
+      "reducers/*": [
+        "src/reducers/*"
+      ],
+      "views/*": [
+        "src/views/*"
+      ],
+      "hooks/*": [
+        "src/hooks/*"
+      ],
+      "assets/*": [
+        "src/assets/*"
+      ],
+      "lib/*": [
+        "src/lib/*"
+      ],
+      "services/*": [
+        "src/services/*"
+      ],
+      "actions/*": [
+        "src/actions/*"
+      ],
+      "store/*": [
+        "src/store/*"
+      ],
+      "utils/*": [
+        "src/utils/*"
+      ],
+    },
+    "typeRoots": [
+      "./src/types",
+      "node_modules/@types",
+      "@types"
+    ],
   },
-  "include": ["src/**/*"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "dist"
+  ],
 }
