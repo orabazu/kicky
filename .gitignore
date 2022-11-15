@@ -112,3 +112,4 @@ tscBuild
 .DS_Store
 .python-version
 Desktop.ini
+.env
