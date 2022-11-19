@@ -1,6 +1,6 @@
 import { Button, Card } from 'antd';
 import React from 'react';
-import { FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight } from 'react-icons/fi/index.esm';
 import { Link } from 'react-router-dom';
 
 import { MatchScore } from './MatchScore';

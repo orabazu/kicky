@@ -10,9 +10,14 @@ module.exports = {
   mode: 'development',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: "[fullhash].js",
-    chunkFilename: "[id].bundle.js",
+    filename: "[name].[contenthash:8].js",
+    chunkFilename: "[name].[chunkhash:8].bundle.js",
     publicPath: '/',
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   resolve: {
     alias: {
@@ -29,7 +34,7 @@ module.exports = {
       store: path.resolve(__dirname, './src/store/'),
       utils: path.resolve(__dirname, './src/utils/'),
     },
-    extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
+    extensions: ['.mjs', '.js', '.jsx', '.json', '.ts', '.tsx'],
   },
   module: {
     rules: [

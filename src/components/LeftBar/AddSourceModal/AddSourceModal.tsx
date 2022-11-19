@@ -7,11 +7,10 @@ import StatsBomb from 'assets/stats.png';
 import { arsenalMatches } from 'const/arsenalMatches';
 import { womenEuroMatches } from 'const/womenEuroMatches';
 import React, { useEffect, useState } from 'react';
-import { FiCloud, FiHardDrive } from 'react-icons/fi';
-import { useDispatch, useSelector } from 'react-redux';
+import { FiCloud, FiHardDrive } from 'react-icons/fi/index.esm';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { addData, removeData } from 'store/openDataSlice';
-import { RootState } from 'store/store';
+import { addData } from 'store/openDataSlice';
 
 import styles from './style.module.scss';
 
@@ -23,7 +22,6 @@ enum IndoorData {
 export const AddSourceModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openData = useSelector((state: RootState) => state.openData);
   const dispatch = useDispatch();
   const params = useParams();
 
@@ -80,7 +78,7 @@ export const AddSourceModal = () => {
           <Meta
             title="360 Data: Women’s Euro 2022"
             description="360 data captures a freeze-frame showing the location of all players in the
-             frame for every event we collect and allows us to uncover a host of new information about 
+             frame for every event we collect and allows us to uncover a host of new information about
              the game that was either difficult to see or completely hidden in standard event data."
           />
           {renderProvider()}
@@ -98,7 +96,7 @@ export const AddSourceModal = () => {
         <Card hoverable cover={<img alt="example" src={Arsenal} />}>
           <Meta
             title="The Invincibles: Arsenal’s 2003/04 Season"
-            description="Historical data of Arsenal’s 2003/04 season, 
+            description="Historical data of Arsenal’s 2003/04 season,
             evaluate the performance of the Thiery Henry-led team."
           />
           {renderProvider()}
@@ -118,11 +116,7 @@ export const AddSourceModal = () => {
   const renderIntegrations = () => (
     <Row gutter={16}>
       <Col className="gutter-row" span={6}>
-        <Card
-          hoverable
-          style={{ width: 240 }}
-          cover={<img alt="example" src={StatsBomb} />}
-        >
+        <Card hoverable style={{ width: 240 }} cover={<img alt="example" src={StatsBomb} />}>
           <Meta title="Soccer data provider" description="" />
         </Card>
       </Col>

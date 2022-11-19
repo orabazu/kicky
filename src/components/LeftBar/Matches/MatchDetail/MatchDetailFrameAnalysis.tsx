@@ -1,6 +1,6 @@
 import { Button, Card } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight } from 'react-icons/fi/index.esm';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -11,7 +11,6 @@ import { removeAllPlayersInPitch } from 'store/eventsSlice';
 import { LayerTypes, openLayer, resetAllLayers, setMapCenter, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
-import { DataAnalysisModal } from './DataAnalysisModal';
 import styles from './MatchDetailFrameAnalysis.module.scss';
 
 type MatchDetailFrameAnalysisProps = {};

@@ -1,7 +1,6 @@
 import { Button, Tabs } from 'antd';
 import React from 'react';
-import { FiDatabase, FiMap, FiSidebar } from 'react-icons/fi';
-import { FiChevronsLeft } from 'react-icons/fi';
+import { FiDatabase, FiMap, FiSidebar, FiChevronsLeft } from 'react-icons/fi/index.esm';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -65,9 +64,7 @@ export const LeftBar = () => {
         <Button onClick={toggleMap} type="primary" shape="round">
           <div className={styles.ButtonWrapper}>
             Toggle {isMobileMapOpen ? 'Dashboard' : 'Map'}
-            <div className={styles.ButtonLogo}>
-              {isMobileMapOpen ? <FiSidebar /> : <FiMap />}
-            </div>
+            <div className={styles.ButtonLogo}>{isMobileMapOpen ? <FiSidebar /> : <FiMap />}</div>
           </div>
         </Button>
       </div>

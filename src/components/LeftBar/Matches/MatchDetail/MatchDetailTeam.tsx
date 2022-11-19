@@ -1,6 +1,6 @@
 import { Button, Timeline, Typography } from 'antd';
 import React from 'react';
-import { IoIosEye, IoIosEyeOff } from 'react-icons/io';
+import { IoIosEye, IoIosEyeOff } from 'react-icons/io/index.esm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getClusterColor, radToDeg, rgbToHex } from 'utils/index';
