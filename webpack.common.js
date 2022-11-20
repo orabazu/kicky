@@ -14,11 +14,6 @@ module.exports = {
     chunkFilename: "[name].[chunkhash:8].bundle.js",
     publicPath: '/',
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
   resolve: {
     alias: {
       types: path.resolve(__dirname, './src/types/'),
