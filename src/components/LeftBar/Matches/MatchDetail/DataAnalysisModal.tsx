@@ -1,12 +1,11 @@
 import nj from '@d4c/numjs/build/module/numjs.min.js';
-import { Avatar, Button, Card, Col, Modal, Row } from 'antd';
+import { Avatar, Button, Card, Col, Modal, Row, message } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import ClusterImage from 'assets/cluster.png';
 import PassNetworkImage from 'assets/passnetwork.png';
 import VoronoiImage from 'assets/voronoi.png';
 import xTImage from 'assets/xt.png';
 import { DataFrame, merge, toJSON } from 'danfojs/dist/danfojs-browser/src';
-import ml5 from 'ml5';
 import React, { useState } from 'react';
 import { BsPlusSquareDotted } from 'react-icons/bs/index.esm';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +16,13 @@ import { LayerTypes, resetAllLayers, toggleLayer } from 'store/mapSlice';
 import { RootState } from 'store/store';
 
 import styles from './DataAnalysisModal.module.scss';
+
+const worker = new Worker(new URL('./ml-worker.ts', import.meta.url));
+
+const messageKey = 'updatable';
+message.config({
+  top: 100,
+});
 
 type DataAnalysisModalProps = {
   isFrameAnalysis?: boolean;
@@ -32,7 +38,6 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
   const [searchParams] = useSearchParams();
   const stadiumId = searchParams.get('stadiumId');
   const activeTeamId = useSelector((state: RootState) => state.events.activeTeamId);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -112,17 +117,19 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
           length: p.length,
         }));
 
-        const options = {
-          k: 7,
-          maxIter: 20,
-          threshold: 0.2,
-        };
-        // When the model is loaded
+        message.loading({ content: 'Calculation is in progress...', key: messageKey, duration: 0 });
 
-        const kmeansHome = ml5.kmeans(filteredHomePasses, options, () => {
-          const kmeansArr: any[][] = Array.from(kmeansHome.dataset);
-          const kmeansHomeResult = kmeansArr.map((kmean, idx) => ({
-            cluster: (kmean as any).centroid,
+        worker.postMessage({
+          home: filteredHomePasses,
+          away: filteredAwayPasses,
+        });
+
+        worker.onmessage = ({ data }) => {
+          const { predictionsHome, predictionsAway } = data;
+          message.success({ content: 'Done!', key: messageKey, duration: 2 });
+
+          const kmeansHomeResult = predictionsHome.map((cluster, idx) => ({
+            cluster,
             ...homePasses[idx],
           }));
 
@@ -146,23 +153,20 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
               },
             }),
           );
-        });
 
-        const kmeansAway = ml5.kmeans(filteredAwayPasses, options, () => {
-          const kmeansArr: any[][] = Array.from(kmeansAway.dataset);
-          const kmeansAwayResult = kmeansArr.map((kmean, idx) => ({
-            cluster: (kmean as any).centroid,
+          const kmeansAwayResult = predictionsAway.map((cluster, idx) => ({
+            cluster,
             ...awayPasses[idx],
           }));
 
-          const df = new DataFrame(kmeansAwayResult);
+          const dfAway = new DataFrame(kmeansAwayResult);
 
-          const clusterStats = df
+          const clusterStatsAway = dfAway
             .groupby(['cluster'])
             .agg({ length: 'mean', angle: ['mean', 'count'] })
             .rename({ angle_count: 'pass_count' });
 
-          const clusterStatsJSON = toJSON(clusterStats);
+          const clusterStatsJSONAway = toJSON(clusterStatsAway);
 
           dispatch(
             setKmeansLayer({
@@ -170,12 +174,12 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
               dataSet: {
                 [teams.away.id!.toString()]: {
                   data: kmeansAwayResult,
-                  stats: clusterStatsJSON,
+                  stats: clusterStatsJSONAway,
                 },
               },
             }),
           );
-        });
+        };
       }
     });
 

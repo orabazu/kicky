@@ -14,6 +14,31 @@ module.exports = {
     chunkFilename: "[name].[chunkhash:8].bundle.js",
     publicPath: '/',
   },
+  optimization: {
+    minimize: true,
+    moduleIds: 'deterministic',
+    nodeEnv: 'production',
+    sideEffects: true,
+    concatenateModules: true,
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: 10,
+      minSize: 0,
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      }
+    }
+  },
   resolve: {
     alias: {
       types: path.resolve(__dirname, './src/types/'),
@@ -35,7 +60,7 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        loader: 'ts-loader',
+        loader: 'babel-loader',
       },
       {
         enforce: 'pre',
@@ -150,8 +175,5 @@ module.exports = {
         secure: false,
       },
     },
-  },
-  externals: {
-    ml5: 'ml5',
-  },
+  }
 };

@@ -126,3 +126,5 @@ export const MatchDetail = () => {
     </>
   );
 };
+
+export default MatchDetail;

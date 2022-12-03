@@ -47,3 +47,5 @@ export const DataSets = () => {
     </>
   );
 };
+
+export default DataSets;
