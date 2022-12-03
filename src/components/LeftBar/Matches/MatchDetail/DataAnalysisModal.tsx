@@ -291,14 +291,16 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                 <Card
                   actions={[
                     <div key="powered">
-                      <span>Powered by: </span>
-                      <img
-                        src={
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGy1t3tz6CJKda8Flq8RRZWiV34uIK6jB4um0OnaK&s'
-                        }
-                        alt="stats"
-                        className={styles.ProviderImage}
-                      />
+                      <a href="https://danfo.jsdata.org/" target="_blank" rel="noreferrer">
+                        <span>Powered by: </span>
+                        <img
+                          src={
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGy1t3tz6CJKda8Flq8RRZWiV34uIK6jB4um0OnaK&s'
+                          }
+                          alt="stats"
+                          className={styles.ProviderImage}
+                        />
+                      </a>
                     </div>,
                     <Button key={'run'} onClick={createPassNetwork}>
                       Run
@@ -318,14 +320,14 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                 <Card
                   actions={[
                     <div key="powered">
-                      <span>Powered by: </span>
-                      <img
-                        src={
-                          'https://ml5js.org/static/ml5_logo_purple-88e082b8dc81d8729f95bcc092db90c5.png'
-                        }
-                        alt="stats"
-                        className={styles.ProviderImage}
-                      />
+                      <a href="https://www.tensorflow.org/js" target="_blank" rel="noreferrer">
+                        <span>Powered by: </span>
+                        <img
+                          src={'https://miro.medium.com/max/1200/0*Rn63hQu9ljtk0wxa.png'}
+                          alt="stats"
+                          className={styles.ProviderImage}
+                        />
+                      </a>
                     </div>,
                     <Button key={'run'} onClick={createKmeans}>
                       Run
