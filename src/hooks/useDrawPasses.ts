@@ -1,4 +1,3 @@
-//@ts-ignore
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { ArcLayer } from 'deck.gl';
 import { google } from 'google-maps';
@@ -15,13 +14,7 @@ type useDrawPassesType = {
   activeTeamId: number | undefined;
 };
 
-const useDrawPasses = ({
-  activeTeamId,
-  forceRerender,
-  gmaps,
-  map,
-  passes,
-}: useDrawPassesType) => {
+const useDrawPasses = ({ activeTeamId, forceRerender, gmaps, map, passes }: useDrawPassesType) => {
   const passFilters = useSelector((state: RootState) => state.map.passFilters);
   const isPassOverlayVisible = useSelector((state: RootState) => state.map.layers.pass);
 
@@ -51,22 +44,15 @@ const useDrawPasses = ({
         const passesLayer = new ArcLayer({
           id: 'passes',
           data: filteredPasses,
-          //@ts-ignore
           dataTransform: (d: PassType[]) => d.filter((f) => f),
-          //@ts-ignore
           getSourcePosition: (f: PassType) => [f.startY, f.startX],
-          //@ts-ignore
           getTargetPosition: (f: PassType) => [f.endY, f.endX],
-          //@ts-ignore
-          getSourceColor: (d: PassType) =>
-            d.height === 1 ? [255, 179, 179] : [0, 128, 200],
-          //@ts-ignore
+          getSourceColor: (d: PassType) => (d.height === 1 ? [255, 179, 179] : [0, 128, 200]),
           getTargetColor: (d: PassType) =>
             d.height === 1 ? [255, 0, 0] : d.height === 2 ? [166, 130, 255] : [0, 0, 80],
           getWidth: 2,
-          //@ts-ignore
-          getHeight: (d: PassType) =>
-            d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3,
+          getHeight: (d: PassType) => (d.height === 1 ? 0.02 : d.height === 2 ? 0.2 : 0.3),
+          pickable: true,
         });
 
         const overlayInstance = new GoogleMapsOverlay({
