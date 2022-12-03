@@ -1,6 +1,6 @@
 import { Card, Result } from 'antd';
 import React from 'react';
-import { FiChevronRight, FiLayers, FiFilm } from 'react-icons/fi/index.esm';
+import { FiChevronRight, FiLayers } from 'react-icons/fi/index.esm';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { RootState } from 'store/store';
@@ -26,7 +26,7 @@ export const DataSets = () => {
               <Card onClick={() => navigateGame(key)} key={key} className={styles.DataCard}>
                 <div className={styles.DataCardHeading}>
                   {' '}
-                  <FiFilm /> Results
+                  <FiLayers /> Results
                 </div>
                 <div className={styles.DataCardBody}>
                   <div>
