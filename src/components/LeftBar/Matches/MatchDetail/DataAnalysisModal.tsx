@@ -287,7 +287,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
         <Row gutter={[16, 16]}>
           {!isFrameAnalysis && (
             <>
-              <Col span={12}>
+              <Col sm={24} md={12}>
                 <Card
                   actions={[
                     <div key="powered">
@@ -314,7 +314,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                   <div className={styles.ProviderWrapper}></div>
                 </Card>
               </Col>
-              <Col span={12}>
+              <Col sm={24} md={12}>
                 <Card
                   actions={[
                     <div key="powered">
@@ -341,7 +341,7 @@ export const DataAnalysisModal: React.FC<DataAnalysisModalProps> = ({
                   <div className={styles.ProviderWrapper}></div>
                 </Card>
               </Col>
-              <Col span={12}>
+              <Col sm={24} md={12}>
                 <Card
                   actions={[
                     <Button key={'run'} onClick={calculateXt}>
