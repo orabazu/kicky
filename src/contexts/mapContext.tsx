@@ -22,7 +22,6 @@ export const MapsProvider = ({ children, writeKey }: MapsProviderProps): JSX.Ele
   const [gmaps, setGmaps] = useState<Maps | undefined>(undefined);
 
   const loadMaps = async () => {
-    console.log(writeKey);
     if (!writeKey || gmaps) {
       return;
     }
