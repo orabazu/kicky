@@ -8,7 +8,7 @@ import xTImage from 'assets/xt.png';
 import { DataFrame, merge, toJSON } from 'danfojs/dist/danfojs-browser/src';
 import ml5 from 'ml5';
 import React, { useState } from 'react';
-import { BsPlusSquareDotted } from 'react-icons/bs';
+import { BsPlusSquareDotted } from 'react-icons/bs/index.esm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { getGeoCoordsFromUTM } from 'utils/index';

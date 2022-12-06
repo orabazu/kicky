@@ -1,7 +1,6 @@
 import { Card, Result } from 'antd';
 import React from 'react';
-import { FiChevronRight, FiLayers } from 'react-icons/fi';
-import { GiSoccerField } from 'react-icons/gi';
+import { FiChevronRight, FiLayers, FiFilm } from 'react-icons/fi/index.esm';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { RootState } from 'store/store';
@@ -24,13 +23,10 @@ export const DataSets = () => {
         <>
           <div>
             {dataKeys.map((key) => (
-              <Card
-                onClick={() => navigateGame(key)}
-                key={key}
-                className={styles.DataCard}
-              >
+              <Card onClick={() => navigateGame(key)} key={key} className={styles.DataCard}>
                 <div className={styles.DataCardHeading}>
-                  <GiSoccerField /> Results
+                  {' '}
+                  <FiFilm /> Results
                 </div>
                 <div className={styles.DataCardBody}>
                   <div>

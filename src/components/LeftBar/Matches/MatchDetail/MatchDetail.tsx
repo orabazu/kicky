@@ -2,8 +2,8 @@ import { Segmented, Tabs } from 'antd';
 import { SegmentedValue } from 'antd/lib/segmented';
 import { stadiums } from 'const/stadiumCoords';
 import React, { useEffect } from 'react';
-import { GiSoccerField } from 'react-icons/gi';
-import { HiUser, HiUserGroup } from 'react-icons/hi';
+import { HiUser, HiUserGroup } from 'react-icons/hi/index.esm';
+import { FiFilm } from 'react-icons/fi/index.esm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useLazyGetEventByMatchIdQuery } from 'store/eventDataApi';
@@ -96,7 +96,7 @@ export const MatchDetail = () => {
     {
       label: (
         <span>
-          <GiSoccerField /> Frame Analysis
+          <FiFilm /> Frame Analysis
         </span>
       ),
       key: 'frameAnalysis',

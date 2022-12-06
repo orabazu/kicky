@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 import * as THREE from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import daFont from 'assets/helvetiker_regular.typeface.json';
 
 type useDrawThreeMatchSummaryType = {
   map: google.maps.Map<Element> | undefined;

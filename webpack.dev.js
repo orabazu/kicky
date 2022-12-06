@@ -9,5 +9,6 @@ module.exports = merge(common, {
   performance: {
     hints: "warning"
   },
+
   plugins: [new webpack.HotModuleReplacementPlugin()],
 });
