@@ -53,7 +53,7 @@ export const getGeoCoordsFromUTM = (pixelX: number, pixelY: number, stadiumId: n
     eastingUpperLeft,
     northingUpperLeft,
     eastingUpperRight,
-    northingUpperRight
+    northingUpperRight,
   );
 
   const rotationinDegrees = (rotationinRadians * 180) / Math.PI;

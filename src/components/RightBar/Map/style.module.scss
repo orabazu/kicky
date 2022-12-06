@@ -114,3 +114,17 @@
     border-top: 12px solid #37003c;
   }
 }
+
+.Tooltip {
+  position: absolute;
+  background: #37003c;
+  color: whitesmoke;
+  margin: 10px;
+  padding-left: 0 !important;
+  padding: 10px !important;
+  border-radius: 8px;
+  opacity: 0;
+  p {
+    margin: 0;
+  }
+}

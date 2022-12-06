@@ -1,14 +1,14 @@
 import './App.less';
 
 import { Header } from 'components/Header';
-import { DataSets } from 'components/LeftBar/DataSets/DataSets';
-import { MatchDetail } from 'components/LeftBar/Matches/MatchDetail';
-import { Matches } from 'components/LeftBar/Matches/Matches';
 import { Loading } from 'components/Loading';
-import React, { useEffect } from 'react';
-import { /*Link, Outlet,*/ Navigate, Route, Routes } from 'react-router-dom';
+import React, { useEffect, Suspense } from 'react';
 
-import { Analytics } from './components/Analytics';
+const DataSets = React.lazy(() => import('components/LeftBar/DataSets/DataSets'));
+const Analytics = React.lazy(() => import('components/Analytics/Analytics'));
+const Matches = React.lazy(() => import('components/LeftBar/Matches/Matches'));
+const MatchDetail = React.lazy(() => import('components/LeftBar/Matches/MatchDetail/MatchDetail'));
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 function App() {
   const [showSplash, setShowSplash] = React.useState(true);
@@ -24,12 +24,47 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/analytics/dataset" />} />
 
-        <Route path="analytics" element={<Analytics />}>
+        <Route
+          path="analytics"
+          element={
+            <Suspense>
+              <Analytics />
+            </Suspense>
+          }
+        >
           <Route path="dataset">
-            <Route element={<DataSets />} />
-            <Route path="" element={<DataSets />} />
-            <Route path=":datasetId/matches" element={<Matches />} />
-            <Route path=":datasetId/matches/:matchId" element={<MatchDetail />} />
+            <Route
+              element={
+                <Suspense fallback={<>Lazy loading</>}>
+                  <DataSets />
+                </Suspense>
+              }
+            />
+            <Route
+              path=""
+              element={
+                <Suspense fallback={<>Lazy loading</>}>
+                  <DataSets />
+                </Suspense>
+              }
+            />
+            <Route
+              path=":datasetId/matches"
+              element={
+                <Suspense>
+                  <Matches />
+                </Suspense>
+              }
+            />
+            <Route
+              path=":datasetId/matches/:matchId"
+              element={
+                <Suspense>
+                  {' '}
+                  <MatchDetail />
+                </Suspense>
+              }
+            />
           </Route>
 
           <Route path="map" element={'Powered by google maps'} />

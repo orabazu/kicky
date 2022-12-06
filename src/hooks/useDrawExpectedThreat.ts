@@ -41,6 +41,26 @@ const useDrawExpectedThreat = ({
             fillColor: getWeightedColor(bin.probability * 50),
             fillOpacity: 0.35,
           });
+
+          polygon.addListener('mouseover', (e) => {
+            const el = document.getElementById('tooltip');
+            if (el) {
+              el.innerHTML = `<p>Probability: ${Number(bin.probability).toFixed(3)}</p>`;
+              el.style.display = 'block';
+              el.style.opacity = '0.9';
+              el.style.left = e.domEvent.x + 'px';
+              el.style.top = e.domEvent.y - 70 + 'px';
+              el.style.paddingLeft = '40%';
+              el.style.opacity = '1';
+            }
+          });
+          polygon.addListener('mouseout', () => {
+            const el = document.getElementById('tooltip');
+            if (el) {
+              el.style.opacity = '0.0';
+            }
+          });
+
           polygonArray.push(polygon);
           polygon.setMap(map);
         });

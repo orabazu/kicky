@@ -342,8 +342,13 @@ export const Map = () => {
   }, [movements, map]);
 
   return (
-    <div id="map" className={isMobileMapOpen ? `${styles.Map} ${styles.MapOpen}` : styles.Map}>
-      Map
-    </div>
+    <>
+      <div id="map" className={isMobileMapOpen ? `${styles.Map} ${styles.MapOpen}` : styles.Map}>
+        Map
+      </div>
+      <div style={{ position: 'relative' }}>
+        <div id="tooltip" className={styles.Tooltip}></div>
+      </div>
+    </>
   );
 };

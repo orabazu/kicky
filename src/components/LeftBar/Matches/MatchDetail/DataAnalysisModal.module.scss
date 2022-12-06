@@ -8,13 +8,16 @@
   width: 90px;
   object-fit: cover;
   border-radius: 4px;
+  height: 30px;
 }
 
 .ProviderCard {
   background-color: #141414;
   :global(.ant-card-body) {
     background-color: #141414;
-    height: 200px;
+    @media screen and (min-width: 768px) {
+      min-height: 200px;
+    }
   }
 }
 

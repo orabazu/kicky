@@ -32,3 +32,5 @@ export const Matches: React.FC<MatchesProps> = () => {
     </>
   );
 };
+
+export default Matches;

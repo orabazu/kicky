@@ -6,7 +6,7 @@
       "es2020"
     ],
     "jsx": "react",
-    "module": "commonjs",
+    "module": "ESNext",
     "noImplicitAny": false,
     "outDir": "./dist/",
     "preserveConstEnums": true,
