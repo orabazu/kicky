@@ -1,14 +1,17 @@
+## Watch Demo 👇
+
+[![kicky-intro](https://user-images.githubusercontent.com/812622/201692295-a5d967a6-3a6e-4805-a595-50adf383e7dc.gif)](https://vimeo.com/770501525 "Demo")
+
 ## Installation
 
 Clone the repo and run `yarn install`
+
 
 ## Start
 
 After the successfull installation of the packages: `yarn dev`
 
 ## Story Behind It
-
-![kicky-intro (2)](https://user-images.githubusercontent.com/812622/201692295-a5d967a6-3a6e-4805-a595-50adf383e7dc.gif)
 
 ## Inspiration
 
